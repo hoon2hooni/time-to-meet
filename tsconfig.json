@@ -13,17 +13,27 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "jsxImportSource": "@emotion/react",
     "incremental": true,
     "baseUrl": ".",
     "paths": {
       "@pages/*": ["pages/*"],
       "@components/*": ["components/*"],
       "@styles/*": ["styles/*"],
+      "@assets/*": ["assets/*"],
+      "@lib/*": ["lib/*"],
+      "@api/*": ["lib/api/*"],
+      "@hooks/*": ["lib/hooks/*"],
       "@types": ["types"],
-      "@types/*": ["types/*"],
-      "@common/*": ["common/*"]
+      "@types/*": ["types/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "environment.d.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "types/env.d.ts",
+    "types/emotion.d.ts"
+  ],
   "exclude": ["node_modules"]
 }
