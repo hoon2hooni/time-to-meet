@@ -1,8 +1,10 @@
 import { css } from "@emotion/react";
 
 const global = css`
+  @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
   * {
     box-sizing: border-box;
+    color: black;
   }
 
   html,
@@ -92,7 +94,13 @@ const global = css`
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
+    font-family: Pretendard, "Roboto", sans-serif;
   }
+  html,
+  body {
+    font-size: 62.5%;
+  }
+  
   /* HTML5 display-role reset for older browsers */
   article,
   aside,
