@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -21,33 +17,15 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@pages/*": [
-        "pages/*"
-      ],
-      "@components/*": [
-        "components/*"
-      ],
-      "@styles/*": [
-        "styles/*"
-      ],
-      "@assets/*": [
-        "assets/*"
-      ],
-      "@lib/*": [
-        "lib/*"
-      ],
-      "@api/*": [
-        "lib/api/*"
-      ],
-      "@hooks/*": [
-        "lib/hooks/*"
-      ],
-      "@types": [
-        "types"
-      ],
-      "@types/*": [
-        "types/*"
-      ]
+      "@pages/*": ["pages/*"],
+      "@components/*": ["components/*"],
+      "@styles/*": ["styles/*"],
+      "@assets/*": ["assets/*"],
+      "@lib/*": ["lib/*"],
+      "@api/*": ["lib/api/*"],
+      "@hooks/*": ["lib/hooks/*"],
+      "@types": ["types"],
+      "@types/*": ["types/*"]
     }
   },
   "include": [
@@ -57,7 +35,5 @@
     "types/env.d.ts",
     "types/emotion.d.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

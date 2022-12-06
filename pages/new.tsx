@@ -2,49 +2,76 @@ import Input from "@components/input/Input";
 import InputTemplate from "@components/input/InputTemplate";
 import Layout from "@components/Layout";
 import styled from "@emotion/styled";
-import { Size } from "@types";
+import type { RoomInfo } from "@types";
+import { dateInputData, timeInputData } from "const/const";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 import type { NextPageWithLayout } from "./_app";
-type Inputs = { id: string; size: Size; span?: string; type: string }[];
-const New: NextPageWithLayout = () => {
-  const dateData: Inputs = [
-    { id: "date", size: "middle", span: "일", type: "date" },
-    { id: "time", size: "middle", span: "시", type: "date" },
-  ];
-  const timeData: Inputs = [
-    { id: "date", size: "middle", span: "일", type: "time" },
-    { id: "time", size: "middle", span: "시", type: "time" },
-  ];
 
-  const dateInputs = dateData.map(({ id, size, span, type }) => (
-    <Input key={id} id={id} size={size} unit={span} type={type} />
+const New: NextPageWithLayout = () => {
+  const { register, handleSubmit } = useForm<RoomInfo>();
+  const onSubmit: SubmitHandler<RoomInfo> = (data) => console.log(data);
+
+  const dateInputs = dateInputData.map(({ id, size, unit, type }) => (
+    <Input
+      key={id}
+      id={id}
+      size={size}
+      unit={unit}
+      type={type}
+      register={register}
+    />
   ));
 
-  const timeInputs = timeData.map(({ id, size, span, type }) => (
-    <Input key={id} id={id} size={size} unit={span} type={type} />
+  const timeInputs = timeInputData.map(({ id, size, unit, type }) => (
+    <Input
+      key={id}
+      id={id}
+      size={size}
+      unit={unit}
+      type={type}
+      register={register}
+    />
   ));
 
   return (
     <>
       <Header>새로운 모임 생성하기</Header>
-      <main>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <InputTemplate
-          inputs={[<Input key="무야호" id="name" size="large" />]}
+          inputs={[
+            <Input
+              key="무야호"
+              id={"title"}
+              size="large"
+              unit="명"
+              register={register}
+            />,
+          ]}
           label="모임 이름"
         />
         <InputTemplate
-          inputs={[<Input key="무야호" id="name" size="small" unit="명" />]}
+          inputs={[
+            <Input
+              key="무야호"
+              id={"memberCount"}
+              size="small"
+              unit="명"
+              register={register}
+            />,
+          ]}
           label="모임 확정 인원은 몇명일까요?"
         />
+
         <InputTemplate inputs={dateInputs} label="모임 시간은 몇시쯤인가요?" />
         <InputTemplate
           inputs={timeInputs}
           label="모임이 진행될 날짜는 언제쯤인가요?"
         />
-      </main>
-      <CtaButton>
-        <Text>생성하기</Text>
-      </CtaButton>
+        <CtaButton type="submit">
+          <Text>생성하기</Text>
+        </CtaButton>
+      </form>
     </>
   );
 };
@@ -65,7 +92,7 @@ const Header = styled.header`
   margin-bottom: 2.4rem;
 `;
 
-const CtaButton = styled.div`
+const CtaButton = styled.button`
   background-color: ${(props) => props.theme.colors.title};
   font-size: 2rem;
   font-weight: 700;
@@ -76,6 +103,7 @@ const CtaButton = styled.div`
   justify-content: center;
   align-items: center;
   height: 3rem;
+  border: none;
 `;
 
 const Text = styled.span`

@@ -1,11 +1,14 @@
 import styled from "@emotion/styled";
-import { Size } from "@types";
+import { RoomInfo, RoomInfoKeys, Size } from "@types";
+import { ControllerRenderProps, UseFormRegister } from "react-hook-form";
 
 interface Props {
-  id: string;
+  id: RoomInfoKeys;
   size: Size;
   type?: string;
   unit?: string;
+  field?: ControllerRenderProps<RoomInfo, any>;
+  register: UseFormRegister<RoomInfo>;
 }
 
 interface InputProps {
@@ -18,14 +21,14 @@ const sizeMap: Record<Size, string> = {
   large: "100%",
 };
 
-export default function Input({ id, size, unit, type = "text" }: Props) {
+const Input = ({ id, size, unit, register, type = "text" }: Props) => {
   return (
     <Wrapper>
-      <InputBox id={id} type={type} sz={size} />
+      <InputBox id={id} type={type} sz={size} {...register(id)} />
       <InputUnit>{unit}</InputUnit>
     </Wrapper>
   );
-}
+};
 
 const Wrapper = styled.div`
   display: flex;
@@ -44,3 +47,6 @@ const InputUnit = styled.span`
   font-size: 1.2rem;
   margin-left: 0.5rem;
 `;
+
+export default Input;
+3
