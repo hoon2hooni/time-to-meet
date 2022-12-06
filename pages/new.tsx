@@ -1,30 +1,45 @@
-import MultiInput from "@components/input/MultiInput";
-import SingleInput from "@components/input/SingleInput";
+import Input from "@components/input/Input";
+import InputTemplate from "@components/input/InputTemplate";
 import Layout from "@components/Layout";
 import styled from "@emotion/styled";
+import { Size } from "@types";
 
 import type { NextPageWithLayout } from "./_app";
+type Inputs = { id: string; size: Size; span?: string; type: string }[];
 const New: NextPageWithLayout = () => {
+  const dateData: Inputs = [
+    { id: "date", size: "middle", span: "일", type: "date" },
+    { id: "time", size: "middle", span: "시", type: "date" },
+  ];
+  const timeData: Inputs = [
+    { id: "date", size: "middle", span: "일", type: "time" },
+    { id: "time", size: "middle", span: "시", type: "time" },
+  ];
+
+  const dateInputs = dateData.map(({ id, size, span, type }) => (
+    <Input key={id} id={id} size={size} unit={span} type={type} />
+  ));
+
+  const timeInputs = timeData.map(({ id, size, span, type }) => (
+    <Input key={id} id={id} size={size} unit={span} type={type} />
+  ));
+
   return (
     <>
       <Header>새로운 모임 생성하기</Header>
       <main>
-        <SingleInput label="모임 이름" size="large" />
-        <SingleInput label="몇 명이 모이나요?" size="middle" span={"명"} />
-        <SingleInput
+        <InputTemplate
+          inputs={[<Input key="무야호" id="name" size="large" />]}
+          label="모임 이름"
+        />
+        <InputTemplate
+          inputs={[<Input key="무야호" id="name" size="small" unit="명" />]}
           label="모임 확정 인원은 몇명일까요?"
-          size="middle"
-          span={"명"}
         />
-        <MultiInput
-          size="middle"
+        <InputTemplate inputs={dateInputs} label="모임 시간은 몇시쯤인가요?" />
+        <InputTemplate
+          inputs={timeInputs}
           label="모임이 진행될 날짜는 언제쯤인가요?"
-          type={"date"}
-        />
-        <MultiInput
-          size="middle"
-          label="모임 시간은 몇시쯤인가요?"
-          type={"time"}
         />
       </main>
       <CtaButton>

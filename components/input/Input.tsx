@@ -5,7 +5,7 @@ interface Props {
   id: string;
   size: Size;
   type?: string;
-  span?: string;
+  unit?: string;
 }
 
 interface InputProps {
@@ -18,11 +18,11 @@ const sizeMap: Record<Size, string> = {
   large: "100%",
 };
 
-export default function Input({ id, size, span, type = "text" }: Props) {
+export default function Input({ id, size, unit, type = "text" }: Props) {
   return (
     <Wrapper>
       <InputBox id={id} type={type} sz={size} />
-      <InputUnit>{span}</InputUnit>
+      <InputUnit>{unit}</InputUnit>
     </Wrapper>
   );
 }
