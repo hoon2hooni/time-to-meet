@@ -59,7 +59,7 @@ const New: NextPageWithLayout = () => {
               register={register}
             />,
           ]}
-          label="모임 확정 인원은 몇명일까요?"
+          label="모임 인원은 몇명일까요?"
         />
 
         <InputTemplate inputs={dateInputs} label="모임 시간은 몇시쯤인가요?" />
