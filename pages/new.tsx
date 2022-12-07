@@ -44,7 +44,6 @@ const New: NextPageWithLayout = () => {
               key="무야호"
               id={"title"}
               size="large"
-              unit="명"
               register={register}
             />,
           ]}
@@ -97,7 +96,7 @@ const CtaButton = styled.button`
   font-size: 2rem;
   font-weight: 700;
   border-radius: 2rem;
-  width: 7rem;
+  width: 8rem;
   margin-left: auto;
   display: flex;
   justify-content: center;
@@ -107,7 +106,7 @@ const CtaButton = styled.button`
 `;
 
 const Text = styled.span`
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
   border-radius: 2rem;
   color: ${(props) => props.theme.colors.white};
