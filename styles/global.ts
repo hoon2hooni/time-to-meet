@@ -94,13 +94,13 @@ const global = css`
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
-    font-family: Pretendard, "Roboto", sans-serif;
+    font-family: "Roboto", sans-serif;
   }
   html,
   body {
     font-size: 62.5%;
   }
-  
+
   /* HTML5 display-role reset for older browsers */
   article,
   aside,

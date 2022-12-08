@@ -25,7 +25,8 @@
       "@api/*": ["lib/api/*"],
       "@hooks/*": ["lib/hooks/*"],
       "@types": ["types"],
-      "@types/*": ["types/*"]
+      "@types/*": ["types/*"],
+      "@firebase/*": ["firebase/*"]
     }
   },
   "include": [

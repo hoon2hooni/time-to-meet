@@ -32,7 +32,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         <Global styles={global} />
         {getLayout(<Component {...pageProps} />)}
       </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} position={"top-left"} />
+      {/* <ReactQueryDevtools initialIsOpen={false} position={"top-left"} /> */}
     </QueryClientProvider>
   );
 }

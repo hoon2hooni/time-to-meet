@@ -6,7 +6,7 @@ function Layout({ children }: PropsWithChildren) {
 }
 
 const Container = styled.div`
-  padding: 3rem 4rem;
+  padding: 2rem 4rem;
   width: 100%;
   height: 100%;
 `;
