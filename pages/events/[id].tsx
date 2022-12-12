@@ -1,10 +1,9 @@
 import { Pagination, Timetable, TimetableInfo } from "@components/timetables";
 import styled from "@emotion/styled";
 import { db } from "@firebase/clientApp";
+import type { NextPageWithLayout } from "@pages/_app";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { useEffect } from "react";
-
-import type { NextPageWithLayout } from "./_app";
 
 const New: NextPageWithLayout = () => {
   useEffect(() => {
