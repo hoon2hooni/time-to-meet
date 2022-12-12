@@ -1,4 +1,4 @@
-import { Arrow } from "@components/icons";
+import Pagination from "@components/timetables/Pagination";
 import TimeTableInfo from "@components/timetables/TimeTableInfo";
 import styled from "@emotion/styled";
 import { db } from "@firebase/clientApp";
@@ -46,15 +46,7 @@ const New: NextPageWithLayout = () => {
         <Header>가능한 시간을 입력하세요!</Header>
         <TimeTableInfo />
       </Container>
-      <CurrentDay>
-        <div style={{ transform: "rotate(-180deg)" }}>
-          <Arrow />
-        </div>
-        15일 월요일
-        <div>
-          <Arrow />
-        </div>
-      </CurrentDay>
+      <Pagination />
       <Wrapper>
         <Days>
           {new Array(7).fill(0).map((_, i) => {
@@ -123,14 +115,6 @@ const Header = styled.header`
   margin-bottom: 2rem;
 `;
 
-const CurrentDay = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0rem 4rem;
-  font-size: 1.5rem;
-  font-weight: 700;
-`;
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
