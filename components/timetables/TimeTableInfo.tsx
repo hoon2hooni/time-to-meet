@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import data from "../../data.schema.json";
 
-const TimeTableInfo = () => {
+const TimetableInfo = () => {
   const [isVisible, setIsVisible] = useState(false);
   const currentAttendee = "사자";
   const isCurrentUser = (name: string) => name === currentAttendee;
@@ -56,7 +56,7 @@ const TimeTableInfo = () => {
   );
 };
 
-export default TimeTableInfo;
+export default TimetableInfo;
 const TextHeader = styled.div`
   color: ${(props) => props.theme.colors.primary};
   margin-top: 1rem;
