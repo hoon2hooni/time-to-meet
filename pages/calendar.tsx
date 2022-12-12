@@ -1,8 +1,8 @@
-import { Arrow, ToggleButton } from "@components/icons";
-import Layout from "@components/Layout";
+import { Arrow } from "@components/icons";
+import TimeTableInfo from "@components/timetables/TimeTableInfo";
 import styled from "@emotion/styled";
 import { db } from "@firebase/clientApp";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, onSnapshot, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import data from "../data.schema.json";
@@ -15,19 +15,12 @@ function getDay(d: number) {
 }
 const New: NextPageWithLayout = () => {
   const [pageIndex, setPageIndex] = useState(0);
-  const [currentAttender, setCurrentAttender] = useState<string>("사자");
-  const [isVisible, setIsVisible] = useState(false);
-
   const timeObj: Record<string, number> = {};
-  data.attendees.forEach(({ name, availableDates }) => {
+  data.attendees.forEach(({ availableDates }) => {
     availableDates.forEach((time) => {
       timeObj[time] = (timeObj[time] ?? 0) + 1;
     });
   });
-
-  const sortedKey = Object.keys(timeObj)
-    .sort((a, b) => timeObj[b] - timeObj[a])
-    .slice(0, 3);
 
   const startDay = new Date(data.startDate).getDate();
   const endDay = new Date(data.endDate).getDate();
@@ -37,7 +30,6 @@ const New: NextPageWithLayout = () => {
     new Array(24 - 8).fill(0).map((_, i) => i + 8)
   ) as Times[];
 
-  const isCurrentUser = (name: string) => name === currentAttender;
   useEffect(() => {
     const collectionRef = collection(db, "events");
     const q = query(collectionRef);
@@ -50,42 +42,10 @@ const New: NextPageWithLayout = () => {
   }, []);
   return (
     <>
-      <Layout>
+      <Container>
         <Header>가능한 시간을 입력하세요!</Header>
-        <CalendarInfo>
-          <AttendeeHeader>{data.name} 참여자</AttendeeHeader>
-          <Attendee>
-            {data.attendees.map(({ name }) => (
-              <Attender key={name} isCurrentUser={isCurrentUser(name)}>
-                {name}
-                {isCurrentUser(name) && "(나)"}
-              </Attender>
-            ))}
-          </Attendee>
-          <TextHeader>
-            가장 많이 선택된 시간
-            <div
-              onClick={() => setIsVisible((s) => !s)}
-              style={{ transform: isVisible ? "rotate(-180deg)" : "none" }}
-            >
-              <ToggleButton />
-            </div>
-          </TextHeader>
-          {isVisible &&
-            sortedKey.map((k, i) => {
-              const [_, month, day, time] = k.split("/");
-              return (
-                <EachResult key={i}>
-                  <Rank>{i + 1}위</Rank>
-                  <div>{`${month}월 ${day}일 ${time}:00시~${
-                    Number(time) + 1
-                  }:00시`}</div>
-                  <Count>{timeObj[k]}명</Count>
-                </EachResult>
-              );
-            })}
-        </CalendarInfo>
-      </Layout>
+        <TimeTableInfo />
+      </Container>
       <CurrentDay>
         <div style={{ transform: "rotate(-180deg)" }}>
           <Arrow />
@@ -146,11 +106,13 @@ const New: NextPageWithLayout = () => {
   );
 };
 
-// New.getLayout = function getLayout(page) {
-//   return <Layout>{page}</Layout>;
-// };
-
 export default New;
+
+const Container = styled.div`
+  padding: 2rem 4rem;
+  width: 100%;
+  height: 100%;
+`;
 
 const Header = styled.header`
   color: ${(props) => props.theme.colors.primary};
@@ -159,70 +121,6 @@ const Header = styled.header`
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 2rem;
-`;
-
-const TextHeader = styled.div`
-  color: ${(props) => props.theme.colors.primary};
-  margin-top: 1rem;
-  font-size: 1.5rem;
-  font-weight: 700;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const TextDaysWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 10rem;
-  margin-top: 1rem;
-  font-weight: 400;
-  font-size: 1.5rem;
-`;
-
-const AttendeeHeader = styled.div`
-  font-size: 1.5rem;
-  font-weight: 700;
-`;
-
-const Attendee = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 1.2rem;
-  font-weight: 700;
-  width: 20rem;
-  margin-top: 1rem;
-`;
-
-const Attender = styled.div<{ isCurrentUser: boolean }>`
-  margin-right: 0.5rem;
-  color: ${(props) =>
-    props.isCurrentUser
-      ? props.theme.colors.title
-      : props.theme.colors.primary};
-  font-weight: ${(props) => (props.isCurrentUser ? 700 : 400)};
-`;
-
-const CalendarInfo = styled.div`
-  width: 100%;
-  background-color: ${(props) => props.theme.colors.secondary};
-  border-radius: 1rem;
-  padding: 1.5rem 2rem;
-`;
-
-const EachResult = styled.div`
-  display: flex;
-  margin-top: 1rem;
-`;
-
-const Rank = styled.div`
-  font-weight: 700;
-  margin-right: 1rem;
-`;
-
-const Count = styled.div`
-  margin-left: auto;
-  font-weight: 700;
 `;
 
 const CurrentDay = styled.div`
@@ -261,11 +159,6 @@ const EachDay = styled.div`
   background-color: ${(props) => props.theme.colors.white};
 `;
 
-const ScrollWrapper = styled.div`
-  width: 100%;
-  height: 30rem;
-  overflow-y: scroll;
-`;
 const CalendarWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
