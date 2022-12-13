@@ -1,5 +1,6 @@
 import { ToggleButton } from "@components/icons";
 import styled from "@emotion/styled";
+import { secondsToDate } from "@lib/days";
 import { useState } from "react";
 
 import data from "../../data.schema.json";
@@ -8,15 +9,20 @@ const TimetableInfo = () => {
   const [isVisible, setIsVisible] = useState(false);
   const currentAttendee = "사자";
   const isCurrentUser = (name: string) => name === currentAttendee;
-  const timeObj: Record<string, number> = {};
+  const dateToAttendees: Record<string, string[]> = {};
   data.attendees.forEach(({ name, availableDates }) => {
-    availableDates.forEach((time) => {
-      timeObj[time] = (timeObj[time] ?? 0) + 1;
+    availableDates.forEach((availableDate) => {
+      const date = secondsToDate(availableDate.seconds).toString();
+      if (dateToAttendees[date]) {
+        dateToAttendees[date].push(name);
+      } else {
+        dateToAttendees[date] = [name];
+      }
     });
   });
 
-  const sortedKey = Object.keys(timeObj)
-    .sort((a, b) => timeObj[b] - timeObj[a])
+  const sortedByAttendeesCounts = Object.keys(dateToAttendees)
+    .sort((a, b) => dateToAttendees[b].length - dateToAttendees[a].length)
     .slice(0, 3);
 
   return (
@@ -40,15 +46,18 @@ const TimetableInfo = () => {
         </div>
       </TextHeader>
       {isVisible &&
-        sortedKey.map((k, i) => {
-          const [_, month, day, time] = k.split("/");
+        sortedByAttendeesCounts.map((k, i) => {
+          const date = new Date(k);
+          const month = date.getMonth() + 1;
+          const day = date.getDate();
+          const time = date.getHours();
           return (
             <EachResult key={i}>
               <Rank>{i + 1}위</Rank>
               <div>{`${month}월 ${day}일 ${time}:00시~${
                 Number(time) + 1
               }:00시`}</div>
-              <Count>{timeObj[k]}명</Count>
+              <Count>{dateToAttendees[k].length}명</Count>
             </EachResult>
           );
         })}
@@ -57,6 +66,7 @@ const TimetableInfo = () => {
 };
 
 export default TimetableInfo;
+
 const TextHeader = styled.div`
   color: ${(props) => props.theme.colors.primary};
   margin-top: 1rem;
