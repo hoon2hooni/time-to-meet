@@ -1,5 +1,5 @@
+import { RoomInfo, RoomInfoKeys, Size } from "@customTypes";
 import styled from "@emotion/styled";
-import { RoomInfo, RoomInfoKeys, Size } from "@types";
 import { ControllerRenderProps, UseFormRegister } from "react-hook-form";
 
 interface Props {
@@ -49,4 +49,4 @@ const InputUnit = styled.span`
 `;
 
 export default Input;
-3
+3;

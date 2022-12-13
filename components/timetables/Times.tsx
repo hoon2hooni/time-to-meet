@@ -1,8 +1,7 @@
 import styled from "@emotion/styled";
+import { Attendees } from "@eventsTypes";
 import { addDateWithDays, secondsToDate } from "@lib/days";
 import { FC } from "react";
-
-import data from "../../data.schema.json";
 
 type Times = number[];
 type ComponentProps = {
@@ -10,6 +9,7 @@ type ComponentProps = {
   endDate: Date;
   pageIndex: number;
   memberCount: number;
+  attendees: Attendees;
 };
 
 type EachRowTimeProps = {
@@ -22,9 +22,10 @@ const Times: FC<ComponentProps> = ({
   startDate,
   endDate,
   memberCount,
+  attendees,
 }) => {
   const dateToAttendees: Record<string, string[]> = {};
-  data.attendees.forEach(({ name, availableDates }) => {
+  attendees.forEach(({ name, availableDates }) => {
     availableDates.forEach((availableDate) => {
       const date = secondsToDate(availableDate.seconds).toString();
       if (dateToAttendees[date]) {

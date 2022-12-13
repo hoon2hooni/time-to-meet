@@ -1,5 +1,4 @@
 import Layout from "@components/Layout";
-import styled from "@emotion/styled";
 import type { ReactElement } from "react";
 
 import type { NextPageWithLayout } from "./_app";

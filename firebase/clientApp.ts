@@ -1,7 +1,13 @@
 // Import the functions you need from the SDKs you need
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {
+  doc,
+  DocumentData,
+  DocumentReference,
+  getFirestore,
+} from "firebase/firestore";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -23,4 +29,8 @@ if (app.name && typeof window !== "undefined") {
   const analytics = getAnalytics(app);
 }
 const db = getFirestore(app);
-export { db };
+const createDocs = <T = DocumentData>(docName: string, id: string) => {
+  return doc(db, docName, id) as DocumentReference<T>;
+};
+
+export { createDocs, db };

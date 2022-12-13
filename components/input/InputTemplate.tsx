@@ -1,8 +1,6 @@
 import { EmotionJSX } from "@emotion/react/types/jsx-namespace";
 import styled from "@emotion/styled";
-import type { Size } from "@types";
 
-import Input from "./Input";
 interface Props {
   label: string;
   inputs?: EmotionJSX.Element[];

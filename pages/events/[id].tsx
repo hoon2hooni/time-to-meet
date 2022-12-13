@@ -1,37 +1,50 @@
 import { Timetable, TimetableInfo } from "@components/timetables";
 import styled from "@emotion/styled";
-import { db } from "@firebase/clientApp";
+import type { Attendees, EventsDocs } from "@eventsTypes";
+import { createDocs } from "@firebase/clientApp";
 import { secondsToDate } from "@lib/days";
 import type { NextPageWithLayout } from "@pages/_app";
-import { collection, onSnapshot, query } from "firebase/firestore";
-import { useEffect } from "react";
+import { onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
-import data from "../../data.schema.json";
+type TimeStamp = {
+  seconds: number;
+};
+
 const New: NextPageWithLayout = () => {
+  const [eventName, setEventName] = useState("");
+  const [startDate, setStartDate] = useState<TimeStamp>({ seconds: 0 });
+  const [endDate, setEndDate] = useState<TimeStamp>({ seconds: 0 });
+  const [attendees, setAttendees] = useState<Attendees>([]);
   useEffect(() => {
-    const collectionRef = collection(db, "events");
-    const q = query(collectionRef);
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-      });
+    const docRef = createDocs<EventsDocs>(
+      "events",
+      process.env.NEXT_PUBLIC_TEST_DOC_ID || ""
+    );
+    const unsubscribe = onSnapshot(docRef, (doc) => {
+      if (doc.data()) {
+        setEventName(doc.data()?.name || "");
+        setEndDate(doc.data()?.endDate || { seconds: 0 });
+        setStartDate(doc.data()?.startDate || { seconds: 0 });
+        setAttendees(doc.data()?.attendees || []);
+        return;
+      }
     });
     return unsubscribe;
   }, []);
 
-  const startDate = data.startDate;
-  const endDate = data.endDate;
   return (
     <>
       <Container>
         <Header>가능한 시간을 입력하세요!</Header>
-        <TimetableInfo />
+        <TimetableInfo eventName={eventName} attendees={attendees} />
       </Container>
 
       <Timetable
         startDate={secondsToDate(startDate.seconds)}
         endDate={secondsToDate(endDate.seconds)}
         memberCount={4}
+        attendees={attendees}
       />
     </>
   );

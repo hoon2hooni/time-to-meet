@@ -1,15 +1,21 @@
 import { Days, Pagination, Times } from "@components/timetables";
 import styled from "@emotion/styled";
+import type { Attendees } from "@eventsTypes";
 import { useState } from "react";
 import { FC } from "react";
-
 type Props = {
   startDate: Date;
   endDate: Date;
   memberCount: number;
+  attendees: Attendees;
 };
 
-const Timetable: FC<Props> = ({ startDate, endDate, memberCount }) => {
+const Timetable: FC<Props> = ({
+  startDate,
+  endDate,
+  memberCount,
+  attendees,
+}) => {
   const [pageIndex, setPageIndex] = useState(0);
 
   const handleClickPageUp = () => {
@@ -36,6 +42,7 @@ const Timetable: FC<Props> = ({ startDate, endDate, memberCount }) => {
           startDate={startDate}
           endDate={endDate}
           memberCount={memberCount}
+          attendees={attendees}
         />
       </Wrapper>
     </>

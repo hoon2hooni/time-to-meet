@@ -1,16 +1,21 @@
 import { ToggleButton } from "@components/icons";
 import styled from "@emotion/styled";
+import { Attendees } from "@eventsTypes";
 import { secondsToDate } from "@lib/days";
-import { useState } from "react";
+import { FC, useState } from "react";
 
 import data from "../../data.schema.json";
+type ComponentProps = {
+  eventName: string;
+  attendees: Attendees;
+};
 
-const TimetableInfo = () => {
+const TimetableInfo: FC<ComponentProps> = ({ eventName, attendees }) => {
   const [isVisible, setIsVisible] = useState(false);
   const currentAttendee = "사자";
   const isCurrentUser = (name: string) => name === currentAttendee;
   const dateToAttendees: Record<string, string[]> = {};
-  data.attendees.forEach(({ name, availableDates }) => {
+  attendees.forEach(({ name, availableDates }) => {
     availableDates.forEach((availableDate) => {
       const date = secondsToDate(availableDate.seconds).toString();
       if (dateToAttendees[date]) {
@@ -27,7 +32,7 @@ const TimetableInfo = () => {
 
   return (
     <CalendarInfo>
-      <AttendeeHeader>{data.name} 참여자</AttendeeHeader>
+      <AttendeeHeader>{eventName} 참여자</AttendeeHeader>
       <Attendee>
         {data.attendees.map(({ name }) => (
           <Attender key={name} isCurrentUser={isCurrentUser(name)}>

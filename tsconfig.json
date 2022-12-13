@@ -24,8 +24,8 @@
       "@lib/*": ["lib/*"],
       "@api/*": ["lib/api/*"],
       "@hooks/*": ["lib/hooks/*"],
-      "@types": ["types"],
-      "@types/*": ["types/*"],
+      "@eventsTypes": ["types/events"],
+      "@customTypes": ["types"],
       "@firebase/*": ["firebase/*"]
     }
   },
