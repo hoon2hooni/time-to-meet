@@ -1,30 +1,67 @@
 import { Arrow } from "@components/icons";
 import styled from "@emotion/styled";
+import { addDateWithDays, getDayOfWeek, getDiffDays } from "@lib/days";
 import { FC } from "react";
 
-type Props = {
+type ComponentProps = {
   startDate: Date;
   endDate: Date;
+  pageIndex: number;
+  onClickPageUp: () => void;
+  onClickPageDown: () => void;
 };
 
-const Pagination: FC<Props> = ({ startDate, endDate }) => {
-  console.log(startDate, endDate);
+type ArrowProps = {
+  direction: "left" | "right";
+  isShown: boolean;
+};
+
+const Pagination: FC<ComponentProps> = ({
+  startDate,
+  endDate,
+  pageIndex,
+  onClickPageDown,
+  onClickPageUp,
+}) => {
+  const diffDays = getDiffDays(startDate, endDate);
+  const firstPageIndex = 0;
+  const lastPageIndex = Math.floor(diffDays / 7);
+
+  const isFirstPage = pageIndex !== firstPageIndex;
+  const isLastPage = pageIndex !== lastPageIndex;
+
+  const currentStartDate = addDateWithDays(startDate, pageIndex * 7);
+
   return (
-    <CurrentDay>
-      <div style={{ transform: "rotate(-180deg)" }}>
+    <Container>
+      <ArrowWrapper
+        isShown={isFirstPage}
+        direction={"left"}
+        onClick={onClickPageDown}
+      >
         <Arrow />
-      </div>
-      15일 월요일
-      <div>
+      </ArrowWrapper>
+      {currentStartDate.getDate()}일 {getDayOfWeek(currentStartDate)}요일
+      <ArrowWrapper
+        isShown={isLastPage}
+        direction={"right"}
+        onClick={onClickPageUp}
+      >
         <Arrow />
-      </div>
-    </CurrentDay>
+      </ArrowWrapper>
+    </Container>
   );
 };
 
 export default Pagination;
 
-const CurrentDay = styled.div`
+const ArrowWrapper = styled.div<ArrowProps>`
+  visibility: ${(props) => (props.isShown ? "visible" : "hidden")};
+  transform: ${(props) =>
+    props.direction === "left" ? "rotate(-180deg)" : ""};
+`;
+
+const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;

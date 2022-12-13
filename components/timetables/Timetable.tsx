@@ -15,7 +15,7 @@ const Timetable: FC<Props> = ({ startDate, endDate }) => {
   const dayTimeArray = new Array(7).fill(
     new Array(24 - 8).fill(0).map((_, i) => i + 8)
   ) as Times[];
-  
+
   const timeObj: Record<string, number> = {};
   data.attendees.forEach(({ availableDates }) => {
     availableDates.forEach((time) => {
@@ -29,13 +29,28 @@ const Timetable: FC<Props> = ({ startDate, endDate }) => {
   }
 
   const [pageIndex, setPageIndex] = useState(0);
+
+  const handleClickPageUp = () => {
+    setPageIndex((index) => index + 1);
+  };
+
+  const handleClickPageDown = () => {
+    setPageIndex((index) => index - 1);
+  };
+
   const startDay = new Date(data.startDate).getDate();
   // const endDay = new Date(data.endDate).getDate();
   const startDayOfWeek = new Date(data.startDate).getDay();
 
   return (
     <>
-      <Pagination startDate={startDate} endDate={endDate} />
+      <Pagination
+        startDate={startDate}
+        endDate={endDate}
+        onClickPageUp={handleClickPageUp}
+        onClickPageDown={handleClickPageDown}
+        pageIndex={pageIndex}
+      />
       <Wrapper>
         <Days>
           {new Array(7).fill(0).map((_, i) => {
