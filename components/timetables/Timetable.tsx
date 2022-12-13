@@ -1,13 +1,21 @@
+import { Pagination } from "@components/timetables";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { FC } from "react";
 
 import data from "../../data.schema.json";
 type Times = number[];
 
-const Timetable = () => {
+type Props = {
+  startDate: Date;
+  endDate: Date;
+};
+
+const Timetable: FC<Props> = ({ startDate, endDate }) => {
   const dayTimeArray = new Array(7).fill(
     new Array(24 - 8).fill(0).map((_, i) => i + 8)
   ) as Times[];
+  
   const timeObj: Record<string, number> = {};
   data.attendees.forEach(({ availableDates }) => {
     availableDates.forEach((time) => {
@@ -26,53 +34,56 @@ const Timetable = () => {
   const startDayOfWeek = new Date(data.startDate).getDay();
 
   return (
-    <Wrapper>
-      <Days>
-        {new Array(7).fill(0).map((_, i) => {
-          return (
-            <EachDay key={i}>
-              <div>{i + 7 * pageIndex + 11}일</div>
-              <div>{getDay(startDayOfWeek + i)}</div>
-            </EachDay>
-          );
-        })}
-      </Days>
-      <CalendarWrapper>
-        {dayTimeArray.map((times, i) => {
-          if (i === 0) {
+    <>
+      <Pagination startDate={startDate} endDate={endDate} />
+      <Wrapper>
+        <Days>
+          {new Array(7).fill(0).map((_, i) => {
             return (
-              <EachTime key={i}>
-                {times.map((time, j) => (
-                  <EachSmallTime key={i}>
-                    <TimeUnit>{j + 8}:00</TimeUnit>
-                    {
-                      timeObj[
-                        `2022/12/${i + 7 * pageIndex + startDay}/${j + 8}`
-                      ]
-                    }
-                  </EachSmallTime>
-                ))}
-              </EachTime>
+              <EachDay key={i}>
+                <div>{i + 7 * pageIndex + 11}일</div>
+                <div>{getDay(startDayOfWeek + i)}</div>
+              </EachDay>
             );
-          } else {
-            return (
-              <EachTime key={i}>
-                {times.map((time, j) => (
-                  <EachSmallTime
-                    key={j}
-                    onClick={() => {
-                      console.log(`2022/12/${i + startDay}/${j + 8}`);
-                    }}
-                  >
-                    {timeObj[`2022/12/${i + startDay}/${j + 8}`]}
-                  </EachSmallTime>
-                ))}
-              </EachTime>
-            );
-          }
-        })}
-      </CalendarWrapper>
-    </Wrapper>
+          })}
+        </Days>
+        <CalendarWrapper>
+          {dayTimeArray.map((times, i) => {
+            if (i === 0) {
+              return (
+                <EachTime key={i}>
+                  {times.map((time, j) => (
+                    <EachSmallTime key={i}>
+                      <TimeUnit>{j + 8}:00</TimeUnit>
+                      {
+                        timeObj[
+                          `2022/12/${i + 7 * pageIndex + startDay}/${j + 8}`
+                        ]
+                      }
+                    </EachSmallTime>
+                  ))}
+                </EachTime>
+              );
+            } else {
+              return (
+                <EachTime key={i}>
+                  {times.map((time, j) => (
+                    <EachSmallTime
+                      key={j}
+                      onClick={() => {
+                        console.log(`2022/12/${i + startDay}/${j + 8}`);
+                      }}
+                    >
+                      {timeObj[`2022/12/${i + startDay}/${j + 8}`]}
+                    </EachSmallTime>
+                  ))}
+                </EachTime>
+              );
+            }
+          })}
+        </CalendarWrapper>
+      </Wrapper>
+    </>
   );
 };
 

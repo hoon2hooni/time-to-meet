@@ -1,6 +1,7 @@
 import { Pagination, Timetable, TimetableInfo } from "@components/timetables";
 import styled from "@emotion/styled";
 import { db } from "@firebase/clientApp";
+import secondsToDate from "@lib/api/secondsToDate";
 import type { NextPageWithLayout } from "@pages/_app";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { useEffect } from "react";
@@ -16,14 +17,24 @@ const New: NextPageWithLayout = () => {
     });
     return unsubscribe;
   }, []);
+
+  const startDate = {
+    seconds: 1671375600,
+  };
+  const endDate = {
+    seconds: 1672498800,
+  };
   return (
     <>
       <Container>
         <Header>가능한 시간을 입력하세요!</Header>
         <TimetableInfo />
       </Container>
-      <Pagination />
-      <Timetable />
+
+      <Timetable
+        startDate={secondsToDate(startDate.seconds)}
+        endDate={secondsToDate(endDate.seconds)}
+      />
     </>
   );
 };

@@ -1,7 +1,14 @@
 import { Arrow } from "@components/icons";
 import styled from "@emotion/styled";
+import { FC } from "react";
 
-const Pagination = () => {
+type Props = {
+  startDate: Date;
+  endDate: Date;
+};
+
+const Pagination: FC<Props> = ({ startDate, endDate }) => {
+  console.log(startDate, endDate);
   return (
     <CurrentDay>
       <div style={{ transform: "rotate(-180deg)" }}>
