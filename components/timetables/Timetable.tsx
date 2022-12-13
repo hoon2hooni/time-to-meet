@@ -1,4 +1,4 @@
-import { Pagination } from "@components/timetables";
+import { Days, Pagination } from "@components/timetables";
 import styled from "@emotion/styled";
 import { useState } from "react";
 import { FC } from "react";
@@ -22,11 +22,6 @@ const Timetable: FC<Props> = ({ startDate, endDate }) => {
       timeObj[time] = (timeObj[time] ?? 0) + 1;
     });
   });
-
-  function getDay(d: number) {
-    const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
-    return dayNames[d % 7];
-  }
 
   const [pageIndex, setPageIndex] = useState(0);
 
@@ -52,16 +47,7 @@ const Timetable: FC<Props> = ({ startDate, endDate }) => {
         pageIndex={pageIndex}
       />
       <Wrapper>
-        <Days>
-          {new Array(7).fill(0).map((_, i) => {
-            return (
-              <EachDay key={i}>
-                <div>{i + 7 * pageIndex + 11}일</div>
-                <div>{getDay(startDayOfWeek + i)}</div>
-              </EachDay>
-            );
-          })}
-        </Days>
+        <Days startDate={startDate} pageIndex={pageIndex} />
         <CalendarWrapper>
           {dayTimeArray.map((times, i) => {
             if (i === 0) {
@@ -111,25 +97,6 @@ const Wrapper = styled.div`
   padding: 1rem 4rem 2rem 4rem;
   margin-top: 2rem;
   background-color: ${(props) => props.theme.colors.secondary};
-`;
-
-const Days = styled.div`
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.3rem;
-  width: 100%;
-  margin-bottom: 1rem;
-`;
-
-const EachDay = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.2rem;
-  gap: 0.3rem;
-  height: 5.2rem;
-  background-color: ${(props) => props.theme.colors.white};
 `;
 
 const CalendarWrapper = styled.div`
