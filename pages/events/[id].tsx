@@ -1,4 +1,4 @@
-import { Pagination, Timetable, TimetableInfo } from "@components/timetables";
+import { Timetable, TimetableInfo } from "@components/timetables";
 import styled from "@emotion/styled";
 import { db } from "@firebase/clientApp";
 import { secondsToDate } from "@lib/days";
@@ -6,6 +6,7 @@ import type { NextPageWithLayout } from "@pages/_app";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { useEffect } from "react";
 
+import data from "../../data.schema.json";
 const New: NextPageWithLayout = () => {
   useEffect(() => {
     const collectionRef = collection(db, "events");
@@ -18,12 +19,8 @@ const New: NextPageWithLayout = () => {
     return unsubscribe;
   }, []);
 
-  const startDate = {
-    seconds: 1671375600,
-  };
-  const endDate = {
-    seconds: 1671634800,
-  };
+  const startDate = data.startDate;
+  const endDate = data.endDate;
   return (
     <>
       <Container>
@@ -34,6 +31,7 @@ const New: NextPageWithLayout = () => {
       <Timetable
         startDate={secondsToDate(startDate.seconds)}
         endDate={secondsToDate(endDate.seconds)}
+        memberCount={4}
       />
     </>
   );

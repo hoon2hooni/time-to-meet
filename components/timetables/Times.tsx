@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { addDateWithDays } from "@lib/days";
+import { addDateWithDays, secondsToDate } from "@lib/days";
 import { FC } from "react";
 
 import data from "../../data.schema.json";
@@ -9,14 +9,29 @@ type ComponentProps = {
   startDate: Date;
   endDate: Date;
   pageIndex: number;
+  memberCount: number;
 };
 
-const Times: FC<ComponentProps> = ({ pageIndex, startDate, endDate }) => {
-  const timeObj: Record<string, number> = {};
+type EachRowTimeProps = {
+  memberCount: number;
+  currentMemberCount?: number;
+};
 
-  data.attendees.forEach(({ availableDates }) => {
-    availableDates.forEach((time) => {
-      timeObj[time] = (timeObj[time] ?? 0) + 1;
+const Times: FC<ComponentProps> = ({
+  pageIndex,
+  startDate,
+  endDate,
+  memberCount,
+}) => {
+  const dateToAttendees: Record<string, string[]> = {};
+  data.attendees.forEach(({ name, availableDates }) => {
+    availableDates.forEach((availableDate) => {
+      const date = secondsToDate(availableDate.seconds).toString();
+      if (dateToAttendees[date]) {
+        dateToAttendees[date].push(name);
+      } else {
+        dateToAttendees[date] = [name];
+      }
     });
   });
 
@@ -27,32 +42,43 @@ const Times: FC<ComponentProps> = ({ pageIndex, startDate, endDate }) => {
     new Array(END_TIME - START_TIME).fill(0).map((_, i) => i + 8)
   ) as Times[];
 
-  const startDay = startDate.getDate();
-  const endDay = endDate.getDate();
-
   const isInRange = (i: number) => {
     return (
       endDate.getTime() >=
       addDateWithDays(startDate, i + pageIndex * 7).getTime()
     );
   };
-
   return (
     <Container>
-      {dayTimeArray.map((times, i) => {
-        if (isInRange(i)) {
+      {dayTimeArray.map((hours, dayIndex) => {
+        if (isInRange(dayIndex)) {
           return (
-            <AvailableDate key={i}>
-              {times.map((time, j) => (
-                <EachRowTime key={i}>
-                  {i === 0 && <TimeUnit>{j + 8}:00</TimeUnit>}
-                  {timeObj[`2022/12/${i + 7 * pageIndex + startDay}/${j + 8}`]}
-                </EachRowTime>
-              ))}
+            <AvailableDate key={dayIndex}>
+              {hours.map((hour) => {
+                const currentMemberCount =
+                  dateToAttendees[
+                    addDateWithDays(
+                      startDate,
+                      dayIndex + pageIndex * 7,
+                      hour
+                    ).toString()
+                  ]?.length;
+
+                return (
+                  <EachRowTime
+                    key={hour}
+                    memberCount={memberCount}
+                    currentMemberCount={currentMemberCount}
+                  >
+                    {dayIndex === 0 && <TimeUnit>{hour}:00</TimeUnit>}
+                    {currentMemberCount}
+                  </EachRowTime>
+                );
+              })}
             </AvailableDate>
           );
         }
-        return <NotAvailableDate key={i} />;
+        return <NotAvailableDate key={dayIndex} />;
       })}
     </Container>
   );
@@ -82,18 +108,29 @@ const TimeUnit = styled.div`
   position: absolute;
   top: -0.5rem;
   left: -3rem;
-
   font-size: 0.5rem;
   color: #585858;
 `;
 
-const EachRowTime = styled.div`
+const EachRowTime = styled.div<EachRowTimeProps>`
   position: relative;
   height: 100%;
   background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${(props) => props.theme.colors.primary};
+  color: ${(props) =>
+    props.currentMemberCount
+      ? props.theme.colors.white
+      : props.theme.colors.primary};
   font-size: 1.5rem;
+  background-color: ${(props) => {
+    if (!props.currentMemberCount) {
+      return props.theme.colors.white;
+    }
+    if (props.currentMemberCount < props.memberCount) {
+      return props.theme.colors.title;
+    }
+    return "green";
+  }};
 `;

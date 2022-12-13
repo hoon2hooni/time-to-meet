@@ -6,9 +6,10 @@ import { FC } from "react";
 type Props = {
   startDate: Date;
   endDate: Date;
+  memberCount: number;
 };
 
-const Timetable: FC<Props> = ({ startDate, endDate }) => {
+const Timetable: FC<Props> = ({ startDate, endDate, memberCount }) => {
   const [pageIndex, setPageIndex] = useState(0);
 
   const handleClickPageUp = () => {
@@ -30,7 +31,12 @@ const Timetable: FC<Props> = ({ startDate, endDate }) => {
       />
       <Wrapper>
         <Days startDate={startDate} pageIndex={pageIndex} />
-        <Times pageIndex={pageIndex} startDate={startDate} endDate={endDate} />
+        <Times
+          pageIndex={pageIndex}
+          startDate={startDate}
+          endDate={endDate}
+          memberCount={memberCount}
+        />
       </Wrapper>
     </>
   );

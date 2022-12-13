@@ -14,6 +14,8 @@ export const secondsToDate = (seconds: number) => {
   return new Date(seconds * 1000);
 };
 
-export const addDateWithDays = (date: Date, days: number) => {
-  return new Date(date.getTime() + days * 1000 * 60 * 60 * 24);
+export const addDateWithDays = (date: Date, days: number, hours = 0) => {
+  return new Date(
+    date.getTime() + days * 1000 * 60 * 60 * 24 + hours * 1000 * 60 * 60
+  );
 };
