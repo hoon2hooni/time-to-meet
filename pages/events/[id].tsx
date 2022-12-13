@@ -22,7 +22,7 @@ const New: NextPageWithLayout = () => {
     seconds: 1671375600,
   };
   const endDate = {
-    seconds: 1672498800,
+    seconds: 1671634800,
   };
   return (
     <>

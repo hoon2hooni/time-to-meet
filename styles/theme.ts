@@ -4,8 +4,9 @@ const theme: Theme = {
   colors: {
     title: "#EDAC00",
     primary: "#000000",
-    secondary: "#F5F5F5",
+    secondary: "#ECECEC",
     white: "#FFFFFF",
+    block: "#B8B8B8",
   },
 };
 
