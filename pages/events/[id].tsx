@@ -1,7 +1,7 @@
 import { Timetable, TimetableInfo } from "@components/timetables";
 import styled from "@emotion/styled";
-import type { Attendees, EventsDocs } from "@eventsTypes";
-import { createDocs } from "@firebase/clientApp";
+import type { Attendees } from "@eventsTypes";
+import { eventsDocs } from "@firebase/clientApp";
 import { secondsToDate } from "@lib/days";
 import type { NextPageWithLayout } from "@pages/_app";
 import { onSnapshot } from "firebase/firestore";
@@ -16,19 +16,18 @@ const New: NextPageWithLayout = () => {
   const [startDate, setStartDate] = useState<TimeStamp>({ seconds: 0 });
   const [endDate, setEndDate] = useState<TimeStamp>({ seconds: 0 });
   const [attendees, setAttendees] = useState<Attendees>([]);
+  const currentAttendee = "사자";
   useEffect(() => {
-    const docRef = createDocs<EventsDocs>(
-      "events",
-      process.env.NEXT_PUBLIC_TEST_DOC_ID || ""
-    );
-    const unsubscribe = onSnapshot(docRef, (doc) => {
-      if (doc.data()) {
-        setEventName(doc.data()?.name || "");
-        setEndDate(doc.data()?.endDate || { seconds: 0 });
-        setStartDate(doc.data()?.startDate || { seconds: 0 });
-        setAttendees(doc.data()?.attendees || []);
+    const eventRef = eventsDocs(process.env.NEXT_PUBLIC_TEST_DOC_ID || "");
+    const unsubscribe = onSnapshot(eventRef, (eventDoc) => {
+      const event = eventDoc?.data();
+      if (!event) {
         return;
       }
+      setEventName(event.name);
+      setEndDate(event.endDate);
+      setStartDate(event.startDate);
+      setAttendees(event.attendees);
     });
     return unsubscribe;
   }, []);
@@ -39,7 +38,6 @@ const New: NextPageWithLayout = () => {
         <Header>가능한 시간을 입력하세요!</Header>
         <TimetableInfo eventName={eventName} attendees={attendees} />
       </Container>
-
       <Timetable
         startDate={secondsToDate(startDate.seconds)}
         endDate={secondsToDate(endDate.seconds)}

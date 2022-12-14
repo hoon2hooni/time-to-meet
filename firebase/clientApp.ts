@@ -1,10 +1,13 @@
 // Import the functions you need from the SDKs you need
+import { Events } from "@eventsTypes";
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import {
   doc,
   DocumentData,
   DocumentReference,
+  Firestore,
+  FirestoreDataConverter,
   getFirestore,
 } from "firebase/firestore";
 
@@ -29,8 +32,16 @@ if (app.name && typeof window !== "undefined") {
   const analytics = getAnalytics(app);
 }
 const db = getFirestore(app);
-const createDocs = <T = DocumentData>(docName: string, id: string) => {
-  return doc(db, docName, id) as DocumentReference<T>;
+
+const eventConverter: FirestoreDataConverter<Events> = {
+  toFirestore: (data: Events) => data,
+  fromFirestore: (snapshot) => {
+    return snapshot.data() as Events;
+  },
 };
 
-export { createDocs, db };
+const eventsDocs = (id: string) => {
+  return doc(db, "events", id).withConverter(eventConverter);
+};
+
+export { db, eventsDocs };

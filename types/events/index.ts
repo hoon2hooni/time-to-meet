@@ -1,4 +1,4 @@
-export type EventsDocs = {
+export type Events = {
   id: string;
   name: string;
   startDate: {
