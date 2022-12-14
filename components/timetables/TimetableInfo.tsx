@@ -4,15 +4,18 @@ import { Attendees } from "@eventsTypes";
 import { secondsToDate } from "@lib/days";
 import { FC, useState } from "react";
 
-import data from "../../data.schema.json";
 type ComponentProps = {
   eventName: string;
   attendees: Attendees;
+  currentAttendee: string;
 };
 
-const TimetableInfo: FC<ComponentProps> = ({ eventName, attendees }) => {
+const TimetableInfo: FC<ComponentProps> = ({
+  eventName,
+  attendees,
+  currentAttendee,
+}) => {
   const [isVisible, setIsVisible] = useState(false);
-  const currentAttendee = "사자";
   const isCurrentUser = (name: string) => name === currentAttendee;
   const dateToAttendees: Record<string, string[]> = {};
   attendees.forEach(({ name, availableDates }) => {
@@ -34,7 +37,7 @@ const TimetableInfo: FC<ComponentProps> = ({ eventName, attendees }) => {
     <CalendarInfo>
       <AttendeeHeader>{eventName} 참여자</AttendeeHeader>
       <Attendee>
-        {data.attendees.map(({ name }) => (
+        {attendees.map(({ name }) => (
           <Attender key={name} isCurrentUser={isCurrentUser(name)}>
             {name}
             {isCurrentUser(name) && "(나)"}

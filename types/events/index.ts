@@ -1,20 +1,18 @@
+import { Timestamp } from "firebase/firestore";
+
 export type Events = {
   id: string;
   name: string;
-  startDate: {
-    seconds: number;
-  };
-  endDate: {
-    seconds: number;
-  };
+  startDate: Timestamp;
+  endDate: Timestamp;
   attendees: Attendees;
 };
 
-export type Attendees = {
+export type Attendees = Attendee[];
+
+export type Attendee = {
   name: string;
   availableDates: AvailableDates;
-}[];
+};
 
-export type AvailableDates = {
-  seconds: number;
-}[];
+export type AvailableDates = Timestamp[];

@@ -8,6 +8,7 @@ type Props = {
   endDate: Date;
   memberCount: number;
   attendees: Attendees;
+  currentAttendee: string;
 };
 
 const Timetable: FC<Props> = ({
@@ -15,6 +16,7 @@ const Timetable: FC<Props> = ({
   endDate,
   memberCount,
   attendees,
+  currentAttendee,
 }) => {
   const [pageIndex, setPageIndex] = useState(0);
 
@@ -43,6 +45,7 @@ const Timetable: FC<Props> = ({
           endDate={endDate}
           memberCount={memberCount}
           attendees={attendees}
+          currentAttendee={currentAttendee}
         />
       </Wrapper>
     </>

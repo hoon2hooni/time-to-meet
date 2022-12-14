@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { Events } from "@eventsTypes";
+import { Attendees, Events } from "@eventsTypes";
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import {

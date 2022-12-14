@@ -2,19 +2,14 @@ import { Timetable, TimetableInfo } from "@components/timetables";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
 import { eventsDocs } from "@firebase/clientApp";
-import { secondsToDate } from "@lib/days";
 import type { NextPageWithLayout } from "@pages/_app";
-import { onSnapshot } from "firebase/firestore";
+import { onSnapshot, Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
-
-type TimeStamp = {
-  seconds: number;
-};
 
 const New: NextPageWithLayout = () => {
   const [eventName, setEventName] = useState("");
-  const [startDate, setStartDate] = useState<TimeStamp>({ seconds: 0 });
-  const [endDate, setEndDate] = useState<TimeStamp>({ seconds: 0 });
+  const [startDate, setStartDate] = useState<Timestamp>();
+  const [endDate, setEndDate] = useState<Timestamp>();
   const [attendees, setAttendees] = useState<Attendees>([]);
   const currentAttendee = "사자";
   useEffect(() => {
@@ -24,6 +19,7 @@ const New: NextPageWithLayout = () => {
       if (!event) {
         return;
       }
+
       setEventName(event.name);
       setEndDate(event.endDate);
       setStartDate(event.startDate);
@@ -36,13 +32,18 @@ const New: NextPageWithLayout = () => {
     <>
       <Container>
         <Header>가능한 시간을 입력하세요!</Header>
-        <TimetableInfo eventName={eventName} attendees={attendees} />
+        <TimetableInfo
+          eventName={eventName}
+          attendees={attendees}
+          currentAttendee={currentAttendee}
+        />
       </Container>
       <Timetable
-        startDate={secondsToDate(startDate.seconds)}
-        endDate={secondsToDate(endDate.seconds)}
+        startDate={startDate?.toDate() || new Date()}
+        endDate={endDate?.toDate() || new Date()}
         memberCount={4}
         attendees={attendees}
+        currentAttendee={currentAttendee}
       />
     </>
   );

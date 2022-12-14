@@ -1,8 +1,10 @@
 import styled from "@emotion/styled";
 import { Attendees } from "@eventsTypes";
-import { addDateWithDays, secondsToDate } from "@lib/days";
+import update from "@firebase/attendeeGenerator";
+import { eventsDocs } from "@firebase/clientApp";
+import { addDateWithDays } from "@lib/days";
+import { updateDoc } from "firebase/firestore";
 import { FC } from "react";
-
 type Times = number[];
 type ComponentProps = {
   startDate: Date;
@@ -10,6 +12,7 @@ type ComponentProps = {
   pageIndex: number;
   memberCount: number;
   attendees: Attendees;
+  currentAttendee: string;
 };
 
 type EachRowTimeProps = {
@@ -23,11 +26,14 @@ const Times: FC<ComponentProps> = ({
   endDate,
   memberCount,
   attendees,
+  currentAttendee,
 }) => {
   const dateToAttendees: Record<string, string[]> = {};
+  const eventRef = eventsDocs(process.env.NEXT_PUBLIC_TEST_DOC_ID || "");
+
   attendees.forEach(({ name, availableDates }) => {
     availableDates.forEach((availableDate) => {
-      const date = secondsToDate(availableDate.seconds).toString();
+      const date = availableDate.toDate().toString();
       if (dateToAttendees[date]) {
         dateToAttendees[date].push(name);
       } else {
@@ -35,6 +41,15 @@ const Times: FC<ComponentProps> = ({
       }
     });
   });
+
+  const handleClick = (i: number, hour: number) => {
+    const data = update(
+      attendees,
+      addDateWithDays(startDate, i + pageIndex * 7, hour),
+      currentAttendee
+    );
+    updateDoc(eventRef, { attendees: data });
+  };
 
   const END_TIME = 24;
   const START_TIME = 8;
@@ -70,6 +85,7 @@ const Times: FC<ComponentProps> = ({
                     key={hour}
                     memberCount={memberCount}
                     currentMemberCount={currentMemberCount}
+                    onClick={() => handleClick(dayIndex, hour)}
                   >
                     {dayIndex === 0 && <TimeUnit>{hour}:00</TimeUnit>}
                     {currentMemberCount}
@@ -98,7 +114,6 @@ const AvailableDate = styled.div`
   display: grid;
   grid-template-rows: repeat(16, 1fr);
   gap: 0.2rem;
-  height: 34rem;
 `;
 
 const NotAvailableDate = styled.div`
@@ -120,6 +135,7 @@ const EachRowTime = styled.div<EachRowTimeProps>`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 3rem;
   color: ${(props) =>
     props.currentMemberCount
       ? props.theme.colors.white
