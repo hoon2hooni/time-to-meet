@@ -5,6 +5,7 @@
 import type { Attendees } from "@eventsTypes";
 import { Timestamp } from "firebase/firestore";
 
+//TODO refactoring, 테스트 코드 생성
 const update = (attendees: Attendees, time: Date, name: string): Attendees => {
   const index = attendees.findIndex((attendee) => attendee.name === name);
 
