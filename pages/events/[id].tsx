@@ -1,15 +1,36 @@
-import { Timetable, TimetableInfo } from "@components/timetables";
+import Modal from "@components/Modal";
+import {
+  EntranceInput,
+  Timetable,
+  TimetableInfo,
+} from "@components/timetables";
 import styled from "@emotion/styled";
 import useEventsStore from "@hooks/useEventsStore";
 import type { NextPageWithLayout } from "@pages/_app";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
-const New: NextPageWithLayout = () => {
+const Events: NextPageWithLayout = () => {
+  const [currentAttendee, setCurrentAttendee] = useState<string>("사자");
+  const [isFirstEntrance, setIsFirstEntrance] = useState(true);
   const router = useRouter();
-  const currentAttendee = "사자";
   const id = router?.query?.id as string;
-  const { eventName, startDate, endDate, attendees, status } =
+  const { eventName, startDate, endDate, attendees, status, memberCount } =
     useEventsStore(id);
+
+  const handleClickEntrance = (name: string) => {
+    if (name === "") return;
+    const isExist =
+      attendees.findIndex((attendee) => attendee.name === name) !== -1;
+
+    if (memberCount <= attendees.length && !isExist) {
+      return;
+    }
+
+    setCurrentAttendee(name);
+    setIsFirstEntrance(false);
+    return;
+  };
 
   if (status === "idle" || status === "loading") {
     return <div>로딩중...</div>;
@@ -21,6 +42,11 @@ const New: NextPageWithLayout = () => {
 
   return (
     <>
+      {isFirstEntrance && (
+        <Modal>
+          <EntranceInput onClickEntrance={handleClickEntrance} />
+        </Modal>
+      )}
       <Container>
         <Header>가능한 시간을 입력하세요!</Header>
         <TimetableInfo
@@ -40,7 +66,7 @@ const New: NextPageWithLayout = () => {
   );
 };
 
-export default New;
+export default Events;
 
 const Container = styled.div`
   padding: 2rem 4rem;

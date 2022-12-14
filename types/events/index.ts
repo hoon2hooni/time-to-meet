@@ -6,6 +6,7 @@ export type Events = {
   startDate: Timestamp;
   endDate: Timestamp;
   attendees: Attendees;
+  memberCount: number;
 };
 
 export type Attendees = Attendee[];
