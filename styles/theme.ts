@@ -7,6 +7,7 @@ const theme: Theme = {
     secondary: "#ECECEC",
     white: "#FFFFFF",
     block: "#B8B8B8",
+    error: "#FF0000",
   },
 };
 

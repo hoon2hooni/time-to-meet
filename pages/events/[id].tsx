@@ -19,17 +19,19 @@ const Events: NextPageWithLayout = () => {
     useEventsStore(id);
 
   const handleClickEntrance = (name: string) => {
-    if (name === "") return;
+    if (name === "") {
+      return "이름을 입력해주세요";
+    }
     const isExist =
       attendees.findIndex((attendee) => attendee.name === name) !== -1;
 
     if (memberCount <= attendees.length && !isExist) {
-      return;
+      return "인원이 초과되었습니다";
     }
 
     setCurrentAttendee(name);
     setIsFirstEntrance(false);
-    return;
+    return "";
   };
 
   if (status === "idle" || status === "loading") {

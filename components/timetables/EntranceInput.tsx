@@ -1,30 +1,35 @@
 import styled from "@emotion/styled";
+import useTemporaryError from "@lib/hooks/useTemporaryError";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 
 type ComponentProps = {
-  onClickEntrance: (name: string) => void;
+  onClickEntrance: (name: string) => string;
 };
 
 const EntranceInput: FC<ComponentProps> = ({ onClickEntrance }) => {
   const { register, watch } = useForm();
-
+  const { temporaryError, setTemporaryError } = useTemporaryError(2000);
   return (
     <>
-      <div>이름을 입력하고 캘린더에 입장하세요</div>
+      <Text>이름을 입력하고 캘린더에 입장하세요</Text>
       <InputBox
         placeholder="이름을 입력해주세요."
         {...register("name")}
-        autoComplete="false"
+        autoComplete="off"
       />
       <Button
         onClick={() => {
           const name = watch("name");
-          onClickEntrance(name);
+          const errorMessage = onClickEntrance(name);
+          if (errorMessage) {
+            setTemporaryError(errorMessage);
+          }
         }}
       >
         <Text>입장하기</Text>
       </Button>
+      {temporaryError && <ErrorText>{temporaryError}</ErrorText>}
     </>
   );
 };
@@ -47,6 +52,10 @@ const Button = styled.button`
 const Text = styled.span`
   font-weight: 700;
   color: ${(props) => props.theme.colors.primary};
+`;
+
+const ErrorText = styled(Text)`
+  color: ${(props) => props.theme.colors.error};
 `;
 
 const InputBox = styled.input`
