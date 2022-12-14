@@ -1,51 +1,15 @@
 import { Timetable, TimetableInfo } from "@components/timetables";
 import styled from "@emotion/styled";
-import type { Attendees } from "@eventsTypes";
-import { eventsDocs } from "@firebase/clientApp";
+import useEventsStore from "@hooks/useEventsStore";
 import type { NextPageWithLayout } from "@pages/_app";
-import { onSnapshot, Timestamp } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-type Status = "loading" | "success" | "error" | "idle";
 
 const New: NextPageWithLayout = () => {
   const router = useRouter();
-  const [eventName, setEventName] = useState("");
-  const [startDate, setStartDate] = useState<Timestamp>();
-  const [endDate, setEndDate] = useState<Timestamp>();
-  const [attendees, setAttendees] = useState<Attendees>([]);
   const currentAttendee = "사자";
-  const id = router.query.id as string;
-  const [status, setStatus] = useState<Status>("idle");
-  useEffect(() => {
-    if (!id) {
-      return;
-    }
-    setStatus("loading");
-    const eventRef = eventsDocs(id || "");
-    const unsubscribe = onSnapshot(
-      eventRef,
-      (eventDoc) => {
-        const event = eventDoc?.data();
-        if (!event) {
-          setStatus("error");
-          return;
-        }
-        setEventName(event.name);
-        setEndDate(event.endDate);
-        setStartDate(event.startDate);
-        setAttendees(event.attendees);
-        setStatus("success");
-      },
-      (error) => {
-        console.error(error);
-        setStatus("error");
-      }
-    );
-    return () => {
-      unsubscribe();
-    };
-  }, [id]);
+  const id = router?.query?.id as string;
+  const { eventName, startDate, endDate, attendees, status } =
+    useEventsStore(id);
 
   if (status === "idle" || status === "loading") {
     return <div>로딩중...</div>;
