@@ -28,10 +28,13 @@ const TimetableInfo: FC<ComponentProps> = ({
       }
     });
   });
-
-  const sortedByAttendeesCounts = Object.keys(dateToAttendees)
-    .sort((a, b) => dateToAttendees[b].length - dateToAttendees[a].length)
-    .slice(0, 3);
+  //todo 시간 구간 보이게 하는 것 구현
+  let featureFlag: boolean = false;
+  const sortedByAttendeesCounts = featureFlag
+    ? Object.keys(dateToAttendees)
+        .sort((a, b) => dateToAttendees[b].length - dateToAttendees[a].length)
+        .slice(0, 3)
+    : undefined;
 
   return (
     <CalendarInfo>
@@ -44,31 +47,36 @@ const TimetableInfo: FC<ComponentProps> = ({
           </Attender>
         ))}
       </Attendee>
-      <TextHeader>
-        가장 많이 선택된 시간
-        <div
-          onClick={() => setIsVisible((s) => !s)}
-          style={{ transform: isVisible ? "rotate(-180deg)" : "none" }}
-        >
-          <ToggleButton />
-        </div>
-      </TextHeader>
-      {isVisible &&
-        sortedByAttendeesCounts.map((k, i) => {
-          const date = new Date(k);
-          const month = date.getMonth() + 1;
-          const day = date.getDate();
-          const time = date.getHours();
-          return (
-            <EachResult key={i}>
-              <Rank>{i + 1}위</Rank>
-              <div>{`${month}월 ${day}일 ${time}:00시~${
-                Number(time) + 1
-              }:00시`}</div>
-              <Count>{dateToAttendees[k].length}명</Count>
-            </EachResult>
-          );
-        })}
+      {featureFlag && (
+        <>
+          <TextHeader>
+            가장 많이 선택된 시간
+            <div
+              onClick={() => setIsVisible((s) => !s)}
+              style={{ transform: isVisible ? "rotate(-180deg)" : "none" }}
+            >
+              <ToggleButton />
+            </div>
+          </TextHeader>
+          {isVisible &&
+            sortedByAttendeesCounts &&
+            sortedByAttendeesCounts.map((k, i) => {
+              const date = new Date(k);
+              const month = date.getMonth() + 1;
+              const day = date.getDate();
+              const time = date.getHours();
+              return (
+                <EachResult key={i}>
+                  <Rank>{i + 1}위</Rank>
+                  <div>{`${month}월 ${day}일 ${time}:00시~${
+                    Number(time) + 1
+                  }:00시`}</div>
+                  <Count>{dateToAttendees[k].length}명</Count>
+                </EachResult>
+              );
+            })}
+        </>
+      )}
     </CalendarInfo>
   );
 };
