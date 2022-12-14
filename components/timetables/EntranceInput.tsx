@@ -18,6 +18,7 @@ const EntranceInput: FC<ComponentProps> = ({ onClickEntrance }) => {
         {...register("name")}
         autoComplete="off"
       />
+      {temporaryError && <ErrorText>{temporaryError}</ErrorText>}
       <Button
         onClick={() => {
           const name = watch("name");
@@ -29,7 +30,6 @@ const EntranceInput: FC<ComponentProps> = ({ onClickEntrance }) => {
       >
         <Text>입장하기</Text>
       </Button>
-      {temporaryError && <ErrorText>{temporaryError}</ErrorText>}
     </>
   );
 };
@@ -37,7 +37,7 @@ const EntranceInput: FC<ComponentProps> = ({ onClickEntrance }) => {
 export default EntranceInput;
 
 const Button = styled.button`
-  background-color: ${(props) => props.theme.colors.title};
+  background-color: ${(props) => props.theme.colors.yellow};
   font-size: 1.6rem;
   font-weight: 700;
   border-radius: 0.5rem;

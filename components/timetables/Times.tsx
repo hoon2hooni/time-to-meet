@@ -18,6 +18,7 @@ type ComponentProps = {
 type EachRowTimeProps = {
   memberCount: number;
   currentMemberCount?: number;
+  hasCurrentMember: boolean;
 };
 
 const Times: FC<ComponentProps> = ({
@@ -64,6 +65,7 @@ const Times: FC<ComponentProps> = ({
       addDateWithDays(startDate, i + pageIndex * 7).getTime()
     );
   };
+
   return (
     <Container>
       {dayTimeArray.map((hours, dayIndex) => {
@@ -85,6 +87,15 @@ const Times: FC<ComponentProps> = ({
                     key={hour}
                     memberCount={memberCount}
                     currentMemberCount={currentMemberCount}
+                    hasCurrentMember={
+                      !!dateToAttendees[
+                        addDateWithDays(
+                          startDate,
+                          dayIndex + pageIndex * 7,
+                          hour
+                        ).toString()
+                      ]?.includes(currentAttendee)
+                    }
                     onClick={() => handleClick(dayIndex, hour)}
                   >
                     {dayIndex === 0 && <TimeUnit>{hour}:00</TimeUnit>}
@@ -136,18 +147,21 @@ const EachRowTime = styled.div<EachRowTimeProps>`
   justify-content: center;
   align-items: center;
   height: 3rem;
-  color: ${(props) =>
-    props.currentMemberCount
-      ? props.theme.colors.white
-      : props.theme.colors.primary};
-  font-size: 1.5rem;
-  background-color: ${(props) => {
-    if (!props.currentMemberCount) {
+  color: ${(props) => {
+    if (props.hasCurrentMember) {
       return props.theme.colors.white;
     }
-    if (props.currentMemberCount < props.memberCount) {
-      return props.theme.colors.title;
+    return props.theme.colors.primary;
+  }};
+
+  font-size: 1.5rem;
+  background-color: ${(props) => {
+    if (props.currentMemberCount === props.memberCount) {
+      return props.theme.colors.green;
     }
-    return "green";
+    if (props.hasCurrentMember) {
+      return props.theme.colors.yellow;
+    }
+    return props.theme.colors.white;
   }};
 `;

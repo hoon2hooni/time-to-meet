@@ -111,7 +111,7 @@ const Attender = styled.div<{ isCurrentUser: boolean }>`
   margin-right: 0.5rem;
   color: ${(props) =>
     props.isCurrentUser
-      ? props.theme.colors.title
+      ? props.theme.colors.yellow
       : props.theme.colors.primary};
   font-weight: ${(props) => (props.isCurrentUser ? 700 : 400)};
 `;
