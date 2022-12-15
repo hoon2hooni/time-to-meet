@@ -18,18 +18,10 @@ interface GenericInputProps
 }
 
 const GenericInput = React.forwardRef<HTMLInputElement, GenericInputProps>(
-  ({ type, sz, unit, onChange, value, ...props }, ref) => {
+  ({ type, sz, unit, ...props }, ref) => {
     return (
       <Container>
-        <InputBox
-          sz={sz}
-          type={type}
-          {...props}
-          ref={ref}
-          autoComplete="off"
-          onChange={onChange}
-          value={value}
-        />
+        <InputBox sz={sz} type={type} {...props} ref={ref} autoComplete="off" />
         {unit && <InputUnit>{unit}</InputUnit>}
       </Container>
     );

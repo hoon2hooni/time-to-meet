@@ -19,3 +19,25 @@ export const addDateWithDays = (date: Date, days: number, hours = 0) => {
     date.getTime() + days * 1000 * 60 * 60 * 24 + hours * 1000 * 60 * 60
   );
 };
+
+export const dateToPattern = (date: Date) => {
+  return date.toISOString().split("T")[0];
+};
+
+export const setMaxDate = (date: Date) => {
+  const maxDate = addDateWithDays(date, 13);
+  return dateToPattern(maxDate);
+};
+
+export const getMaxDate = (s: string) => {
+  if (s) {
+    return setMaxDate(new Date(s));
+  }
+};
+
+export const notWithinTwoWeeks = (startDate: string, endDate: string) => {
+  const TWO_WEEKS = 13 * 24 * 60 * 60 * 1000;
+  const st = new Date(startDate).getTime();
+  const et = new Date(endDate).getTime();
+  return Math.abs(et - st) > TWO_WEEKS;
+};

@@ -1,19 +1,16 @@
 export type Size = "small" | "middle" | "large";
 
-export type RoomInfo = {
-  title: string;
+export type NewEvent = {
+  name: string;
   memberCount: number;
   startDate: string;
   endDate: string;
-  startTime: string;
-  endTime: string;
-  goal: number;
 };
 
-export type RoomInfoKeys = keyof RoomInfo;
+export type NewEventFields = keyof NewEvent;
 
 export type InputProps = {
-  id: RoomInfoKeys;
+  id: NewEventFields;
   size: Size;
   unit?: string;
   type: string;

@@ -1,68 +1,22 @@
-import GenericInput from "@components/input/GenericInput";
-import InputTemplate from "@components/input/InputTemplate";
 import Layout from "@components/Layout";
-import type { RoomInfo } from "@customTypes";
+import { DateInputs, MemberCountInput, NameInput } from "@components/new";
+import type { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
-import { dateInputData, timeInputData } from "const/const";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import type { NextPageWithLayout } from "./_app";
 
 const New: NextPageWithLayout = () => {
-  const { register, handleSubmit } = useForm<RoomInfo>();
-  const onSubmit: SubmitHandler<RoomInfo> = (data) => console.log(data);
-  const featureFlag = false;
-  const dateInputs = dateInputData.map(({ id, size, unit, type }) => (
-    <GenericInput
-      key={id}
-      id={id}
-      sz={size}
-      unit={unit}
-      type={type}
-      {...register(id)}
-    />
-  ));
-
-  const timeInputs = timeInputData.map(({ id, size, unit, type }) => (
-    <GenericInput
-      key={id}
-      id={id}
-      sz={size}
-      unit={unit}
-      type={type}
-      {...register(id)}
-    />
-  ));
-
+  const { register, handleSubmit, control, setValue } = useForm<NewEvent>();
+  const onSubmit: SubmitHandler<NewEvent> = (data) => console.log(data);
   return (
     <>
       <Header>새로운 모임 생성하기</Header>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <InputTemplate label="모임 이름은 무엇인가요?">
-          <GenericInput
-            key="무야호"
-            id={"title"}
-            sz="large"
-            {...register("title")}
-          />
-        </InputTemplate>
-        <InputTemplate label="몇 명이 모이나요?">
-          <GenericInput
-            key="무야호"
-            id={"memberCount"}
-            sz="small"
-            unit="명"
-            {...register("memberCount")}
-          />
-        </InputTemplate>
-        <InputTemplate label="모임이 진행될 날짜는 언제쯤인가요? (최대 2주)">
-          {dateInputs}
-        </InputTemplate>
-        {featureFlag && (
-          <InputTemplate label="모임이 진행될 날짜는 언제쯤인가요?">
-            {timeInputs}
-          </InputTemplate>
-        )}
+        <NameInput control={control} register={register} />
+        <MemberCountInput control={control} />
+        <DateInputs control={control} setValue={setValue} register={register} />
+        {/* TODO 나중에 시간범위 설정 가능하게 할 예정 */}
         <ButtonWrapper>
           <div>
             <TextP>
