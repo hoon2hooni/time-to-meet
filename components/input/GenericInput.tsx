@@ -18,10 +18,18 @@ interface GenericInputProps
 }
 
 const GenericInput = React.forwardRef<HTMLInputElement, GenericInputProps>(
-  ({ type, sz, unit, ...props }, ref) => {
+  ({ type, sz, unit, onChange, value, ...props }, ref) => {
     return (
       <Container>
-        <InputBox sz={sz} type={type} {...props} ref={ref} autoComplete="off" />
+        <InputBox
+          sz={sz}
+          type={type}
+          {...props}
+          ref={ref}
+          autoComplete="off"
+          onChange={onChange}
+          value={value}
+        />
         {unit && <InputUnit>{unit}</InputUnit>}
       </Container>
     );
@@ -44,6 +52,16 @@ const InputBox = styled.input<InputProps>`
   padding: 0 1.6rem;
   width: ${(props) => sizeMap[props.sz]};
   font-size: 1.6rem;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
 `;
 
 const InputUnit = styled.span`
