@@ -6,15 +6,15 @@ import {
 } from "@components/timetables";
 import styled from "@emotion/styled";
 import useEventsStore from "@hooks/useEventsStore";
+import useUrlEventId from "@hooks/useUrlEventId";
 import type { NextPageWithLayout } from "@pages/_app";
-import { useRouter } from "next/router";
 import { useState } from "react";
 
 const Events: NextPageWithLayout = () => {
   const [currentAttendee, setCurrentAttendee] = useState<string>("사자");
   const [isFirstEntrance, setIsFirstEntrance] = useState(true);
-  const router = useRouter();
-  const id = router?.query?.id as string;
+
+  const id = useUrlEventId();
   const { eventName, startDate, endDate, attendees, status, memberCount } =
     useEventsStore(id);
 
@@ -28,7 +28,6 @@ const Events: NextPageWithLayout = () => {
     if (memberCount <= attendees.length && !isExist) {
       return "인원이 초과되었습니다";
     }
-
     setCurrentAttendee(name);
     setIsFirstEntrance(false);
     return "";

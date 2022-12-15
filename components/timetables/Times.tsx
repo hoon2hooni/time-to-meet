@@ -3,6 +3,7 @@ import { Attendees } from "@eventsTypes";
 import update from "@firebase/attendeeGenerator";
 import { eventsDocs } from "@firebase/clientApp";
 import { addDateWithDays } from "@lib/days";
+import useUrlEventId from "@lib/hooks/useUrlEventId";
 import { updateDoc } from "firebase/firestore";
 import { FC } from "react";
 type Times = number[];
@@ -30,7 +31,8 @@ const Times: FC<ComponentProps> = ({
   currentAttendee,
 }) => {
   const dateToAttendees: Record<string, string[]> = {};
-  const eventRef = eventsDocs(process.env.NEXT_PUBLIC_TEST_DOC_ID || "");
+  const id = useUrlEventId();
+  const eventRef = eventsDocs(id);
 
   attendees.forEach(({ name, availableDates }) => {
     availableDates.forEach((availableDate) => {
