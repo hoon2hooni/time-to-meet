@@ -1,16 +1,17 @@
 import { EmotionJSX } from "@emotion/react/types/jsx-namespace";
 import styled from "@emotion/styled";
-
+import type { ReactNode } from "react";
 interface Props {
   label: string;
   inputs?: EmotionJSX.Element[];
+  children: ReactNode;
 }
 
-export default function InputTemplate({ label, inputs }: Props) {
+export default function InputTemplate({ label, children }: Props) {
   return (
     <Container>
-      <InputLabel htmlFor={label}>{label}</InputLabel>
-      <InputWrapper>{inputs}</InputWrapper>
+      <Label htmlFor={label}>{label}</Label>
+      <InputLayout>{children}</InputLayout>
     </Container>
   );
 }
@@ -18,16 +19,17 @@ export default function InputTemplate({ label, inputs }: Props) {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 5rem;
+  margin-bottom: 4rem;
 `;
 
-const InputLabel = styled.label`
+const Label = styled.label`
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 1rem;
 `;
 
-const InputWrapper = styled.div`
+const InputLayout = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 2rem;
 `;
