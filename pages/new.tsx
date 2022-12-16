@@ -1,5 +1,6 @@
 import { Button } from "@components/common";
 import { DateInputs, MemberCountInput, NameInput } from "@components/new";
+import InfoModal from "@components/new/InfoModal";
 import type { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
 import { Events } from "@eventsTypes";
@@ -7,6 +8,7 @@ import { db } from "@firebase/clientApp";
 import { Timestamp } from "firebase/firestore";
 import { addDoc, collection } from "firebase/firestore";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import type { NextPageWithLayout } from "./_app";
@@ -23,12 +25,11 @@ const fromFormDataToEvent = (data: NewEvent): Omit<Events, "id"> => {
 };
 
 const New: NextPageWithLayout = () => {
+  const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
   const { register, handleSubmit, control, setValue } = useForm<NewEvent>();
-
-  const onSubmit: SubmitHandler<NewEvent> = async (data) => {
+  const handleSubmitData = async (data: NewEvent) => {
     const event = fromFormDataToEvent(data);
-
     try {
       const eventsRef = await addDoc(collection(db, "events"), event);
       router.push({
@@ -40,8 +41,23 @@ const New: NextPageWithLayout = () => {
     }
   };
 
+  const onSubmit: SubmitHandler<NewEvent> = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
   return (
     <Layout>
+      {modalOpen && (
+        <InfoModal
+          control={control}
+          onSubmitData={handleSubmitData}
+          onCloseModal={handleCloseModal}
+        />
+      )}
       <Header>새로운 모임 생성하기</Header>
       <form onSubmit={handleSubmit(onSubmit)}>
         <NameInput control={control} register={register} />

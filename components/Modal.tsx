@@ -21,15 +21,12 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 999;
-  padding: 40px 20px 20px;
   transition: all 0.3s ease-in-out;
   overflow: hidden;
 `;
 
 const Content = styled.div`
-  max-width: 30rem;
-  width: 70%;
-  height: 30%;
+  max-width: 49.3rem;
   display: flex;
   justify-content: center;
   align-items: center;
