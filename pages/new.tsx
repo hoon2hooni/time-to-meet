@@ -2,13 +2,52 @@ import Layout from "@components/Layout";
 import { DateInputs, MemberCountInput, NameInput } from "@components/new";
 import type { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
+import { Events } from "@eventsTypes";
+import { db } from "@firebase/clientApp";
+import { Timestamp } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
+import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import type { NextPageWithLayout } from "./_app";
 
+const fromFormDataToEvent = (data: NewEvent): Omit<Events, "id"> => {
+  const { name, memberCount, startDate, endDate } = data;
+  return {
+    name,
+    memberCount,
+    startDate: Timestamp.fromDate(new Date(startDate)),
+    endDate: Timestamp.fromDate(new Date(endDate)),
+    attendees: [],
+  };
+};
+
 const New: NextPageWithLayout = () => {
+  const router = useRouter();
   const { register, handleSubmit, control, setValue } = useForm<NewEvent>();
-  const onSubmit: SubmitHandler<NewEvent> = (data) => console.log(data);
+
+  const onSubmit: SubmitHandler<NewEvent> = async (data) => {
+    let encodedData: Record<string, string> = {};
+
+    const keys = Object.keys(data) as (keyof NewEvent)[];
+
+    keys.forEach((key) => {
+      encodedData[key] = encodeURIComponent(data[key]);
+    });
+
+    const event = fromFormDataToEvent(data);
+
+    try {
+      const eventsRef = await addDoc(collection(db, "events"), event);
+      router.push({
+        pathname: "/share",
+        query: { id: eventsRef.id, ...encodedData },
+      });
+    } catch (e) {
+      console.error("네트워크 에러 발생");
+    }
+  };
+
   return (
     <>
       <Header>새로운 모임 생성하기</Header>

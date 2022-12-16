@@ -1,4 +1,5 @@
 import Document, { Head, Html, Main, NextScript } from "next/document";
+import Script from "next/script";
 
 class MyDocument extends Document {
   render() {
@@ -17,6 +18,10 @@ class MyDocument extends Document {
               rel="stylesheet"
             />
           </>
+          <script
+            src="https://developers.kakao.com/sdk/js/kakao.js"
+            async
+          ></script>
         </Head>
         <body>
           <Main />
