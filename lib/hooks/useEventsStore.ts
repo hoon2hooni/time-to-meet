@@ -42,7 +42,7 @@ const useEventsStore = (id = "") => {
     };
   }, [id]);
 
-  return { eventName, startDate, endDate, attendees, status, memberCount };
+  return { eventName, startDate, endDate, attendees, status, memberCount, setAttendees };
 };
 
 export default useEventsStore;

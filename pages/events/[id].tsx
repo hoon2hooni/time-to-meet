@@ -10,16 +10,26 @@ import {
 import styled from "@emotion/styled";
 import useEventsStore from "@hooks/useEventsStore";
 import useUrlEventId from "@hooks/useUrlEventId";
+import closePage from "@lib/closePage";
 import type { NextPageWithLayout } from "@pages/_app";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const getLocalStorageKey = (id: string) => {
+  return `${id}-currentAttendee`;
+};
 
 const Events: NextPageWithLayout = () => {
-  const [currentAttendee, setCurrentAttendee] = useState<string>("사자");
-  const [isFirstEntrance, setIsFirstEntrance] = useState(true);
-
   const id = useUrlEventId();
-  const { eventName, startDate, endDate, attendees, status, memberCount } =
-    useEventsStore(id);
+  const [currentAttendee, setCurrentAttendee] = useState<string>("");
+  const {
+    eventName,
+    startDate,
+    endDate,
+    attendees,
+    status,
+    memberCount,
+    setAttendees,
+  } = useEventsStore(id);
 
   const handleClickEntrance = (name: string) => {
     if (name === "") {
@@ -32,9 +42,23 @@ const Events: NextPageWithLayout = () => {
       return "인원이 초과되었습니다";
     }
     setCurrentAttendee(name);
-    setIsFirstEntrance(false);
+    if (!isExist) {
+      setAttendees((prev) => {
+        return [...prev, { name, availableDates: [] }];
+      });
+    }
+    if (window !== undefined) {
+      window.localStorage.setItem(getLocalStorageKey(id), name);
+    }
     return "";
   };
+
+  useEffect(() => {
+    if (window === undefined || !id) return;
+    setCurrentAttendee(
+      window.localStorage.getItem(getLocalStorageKey(id)) || ""
+    );
+  }, [id]);
 
   if (status === "idle" || status === "loading") {
     return (
@@ -53,22 +77,16 @@ const Events: NextPageWithLayout = () => {
             <br />
             모임 링크를 다시 한 번 확인해보세요
           </p>
-          <Button
-            onClick={() => {
-              window.open("", "_self")?.close();
-            }}
-            color="secondary"
-          >
+          <Button onClick={closePage} color="secondary">
             창닫기
           </Button>
         </ErrorBox>
       </FullViewWrapper>
     );
   }
-
   return (
     <>
-      {isFirstEntrance && (
+      {!currentAttendee && (
         <Modal>
           <EntranceInput onClickEntrance={handleClickEntrance} />
         </Modal>
@@ -94,7 +112,6 @@ const Events: NextPageWithLayout = () => {
 };
 
 export default Events;
-
 const FullViewWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -102,7 +119,6 @@ const FullViewWrapper = styled.div`
   width: 100%;
   height: 100vh;
 `;
-
 const Container = styled.div`
   padding: 2rem 4rem;
   width: 100%;
