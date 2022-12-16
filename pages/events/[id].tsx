@@ -1,5 +1,6 @@
 import { LoadingSpinner } from "@components/common";
 import { Button, ErrorBox } from "@components/common";
+import Retention from "@components/common/Retention";
 import Modal from "@components/Modal";
 import {
   EntranceInput,
@@ -87,6 +88,7 @@ const Events: NextPageWithLayout = () => {
         attendees={attendees}
         currentAttendee={currentAttendee}
       />
+      <Retention />
     </>
   );
 };

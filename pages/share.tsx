@@ -1,5 +1,6 @@
 import { Button } from "@components/common";
 import { EventInfo } from "@components/common";
+import Retention from "@components/common/Retention";
 import { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
 import { eventsDocs } from "@firebase/clientApp";
@@ -7,7 +8,6 @@ import { dateToPattern } from "@lib/days";
 import { getDoc } from "firebase/firestore";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useEffect } from "react";
-
 export default function Home({
   id,
   name,
@@ -52,6 +52,7 @@ export default function Home({
             <Button onClick={shareMessage}>공유하기</Button>
           </Wrapper>
         </WrapperMain>
+        <Retention />
       </Layout>
     </>
   );
@@ -86,15 +87,14 @@ export const getServerSideProps: GetServerSideProps<
 };
 
 const Layout = styled.div`
-  padding: 2rem 4rem;
   width: 100vw;
-  height: calc(100vh - 20rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
 `;
 
 const WrapperMain = styled.main`
+  padding: 10rem 2rem 0rem 2rem;
   max-width: 39rem;
   width: 100%;
   margin: 0 auto;
@@ -115,7 +115,7 @@ const Comment = styled.p`
 const Wrapper = styled.div`
   display: flex;
   height: 4rem;
-  margin-top: 2rem;
+  margin: 2rem 0rem 4rem 0rem;
 `;
 
 const LinkBox = styled.div`
