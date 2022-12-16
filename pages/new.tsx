@@ -27,21 +27,13 @@ const New: NextPageWithLayout = () => {
   const { register, handleSubmit, control, setValue } = useForm<NewEvent>();
 
   const onSubmit: SubmitHandler<NewEvent> = async (data) => {
-    let encodedData: Record<string, string> = {};
-
-    const keys = Object.keys(data) as (keyof NewEvent)[];
-
-    keys.forEach((key) => {
-      encodedData[key] = encodeURIComponent(data[key]);
-    });
-
     const event = fromFormDataToEvent(data);
 
     try {
       const eventsRef = await addDoc(collection(db, "events"), event);
       router.push({
         pathname: "/share",
-        query: { id: eventsRef.id, ...encodedData },
+        query: { id: eventsRef.id },
       });
     } catch (e) {
       console.error("네트워크 에러 발생");
@@ -70,10 +62,6 @@ const New: NextPageWithLayout = () => {
       </form>
     </>
   );
-};
-
-New.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
 };
 
 export default New;

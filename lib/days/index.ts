@@ -17,7 +17,9 @@ export const secondsToDate = (seconds: number) => {
 };
 
 export const addDateWithDays = (date: Date, days: number, hours = 0) => {
-  return new Date(date.getTime() + days * DAY_MILE_SECONDS + hours * 1000 * 60 * 60);
+  return new Date(
+    date.getTime() + days * DAY_MILE_SECONDS + hours * 1000 * 60 * 60
+  );
 };
 
 export const dateToPattern = (date: Date) => {
@@ -39,4 +41,11 @@ export const notWithinThreeWeeks = (startDate: string, endDate: string) => {
   const st = new Date(startDate).getTime();
   const et = new Date(endDate).getTime();
   return Math.abs(et - st) > (THREE_WEEKS_DAYS - 1) * DAY_MILE_SECONDS;
+};
+
+export const parseStringDateAndCombine = (date: string, pattern: string) => {
+  const parsedDate = date.split(pattern);
+  return `${parsedDate[0]}년 ${
+    parsedDate[1][0] === "0" ? parsedDate[1][1] : parsedDate[1]
+  }월 ${parsedDate[2][0] === "0" ? parsedDate[2][1] : parsedDate[2]}일`;
 };

@@ -1,19 +1,18 @@
+import { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
-import { Events } from "@eventsTypes";
-import { useRouter } from "next/router";
+import { eventsDocs } from "@firebase/clientApp";
+import { dateToPattern, parseStringDateAndCombine } from "@lib/days";
+import { getDoc } from "firebase/firestore";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useEffect } from "react";
 
-const parseStringDateAndCombine = (date: string, pattern: string) => {
-  const parsedDate = date.split(pattern);
-  return `${parsedDate[0]}년 ${
-    parsedDate[1][0] === "0" ? parsedDate[1][1] : parsedDate[1]
-  }월 ${parsedDate[2][0] === "0" ? parsedDate[2][1] : parsedDate[2]}일`;
-};
-
-export default function Home() {
-  const router = useRouter();
-  const query = router.query as Record<keyof Events, string>;
-  const { id, name, memberCount, startDate, endDate } = query || {};
+export default function Home({
+  id,
+  name,
+  memberCount,
+  endDate,
+  startDate,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useEffect(() => {
     if (window.Kakao?.isInitialized()) {
       return;
@@ -25,22 +24,17 @@ export default function Home() {
     window?.Kakao.Share.sendCustom({
       templateId: 87342,
       templateArgs: {
-        id: id,
+        id,
       },
     });
   };
-
-  if (!id || !name || !memberCount || !startDate || !endDate) {
-    return <div>잘못된 접근입니다.</div>;
-  }
 
   return (
     <Layout>
       <WrapperMain>
         <Header>모임이 생성되었어요!</Header>
         <CalendarInfo>
-          <TextHeader>{decodeURIComponent(name)}</TextHeader>
-
+          <TextHeader>{name}</TextHeader>
           <Text>
             참여 인원 <strong>{memberCount}</strong> 명
           </Text>
@@ -66,6 +60,34 @@ export default function Home() {
     </Layout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<
+  NewEvent & { id: string }
+> = async (context) => {
+  const id = (context?.query?.id || "") as string;
+  if (!id) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const eventRef = await getDoc(eventsDocs(id));
+
+  if (!eventRef.exists()) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const eachEvent = eventRef.data();
+  const { name, memberCount } = eachEvent;
+  const startDate = dateToPattern(eachEvent.startDate.toDate());
+  const endDate = dateToPattern(eachEvent.endDate.toDate());
+
+  return {
+    props: { id, name, memberCount, startDate, endDate },
+  };
+};
 
 const Layout = styled.div`
   padding: 2rem 4rem;
@@ -137,6 +159,7 @@ const LinkBox = styled.div`
   margin-right: 1rem;
   border-radius: 0.5rem;
 `;
+
 const TextSpan = styled.span`
   overflow: hidden;
   white-space: nowrap;
