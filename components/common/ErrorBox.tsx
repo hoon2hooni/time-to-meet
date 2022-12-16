@@ -1,4 +1,4 @@
-import { Thumbnail } from "@components/icons";
+import { ThumbnailError } from "@components/icons";
 import styled from "@emotion/styled";
 import type { FC, ReactNode } from "react";
 
@@ -8,7 +8,7 @@ type ComponentProps = {
 const ErrorBox: FC<ComponentProps> = ({ children }) => {
   return (
     <ErrorWrapper>
-      <Thumbnail width={60} height={60} />
+      <ThumbnailError width={60} height={60} />
       {children}
     </ErrorWrapper>
   );
