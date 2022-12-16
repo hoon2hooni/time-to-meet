@@ -1,5 +1,4 @@
 import { Button } from "@components/common";
-import Layout from "@components/Layout";
 import { DateInputs, MemberCountInput, NameInput } from "@components/new";
 import type { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
@@ -66,6 +65,13 @@ const New: NextPageWithLayout = () => {
 };
 
 export default New;
+
+const Layout = styled.div`
+  width: 100%;
+  max-width: 42.8rem;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+`;
 
 const Header = styled.header`
   color: ${(props) => props.theme.colors.yellow};

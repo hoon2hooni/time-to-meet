@@ -9,6 +9,7 @@ const theme: Theme = {
     block: "#B8B8B8",
     error: "#FF0000",
     green: "#2AA000",
+    gray: "#CECECE",
   },
 };
 

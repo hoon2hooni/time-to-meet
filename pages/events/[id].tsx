@@ -1,3 +1,5 @@
+import { LoadingSpinner } from "@components/common";
+import { Button, ErrorBox } from "@components/common";
 import Modal from "@components/Modal";
 import {
   EntranceInput,
@@ -34,11 +36,33 @@ const Events: NextPageWithLayout = () => {
   };
 
   if (status === "idle" || status === "loading") {
-    return <div>로딩중...</div>;
+    return (
+      <FullViewWrapper>
+        <LoadingSpinner />
+      </FullViewWrapper>
+    );
   }
 
   if (status === "error") {
-    return <div>잘못된 url입니다</div>;
+    return (
+      <FullViewWrapper>
+        <ErrorBox>
+          <p>
+            앗! 존재하지 않는 모임이에요
+            <br />
+            모임 링크를 다시 한 번 확인해보세요
+          </p>
+          <Button
+            onClick={() => {
+              window.open("", "_self")?.close();
+            }}
+            color="secondary"
+          >
+            창닫기
+          </Button>
+        </ErrorBox>
+      </FullViewWrapper>
+    );
   }
 
   return (
@@ -68,6 +92,14 @@ const Events: NextPageWithLayout = () => {
 };
 
 export default Events;
+
+const FullViewWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+`;
 
 const Container = styled.div`
   padding: 2rem 4rem;
