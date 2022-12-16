@@ -1,3 +1,4 @@
+import { Button } from "@components/common";
 import Layout from "@components/Layout";
 import { DateInputs, MemberCountInput, NameInput } from "@components/new";
 import type { NewEvent } from "@customTypes";
@@ -41,7 +42,7 @@ const New: NextPageWithLayout = () => {
   };
 
   return (
-    <>
+    <Layout>
       <Header>새로운 모임 생성하기</Header>
       <form onSubmit={handleSubmit(onSubmit)}>
         <NameInput control={control} register={register} />
@@ -49,18 +50,18 @@ const New: NextPageWithLayout = () => {
         <DateInputs control={control} setValue={setValue} register={register} />
         {/* TODO 나중에 시간범위 설정 가능하게 할 예정 */}
         <ButtonWrapper>
-          <div>
+          <Wrapper>
             <TextP>
               생성하고 나면 <br />
               수정이 불가능해요
             </TextP>
-            <CtaButton type="submit">
+            <Button width={"100%"} type="submit">
               <Text>생성하기</Text>
-            </CtaButton>
-          </div>
+            </Button>
+          </Wrapper>
         </ButtonWrapper>
       </form>
-    </>
+    </Layout>
   );
 };
 
@@ -84,21 +85,17 @@ const ButtonWrapper = styled.div`
 const TextP = styled.div`
   text-align: right;
   margin-bottom: 1.2rem;
-`;
-const CtaButton = styled.button`
-  background-color: ${(props) => props.theme.colors.yellow};
-  font-size: 1.5rem;
-  font-weight: 700;
-  border-radius: 0.5rem;
-  width: 10rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 4rem;
-  border: none;
+  line-height: 1.5;
 `;
 
 const Text = styled.span`
   font-weight: 700;
+  font-size: 1.5rem;
   color: ${(props) => props.theme.colors.primary};
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 `;

@@ -1,8 +1,8 @@
+import { Button } from "@components/common";
 import styled from "@emotion/styled";
 import useTemporaryError from "@lib/hooks/useTemporaryError";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
-
 type ComponentProps = {
   onClickEntrance: (name: string) => string;
 };
@@ -35,19 +35,6 @@ const EntranceInput: FC<ComponentProps> = ({ onClickEntrance }) => {
 };
 
 export default EntranceInput;
-
-const Button = styled.button`
-  background-color: ${(props) => props.theme.colors.yellow};
-  font-size: 1.6rem;
-  font-weight: 700;
-  border-radius: 0.5rem;
-  width: 10rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 4rem;
-  border: none;
-`;
 
 const Text = styled.span`
   font-weight: 700;

@@ -1,3 +1,4 @@
+import { Button } from "@components/common";
 import { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
 import { eventsDocs } from "@firebase/clientApp";
@@ -164,17 +165,4 @@ const TextSpan = styled.span`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-`;
-
-const Button = styled.button`
-  background-color: ${(props) => props.theme.colors.yellow};
-  font-size: 1.6rem;
-  font-weight: 700;
-  border-radius: 0.5rem;
-  width: 10rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 4rem;
-  border: none;
 `;
