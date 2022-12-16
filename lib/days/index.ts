@@ -1,3 +1,5 @@
+const THREE_WEEKS_DAYS = 21;
+const DAY_MILE_SECONDS = 24 * 60 * 60 * 1000;
 export const getDiffDays = (date1: Date, date2: Date) => {
   const diffTime = Math.abs(date2.getTime() - date1.getTime());
   const diffDays = diffTime / (1000 * 60 * 60 * 24);
@@ -15,9 +17,7 @@ export const secondsToDate = (seconds: number) => {
 };
 
 export const addDateWithDays = (date: Date, days: number, hours = 0) => {
-  return new Date(
-    date.getTime() + days * 1000 * 60 * 60 * 24 + hours * 1000 * 60 * 60
-  );
+  return new Date(date.getTime() + days * DAY_MILE_SECONDS + hours * 1000 * 60 * 60);
 };
 
 export const dateToPattern = (date: Date) => {
@@ -25,7 +25,7 @@ export const dateToPattern = (date: Date) => {
 };
 
 export const setMaxDate = (date: Date) => {
-  const maxDate = addDateWithDays(date, 13);
+  const maxDate = addDateWithDays(date, THREE_WEEKS_DAYS - 1);
   return dateToPattern(maxDate);
 };
 
@@ -35,9 +35,8 @@ export const getMaxDate = (s: string) => {
   }
 };
 
-export const notWithinTwoWeeks = (startDate: string, endDate: string) => {
-  const TWO_WEEKS = 13 * 24 * 60 * 60 * 1000;
+export const notWithinThreeWeeks = (startDate: string, endDate: string) => {
   const st = new Date(startDate).getTime();
   const et = new Date(endDate).getTime();
-  return Math.abs(et - st) > TWO_WEEKS;
+  return Math.abs(et - st) > (THREE_WEEKS_DAYS - 1) * DAY_MILE_SECONDS;
 };

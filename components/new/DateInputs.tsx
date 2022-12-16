@@ -2,7 +2,7 @@ import GenericInput from "@components/input/GenericInput";
 import InputTemplate from "@components/input/InputTemplate";
 import { InputError } from "@components/new";
 import type { NewEvent } from "@customTypes";
-import { getMaxDate, notWithinTwoWeeks } from "@lib/days";
+import { getMaxDate, notWithinThreeWeeks } from "@lib/days";
 import type { FC } from "react";
 import { useEffect } from "react";
 import type {
@@ -32,25 +32,26 @@ const DateInputs: FC<ComponentProps> = ({ control, setValue, register }) => {
 
   useEffect(() => {
     if (startDate && endDate) {
-      if (notWithinTwoWeeks(startDate, endDate)) {
+      if (notWithinThreeWeeks(startDate, endDate)) {
         setValue("endDate", "");
       }
     }
   }, [startDate, endDate, setValue]);
 
   return (
-    <InputTemplate label="모임이 진행될 날짜는 언제쯤인가요? (최대 2주)">
+    <InputTemplate label="모임이 진행될 날짜는 언제쯤인가요? (최대 3주)">
       <GenericInput
         sz="middle"
-        unit="명"
+        unit="부터"
         type="date"
         {...register("startDate", { required: "시작일을 입력해주세요." })}
       />
       <InputError errors={errors} fieldName="startDate" type="required" />
       <GenericInput
         sz="middle"
-        unit="명"
+        unit="까지"
         type="date"
+        min={startDate}
         max={getMaxDate(startDate)}
         {...register("endDate", { required: "종료일을 입력해주세요." })}
       />
