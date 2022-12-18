@@ -100,7 +100,7 @@ const Events: NextPageWithLayout = () => {
       <Timetable
         startDate={startDate?.toDate() || new Date()}
         endDate={endDate?.toDate() || new Date()}
-        memberCount={4}
+        memberCount={memberCount}
         attendees={attendees}
         currentAttendee={currentAttendee}
       />
