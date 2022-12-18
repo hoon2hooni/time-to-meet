@@ -5,6 +5,11 @@ const global = css`
   * {
     box-sizing: border-box;
     color: black;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
   html,

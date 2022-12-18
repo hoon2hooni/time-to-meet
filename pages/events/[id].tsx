@@ -91,6 +91,7 @@ const Events: NextPageWithLayout = () => {
           <EntranceInput onClickEntrance={handleClickEntrance} />
         </Modal>
       )}
+
       <Container>
         <Header>가능한 시간을 입력하세요!</Header>
         <TimetableInfo
@@ -106,7 +107,6 @@ const Events: NextPageWithLayout = () => {
         attendees={attendees}
         currentAttendee={currentAttendee}
       />
-      <Retention />
     </>
   );
 };
@@ -118,6 +118,7 @@ const FullViewWrapper = styled.div`
   align-items: center;
   width: 100%;
   height: 100vh;
+  flex-direction: column;
 `;
 const Container = styled.div`
   padding: 2rem 4rem;

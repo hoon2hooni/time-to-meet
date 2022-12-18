@@ -55,7 +55,6 @@ const Timetable: FC<Props> = ({
 export default Timetable;
 
 const Wrapper = styled.div`
-  position: relative;
   width: 100%;
   height: 100%;
   padding: 1rem 4rem;
