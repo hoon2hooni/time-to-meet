@@ -1,33 +1,25 @@
 import { ToggleButton } from "@components/icons";
 import styled from "@emotion/styled";
 import { Attendees } from "@eventsTypes";
-import { secondsToDate } from "@lib/days";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 type ComponentProps = {
   eventName: string;
   attendees: Attendees;
   currentAttendee: string;
+  setAttendees: Dispatch<SetStateAction<Attendees>>;
 };
 
 const TimetableInfo: FC<ComponentProps> = ({
   eventName,
   attendees,
   currentAttendee,
+  setAttendees,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const isCurrentUser = (name: string) => name === currentAttendee;
   const dateToAttendees: Record<string, string[]> = {};
-  attendees.forEach(({ name, availableDates }) => {
-    availableDates.forEach((availableDate) => {
-      const date = secondsToDate(availableDate.seconds).toString();
-      if (dateToAttendees[date]) {
-        dateToAttendees[date].push(name);
-      } else {
-        dateToAttendees[date] = [name];
-      }
-    });
-  });
   //todo 시간 구간 보이게 하는 것 구현
   let featureFlag: boolean = false;
   const sortedByAttendeesCounts = featureFlag
@@ -35,7 +27,18 @@ const TimetableInfo: FC<ComponentProps> = ({
         .sort((a, b) => dateToAttendees[b].length - dateToAttendees[a].length)
         .slice(0, 3)
     : undefined;
-
+  useEffect(() => {
+    if (currentAttendee === "") return;
+    setAttendees((attendees) => {
+      const isExist =
+        attendees.findIndex((attendee) => attendee.name === currentAttendee) !==
+        -1;
+      if (!isExist) {
+        return [...attendees, { name: currentAttendee, availableDates: [] }];
+      }
+      return attendees;
+    });
+  }, [currentAttendee, setAttendees]);
   return (
     <CalendarInfo>
       <AttendeeHeader>{eventName} 참여자</AttendeeHeader>

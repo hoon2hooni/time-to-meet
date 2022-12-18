@@ -8,6 +8,7 @@ import {
   TimetableInfo,
 } from "@components/timetables";
 import styled from "@emotion/styled";
+import { getIndexOfAttendees } from "@firebase/attendeeGenerator";
 import useEventsStore from "@hooks/useEventsStore";
 import useUrlEventId from "@hooks/useUrlEventId";
 import closePage from "@lib/closePage";
@@ -42,11 +43,6 @@ const Events: NextPageWithLayout = () => {
       return "인원이 초과되었습니다";
     }
     setCurrentAttendee(name);
-    if (!isExist) {
-      setAttendees((prev) => {
-        return [...prev, { name, availableDates: [] }];
-      });
-    }
     if (window !== undefined) {
       window.localStorage.setItem(getLocalStorageKey(id), name);
     }
@@ -98,6 +94,7 @@ const Events: NextPageWithLayout = () => {
           eventName={eventName}
           attendees={attendees}
           currentAttendee={currentAttendee}
+          setAttendees={setAttendees}
         />
       </Container>
       <Timetable
