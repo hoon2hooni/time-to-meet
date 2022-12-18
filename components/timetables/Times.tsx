@@ -1,11 +1,12 @@
 import styled from "@emotion/styled";
 import type { Attendee } from "@eventsTypes";
 import { Attendees } from "@eventsTypes";
-import update from "@firebase/attendeeGenerator";
+import update, { getIndexOfAttendees } from "@firebase/attendeeGenerator";
 import { eventsDocs } from "@firebase/clientApp";
 import { addDateWithDays } from "@lib/days";
 import useUrlEventId from "@lib/hooks/useUrlEventId";
-import { updateDoc } from "firebase/firestore";
+import { arrayUnion, updateDoc } from "firebase/firestore";
+import { arrayRemove } from "firebase/firestore";
 import { FC, useEffect, useRef, useState } from "react";
 type Times = number[];
 type ComponentProps = {
@@ -55,7 +56,7 @@ const Times: FC<ComponentProps> = ({
       setDefaultSize({ x, y, w: width, h: height });
     }
   }, []);
-  
+
   attendees.forEach(({ name, availableDates }) => {
     availableDates.forEach((availableDate) => {
       const date = availableDate.toDate().toISOString();
@@ -183,7 +184,9 @@ const Times: FC<ComponentProps> = ({
         const data = myArray.reduce((acc: Attendee[], cur) => {
           return update(acc, cur, currentAttendee);
         }, attendees);
-        updateDoc(eventRef, { attendees: data });
+        const index = getIndexOfAttendees(attendees, currentAttendee);
+        updateDoc(eventRef, { attendees: arrayRemove(attendees[index]) });
+        updateDoc(eventRef, { attendees: arrayUnion(data[0]) });
       }
       setConfig({ x: 0, y: 0, w: 0, h: 0 });
     };
@@ -224,7 +227,9 @@ const Times: FC<ComponentProps> = ({
         const data = myArray.reduce((acc: Attendee[], cur) => {
           return update(acc, cur, currentAttendee);
         }, attendees);
-        updateDoc(eventRef, { attendees: data });
+        const index = getIndexOfAttendees(attendees, currentAttendee);
+        updateDoc(eventRef, { attendees: arrayRemove(attendees[index]) });
+        updateDoc(eventRef, { attendees: arrayUnion(data[0]) });
       }
       setConfig({ x: 0, y: 0, w: 0, h: 0 });
     };
