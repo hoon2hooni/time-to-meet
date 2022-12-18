@@ -344,6 +344,7 @@ const UpdaterBox = styled.div<TimeProps>`
   z-index: 100;
   opacity: 0.8;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 0.2rem;
 `;
 const AvailableDate = styled.div`
   border-radius: 0.3rem;
@@ -358,13 +359,15 @@ const NotAvailableDate = styled.div`
 
 const TimeUnit = styled.div`
   position: absolute;
-  top: -0.5rem;
+  top: -0.1rem;
   left: -3rem;
   font-size: 0.5rem;
-  color: #585858;
+  font-weight: 700;
+  color: ${(props) => props.theme.colors.primary};
 `;
 
 const EachRowTime = styled.div<EachRowTimeProps>`
+  font-weight: 700;
   position: relative;
   background-color: white;
   display: flex;
@@ -377,7 +380,7 @@ const EachRowTime = styled.div<EachRowTimeProps>`
     }
     return props.theme.colors.primary;
   }};
-
+  border-radius: 0.3rem;
   font-size: 1.5rem;
   background-color: ${(props) => {
     if (props.currentMemberCount === props.memberCount) {
