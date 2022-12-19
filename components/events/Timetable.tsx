@@ -1,4 +1,4 @@
-import { Days, Pagination, Times } from "@components/timetables";
+import { Days, Pagination, Times } from "@components/events";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
 import { useState } from "react";

@@ -1,10 +1,6 @@
 import { Button, ErrorBox, Modal } from "@components/common";
+import { EntranceInput, Timetable, TimetableInfo } from "@components/events";
 import { LoadingSpinner } from "@components/icons";
-import {
-  EntranceInput,
-  Timetable,
-  TimetableInfo,
-} from "@components/timetables";
 import styled from "@emotion/styled";
 import useEventsStore from "@hooks/useEventsStore";
 import useUrlEventId from "@hooks/useUrlEventId";
