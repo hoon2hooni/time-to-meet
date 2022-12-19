@@ -1,6 +1,10 @@
 import { Button } from "@components/common";
-import { DateInputs, MaxCapacityInput, NameInput } from "@components/new";
-import InfoModal from "@components/new/InfoModal";
+import {
+  DateInputs,
+  MaxCapacityInput,
+  NameInput,
+  NewEventConfirmModal,
+} from "@components/new";
 import type { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
 import { Events } from "@eventsTypes";
@@ -52,7 +56,7 @@ const New: NextPageWithLayout = () => {
   return (
     <Layout>
       {modalOpen && (
-        <InfoModal
+        <NewEventConfirmModal
           control={control}
           onSubmitData={handleSubmitData}
           onCloseModal={handleCloseModal}

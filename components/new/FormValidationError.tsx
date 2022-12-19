@@ -9,11 +9,15 @@ type ComponentProps = {
   type: "required" | "min" | "maxLength";
 };
 
-const InputError: FC<ComponentProps> = ({ errors, fieldName, type }) => {
+const FormValidationError: FC<ComponentProps> = ({
+  errors,
+  fieldName,
+  type,
+}) => {
   if (errors[fieldName] && errors[fieldName]?.type === type) {
     return <ErrorText>{errors[fieldName]?.message}</ErrorText>;
   }
   return null;
 };
 
-export default InputError;
+export default FormValidationError;

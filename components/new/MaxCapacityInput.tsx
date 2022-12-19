@@ -1,6 +1,5 @@
-import GenericInput from "@components/input/GenericInput";
-import InputTemplate from "@components/input/InputTemplate";
-import { InputError } from "@components/new";
+import { GenericInput, InputTemplate } from "@components/common";
+import { FormValidationError } from "@components/new";
 import type { NewEvent } from "@customTypes";
 import type { FC } from "react";
 import type { ChangeEvent } from "react";
@@ -53,12 +52,16 @@ const MaxCapacityInput: FC<ComponentProps> = ({ control }) => {
               onChange={(e) => field.onChange(transform.output(e))}
               value={transform.input(field.value)}
             />
-            <InputError
+            <FormValidationError
               errors={errors}
               fieldName="maxCapacity"
               type="required"
             />
-            <InputError errors={errors} fieldName="maxCapacity" type="min" />
+            <FormValidationError
+              errors={errors}
+              fieldName="maxCapacity"
+              type="min"
+            />
           </>
         )}
       />

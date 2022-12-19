@@ -1,6 +1,5 @@
-import GenericInput from "@components/input/GenericInput";
-import InputTemplate from "@components/input/InputTemplate";
-import { InputError } from "@components/new";
+import { GenericInput, InputTemplate } from "@components/common";
+import { FormValidationError } from "@components/new";
 import type { NewEvent } from "@customTypes";
 import { getMaxDate, notWithinThreeWeeks } from "@lib/days";
 import type { FC } from "react";
@@ -46,7 +45,11 @@ const DateInputs: FC<ComponentProps> = ({ control, setValue, register }) => {
         type="date"
         {...register("startDate", { required: "시작일을 입력해주세요." })}
       />
-      <InputError errors={errors} fieldName="startDate" type="required" />
+      <FormValidationError
+        errors={errors}
+        fieldName="startDate"
+        type="required"
+      />
       <GenericInput
         sz="middle"
         unit="까지"
@@ -55,7 +58,11 @@ const DateInputs: FC<ComponentProps> = ({ control, setValue, register }) => {
         max={getMaxDate(startDate)}
         {...register("endDate", { required: "종료일을 입력해주세요." })}
       />
-      <InputError errors={errors} fieldName="endDate" type="required" />
+      <FormValidationError
+        errors={errors}
+        fieldName="endDate"
+        type="required"
+      />
     </InputTemplate>
   );
 };

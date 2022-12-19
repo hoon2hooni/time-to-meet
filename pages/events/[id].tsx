@@ -1,14 +1,11 @@
-import { LoadingSpinner } from "@components/common";
-import { Button, ErrorBox } from "@components/common";
-import Retention from "@components/common/Retention";
-import Modal from "@components/Modal";
+import { Button, ErrorBox, Modal } from "@components/common";
+import { LoadingSpinner } from "@components/icons";
 import {
   EntranceInput,
   Timetable,
   TimetableInfo,
 } from "@components/timetables";
 import styled from "@emotion/styled";
-import { getIndexOfAttendees } from "@firebase/attendeeGenerator";
 import useEventsStore from "@hooks/useEventsStore";
 import useUrlEventId from "@hooks/useUrlEventId";
 import closePage from "@lib/closePage";

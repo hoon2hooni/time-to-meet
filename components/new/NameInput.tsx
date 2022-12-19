@@ -1,5 +1,5 @@
-import GenericInput from "@components/input/GenericInput";
-import { InputError } from "@components/new";
+import { GenericInput, InputTemplate } from "@components/common";
+import { FormValidationError } from "@components/new";
 import type { NewEvent } from "@customTypes";
 import type { FC } from "react";
 import type { Control, UseFormRegister } from "react-hook-form";
@@ -9,7 +9,6 @@ type ComponentProps = {
   control: Control<NewEvent>;
   register: UseFormRegister<NewEvent>;
 };
-import InputTemplate from "@components/input/InputTemplate";
 
 const NameInput: FC<ComponentProps> = ({ control, register }) => {
   const { errors } = useFormState({ control, name: ["name"] });
@@ -26,8 +25,8 @@ const NameInput: FC<ComponentProps> = ({ control, register }) => {
           },
         })}
       />
-      <InputError errors={errors} fieldName="name" type="required" />
-      <InputError errors={errors} fieldName="name" type="maxLength" />
+      <FormValidationError errors={errors} fieldName="name" type="required" />
+      <FormValidationError errors={errors} fieldName="name" type="maxLength" />
     </InputTemplate>
   );
 };

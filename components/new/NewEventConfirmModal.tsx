@@ -1,6 +1,5 @@
 import { Button } from "@components/common";
-import { EventInfo } from "@components/common";
-import Modal from "@components/Modal";
+import { EventInfo, Modal } from "@components/common";
 import type { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
 import type { FC } from "react";
@@ -13,7 +12,7 @@ type ComponentProps = {
   onCloseModal: () => void;
 };
 
-const InfoModal: FC<ComponentProps> = ({
+const NewEventConfirmModal: FC<ComponentProps> = ({
   control,
   onCloseModal,
   onSubmitData,
@@ -62,7 +61,7 @@ const InfoModal: FC<ComponentProps> = ({
   );
 };
 
-export default InfoModal;
+export default NewEventConfirmModal;
 
 const TextWrapper = styled.div`
   font-size: 1.6rem;
