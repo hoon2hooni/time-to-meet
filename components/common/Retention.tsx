@@ -1,7 +1,7 @@
 import { Button } from "@components/common";
 import { Thumbnail } from "@components/icons";
 import styled from "@emotion/styled";
-// import Link from "next/link";
+import Link from "next/link";
 import { useRouter } from "next/router";
 const Retention = () => {
   const router = useRouter();
@@ -19,7 +19,9 @@ const Retention = () => {
         <Thumbnail width={16} height={16} />
         <Text>타임투밋</Text>
       </Wrapper>
-      <Link href="/">의견 보내기</Link>
+      <StyledLink href="https://open.kakao.com/o/sg36S8Te">
+        의견 보내기
+      </StyledLink>
     </Container>
   );
 };
@@ -55,7 +57,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
 `;
 
-const Link = styled.a`
+const StyledLink = styled(Link)`
   font-size: 1.4rem;
   font-weight: 700;
   color: ${(props) => props.theme.colors.white};
