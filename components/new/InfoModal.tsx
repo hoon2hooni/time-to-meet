@@ -32,18 +32,18 @@ const InfoModal: FC<ComponentProps> = ({
     name: "name",
   });
 
-  const memberCount = useWatch({
+  const maxCapacity = useWatch({
     control,
-    name: "memberCount",
+    name: "maxCapacity",
   });
 
   return (
     <Modal>
       <EventInfo
-        name={name || ""}
-        memberCount={memberCount || 3}
-        startDate={startDate || ""}
-        endDate={endDate || ""}
+        name={name}
+        maxCapacity={maxCapacity}
+        startDate={startDate}
+        endDate={endDate}
       />
       <TextWrapper>이대로 모임을 생성할까요?</TextWrapper>
       <ButtonWrapper>
@@ -52,7 +52,7 @@ const InfoModal: FC<ComponentProps> = ({
         </Button>
         <Button
           onClick={() =>
-            onSubmitData({ name, memberCount, startDate, endDate })
+            onSubmitData({ name, maxCapacity, startDate, endDate })
           }
         >
           생성하기

@@ -2,12 +2,12 @@ import { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
 import { parseStringDateAndCombine } from "@lib/days";
 import { FC } from "react";
-const EventInfo: FC<NewEvent> = ({ name, memberCount, startDate, endDate }) => {
+const EventInfo: FC<NewEvent> = ({ name, maxCapacity, startDate, endDate }) => {
   return (
     <CalendarInfo>
       <TextHeader>{name}</TextHeader>
       <Text>
-        참여 인원 <strong>{memberCount}</strong> 명
+        참여 인원 <strong>{maxCapacity}</strong> 명
       </Text>
       <Text>
         <strong>{parseStringDateAndCombine(startDate, "-")}</strong> 부터

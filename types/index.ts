@@ -2,7 +2,7 @@ export type Size = "small" | "middle" | "large";
 
 export type NewEvent = {
   name: string;
-  memberCount: number;
+  maxCapacity: number;
   startDate: string;
   endDate: string;
 };

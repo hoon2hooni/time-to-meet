@@ -9,7 +9,7 @@ const useEventsStore = (id = "") => {
   const [startDate, setStartDate] = useState<Timestamp>();
   const [endDate, setEndDate] = useState<Timestamp>();
   const [attendees, setAttendees] = useState<Attendees>([]);
-  const [memberCount, setMemberCount] = useState<number>(0);
+  const [maxCapacity, setMaxCapacity] = useState<number>(0);
   const [status, setStatus] = useState<Status>("idle");
   useEffect(() => {
     if (!id) {
@@ -29,7 +29,7 @@ const useEventsStore = (id = "") => {
         setEndDate(event.endDate);
         setStartDate(event.startDate);
         setAttendees(event.attendees);
-        setMemberCount(event.memberCount);
+        setMaxCapacity(event.maxCapacity);
         setStatus("success");
       },
       (error) => {
@@ -42,7 +42,15 @@ const useEventsStore = (id = "") => {
     };
   }, [id]);
 
-  return { eventName, startDate, endDate, attendees, status, memberCount, setAttendees };
+  return {
+    eventName,
+    startDate,
+    endDate,
+    attendees,
+    status,
+    maxCapacity,
+    setAttendees,
+  };
 };
 
 export default useEventsStore;

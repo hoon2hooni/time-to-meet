@@ -28,7 +28,7 @@ const Events: NextPageWithLayout = () => {
     endDate,
     attendees,
     status,
-    memberCount,
+    maxCapacity,
     setAttendees,
   } = useEventsStore(id);
 
@@ -39,7 +39,7 @@ const Events: NextPageWithLayout = () => {
     const isExist =
       attendees.findIndex((attendee) => attendee.name === name) !== -1;
 
-    if (memberCount <= attendees.length && !isExist) {
+    if (maxCapacity <= attendees.length && !isExist) {
       return "인원이 초과되었습니다";
     }
     setCurrentAttendee(name);
@@ -100,7 +100,7 @@ const Events: NextPageWithLayout = () => {
       <Timetable
         startDate={startDate?.toDate() || new Date()}
         endDate={endDate?.toDate() || new Date()}
-        memberCount={memberCount}
+        maxCapacity={maxCapacity}
         attendees={attendees}
         currentAttendee={currentAttendee}
       />

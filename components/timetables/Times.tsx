@@ -13,14 +13,14 @@ type ComponentProps = {
   startDate: Date;
   endDate: Date;
   pageIndex: number;
-  memberCount: number;
+  maxCapacity: number;
   attendees: Attendees;
   currentAttendee: string;
 };
 
 type EachRowTimeProps = {
-  memberCount: number;
-  currentMemberCount?: number;
+  maxCapacity: number;
+  currentAttendeeCount?: number;
   hasCurrentMember: boolean;
 };
 
@@ -35,7 +35,7 @@ const Times: FC<ComponentProps> = ({
   pageIndex,
   startDate,
   endDate,
-  memberCount,
+  maxCapacity,
   attendees,
   currentAttendee,
 }) => {
@@ -285,7 +285,7 @@ const Times: FC<ComponentProps> = ({
           return (
             <AvailableDate key={dayIndex}>
               {hours.map((hour) => {
-                const currentMemberCount =
+                const currentAttendeeCount =
                   dateToAttendees[
                     addDateWithDays(
                       startDate,
@@ -296,8 +296,8 @@ const Times: FC<ComponentProps> = ({
                 return (
                   <EachRowTime
                     key={hour}
-                    memberCount={memberCount}
-                    currentMemberCount={currentMemberCount}
+                    maxCapacity={maxCapacity}
+                    currentAttendeeCount={currentAttendeeCount}
                     id={`${dayIndex}-${hour}-time`}
                     hasCurrentMember={
                       !!dateToAttendees[
@@ -310,7 +310,7 @@ const Times: FC<ComponentProps> = ({
                     }
                   >
                     {dayIndex === 0 && <TimeUnit>{hour}:00</TimeUnit>}
-                    {currentMemberCount}
+                    {currentAttendeeCount}
                   </EachRowTime>
                 );
               })}
@@ -386,7 +386,7 @@ const EachRowTime = styled.div<EachRowTimeProps>`
   border-radius: 0.3rem;
   font-size: 1.5rem;
   background-color: ${(props) => {
-    if (props.currentMemberCount === props.memberCount) {
+    if (props.currentAttendeeCount === props.maxCapacity) {
       return props.theme.colors.green;
     }
     if (props.hasCurrentMember) {

@@ -6,7 +6,7 @@ import { FC } from "react";
 type Props = {
   startDate: Date;
   endDate: Date;
-  memberCount: number;
+  maxCapacity: number;
   attendees: Attendees;
   currentAttendee: string;
 };
@@ -14,7 +14,7 @@ type Props = {
 const Timetable: FC<Props> = ({
   startDate,
   endDate,
-  memberCount,
+  maxCapacity,
   attendees,
   currentAttendee,
 }) => {
@@ -43,7 +43,7 @@ const Timetable: FC<Props> = ({
           pageIndex={pageIndex}
           startDate={startDate}
           endDate={endDate}
-          memberCount={memberCount}
+          maxCapacity={maxCapacity}
           attendees={attendees}
           currentAttendee={currentAttendee}
         />

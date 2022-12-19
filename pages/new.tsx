@@ -1,5 +1,5 @@
 import { Button } from "@components/common";
-import { DateInputs, MemberCountInput, NameInput } from "@components/new";
+import { DateInputs, MaxCapacityInput, NameInput } from "@components/new";
 import InfoModal from "@components/new/InfoModal";
 import type { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
@@ -14,10 +14,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import type { NextPageWithLayout } from "./_app";
 
 const fromFormDataToEvent = (data: NewEvent): Omit<Events, "id"> => {
-  const { name, memberCount, startDate, endDate } = data;
+  const { name, maxCapacity, startDate, endDate } = data;
   return {
     name,
-    memberCount,
+    maxCapacity,
     startDate: Timestamp.fromDate(new Date(startDate)),
     endDate: Timestamp.fromDate(new Date(endDate)),
     attendees: [],
@@ -61,7 +61,7 @@ const New: NextPageWithLayout = () => {
       <Header>새로운 모임 생성하기</Header>
       <form onSubmit={handleSubmit(onSubmit)}>
         <NameInput control={control} register={register} />
-        <MemberCountInput control={control} />
+        <MaxCapacityInput control={control} />
         <DateInputs control={control} setValue={setValue} register={register} />
         {/* TODO 나중에 시간범위 설정 가능하게 할 예정 */}
         <ButtonWrapper>

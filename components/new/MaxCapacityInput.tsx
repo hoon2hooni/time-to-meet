@@ -12,8 +12,8 @@ type ComponentProps = {
   control: Control<NewEvent>;
 };
 
-const MemberCountInput: FC<ComponentProps> = ({ control }) => {
-  const { errors } = useFormState({ control, name: ["memberCount"] });
+const MaxCapacityInput: FC<ComponentProps> = ({ control }) => {
+  const { errors } = useFormState({ control, name: ["maxCapacity"] });
   const transform = {
     input: (value: number) =>
       isNaN(value) //
@@ -30,7 +30,7 @@ const MemberCountInput: FC<ComponentProps> = ({ control }) => {
   return (
     <InputTemplate label="몇 명이 모이나요?">
       <Controller
-        name={"memberCount"}
+        name={"maxCapacity"}
         control={control}
         rules={{
           required: {
@@ -47,7 +47,7 @@ const MemberCountInput: FC<ComponentProps> = ({ control }) => {
             <GenericInput
               {...field}
               key="무야호"
-              id={"memberCount"}
+              id={"maxCapacity"}
               sz="small"
               unit="명"
               onChange={(e) => field.onChange(transform.output(e))}
@@ -55,10 +55,10 @@ const MemberCountInput: FC<ComponentProps> = ({ control }) => {
             />
             <InputError
               errors={errors}
-              fieldName="memberCount"
+              fieldName="maxCapacity"
               type="required"
             />
-            <InputError errors={errors} fieldName="memberCount" type="min" />
+            <InputError errors={errors} fieldName="maxCapacity" type="min" />
           </>
         )}
       />
@@ -66,4 +66,4 @@ const MemberCountInput: FC<ComponentProps> = ({ control }) => {
   );
 };
 
-export default MemberCountInput;
+export default MaxCapacityInput;

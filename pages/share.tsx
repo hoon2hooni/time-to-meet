@@ -11,7 +11,7 @@ import { useEffect } from "react";
 export default function Home({
   id,
   name,
-  memberCount,
+  maxCapacity,
   endDate,
   startDate,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -38,7 +38,7 @@ export default function Home({
           <Header>모임이 생성되었어요!</Header>
           <EventInfo
             name={name}
-            memberCount={memberCount}
+            maxCapacity={maxCapacity}
             startDate={startDate}
             endDate={endDate}
           />
@@ -77,12 +77,12 @@ export const getServerSideProps: GetServerSideProps<
   }
 
   const eachEvent = eventRef.data();
-  const { name, memberCount } = eachEvent;
+  const { name, maxCapacity } = eachEvent;
   const startDate = dateToPattern(eachEvent.startDate.toDate());
   const endDate = dateToPattern(eachEvent.endDate.toDate());
 
   return {
-    props: { id, name, memberCount, startDate, endDate },
+    props: { id, name, maxCapacity, startDate, endDate },
   };
 };
 
