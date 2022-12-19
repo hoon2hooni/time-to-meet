@@ -4,6 +4,10 @@ import type { Attendees } from "@eventsTypes";
 import update, { getIndexOfAttendees } from "@firebase/attendeeGenerator";
 import { eventsDocs } from "@firebase/clientApp";
 import { addDateWithDays } from "@lib/days";
+import {
+  getIsMobile,
+  normalizeTouchAndMouseEvent,
+} from "@lib/handleCrossPlatform";
 import useUrlEventId from "@lib/hooks/useUrlEventId";
 import { arrayUnion, updateDoc } from "firebase/firestore";
 import { arrayRemove } from "firebase/firestore";
@@ -47,7 +51,7 @@ const Times: FC<ComponentProps> = ({
   const [defaultSize, setDefaultSize] = useState({ w: 0, h: 0, x: 0, y: 0 });
   const [thresholdY, setThresholdY] = useState(0);
   const [currentClickedDayIndex, setCurrentClickedDayIndex] = useState(0);
-
+  const isMobile = getIsMobile();
   useEffect(() => {
     if (containerRef.current) {
       const { x, y, width, height } =
@@ -80,27 +84,29 @@ const Times: FC<ComponentProps> = ({
       addDateWithDays(startDate, i + pageIndex * 7).getTime()
     );
   };
+
   useEffect(() => {
-    const mouseMoveHandler = (e: MouseEvent) => {
+    const moveHandler = (e: MouseEvent | TouchEvent) => {
+      const { clientY } = normalizeTouchAndMouseEvent(e);
       if (
         w === 0 ||
-        (e.clientY > defaultSize.y + defaultSize.h &&
+        (clientY > defaultSize.y + defaultSize.h &&
           h === defaultSize.y + defaultSize.h - y) ||
-        (e.clientY < defaultSize.y && h === thresholdY - defaultSize.y)
+        (clientY < defaultSize.y && h === thresholdY - defaultSize.y)
       ) {
         return;
       }
-      if (e.clientY > thresholdY) {
-        if (e.clientY > defaultSize.y + defaultSize.h) {
+      if (clientY > thresholdY) {
+        if (clientY > defaultSize.y + defaultSize.h) {
           setConfig((config) => ({
             ...config,
             h: defaultSize.y + defaultSize.h - config.y,
           }));
         } else {
-          setConfig((config) => ({ ...config, h: e.clientY - config.y }));
+          setConfig((config) => ({ ...config, h: clientY - config.y }));
         }
       } else {
-        if (e.clientY < defaultSize.y) {
+        if (clientY < defaultSize.y) {
           setConfig((config) => ({
             ...config,
             h: thresholdY - defaultSize.y,
@@ -109,64 +115,25 @@ const Times: FC<ComponentProps> = ({
         } else {
           setConfig((config) => ({
             ...config,
-            h: thresholdY - e.clientY,
-            y: e.clientY,
+            h: thresholdY - clientY,
+            y: clientY,
           }));
         }
       }
     };
-    document.addEventListener("mousemove", mouseMoveHandler);
-    return () => document.removeEventListener("mousemove", mouseMoveHandler);
-  }, [thresholdY, defaultSize.y, defaultSize.h, h, y, w]);
+    if (isMobile) {
+      document.addEventListener("touchmove", moveHandler);
+      return () => document.removeEventListener("touchmove", moveHandler);
+    }
+    document.addEventListener("mousemove", moveHandler);
+    return () => document.removeEventListener("mousemove", moveHandler);
+  }, [thresholdY, defaultSize.y, defaultSize.h, h, y, w, isMobile]);
 
   useEffect(() => {
-    const touchMoveHandler = (e: TouchEvent) => {
-      if (
-        w === 0 ||
-        (e.touches[0].clientY > defaultSize.y + defaultSize.h &&
-          h === defaultSize.y + defaultSize.h - y) ||
-        (e.touches[0].clientY < defaultSize.y &&
-          h === thresholdY - defaultSize.y)
-      ) {
-        return;
-      }
-      if (e.touches[0].clientY > thresholdY) {
-        if (e.touches[0].clientY > defaultSize.y + defaultSize.h) {
-          setConfig((config) => ({
-            ...config,
-            h: defaultSize.y + defaultSize.h - config.y,
-          }));
-        } else {
-          setConfig((config) => ({
-            ...config,
-            h: e.touches[0].clientY - config.y,
-          }));
-        }
-      } else {
-        if (e.touches[0].clientY < defaultSize.y) {
-          setConfig((config) => ({
-            ...config,
-            h: thresholdY - defaultSize.y,
-            y: defaultSize.y,
-          }));
-        } else {
-          setConfig((config) => ({
-            ...config,
-            h: thresholdY - e.touches[0].clientY,
-            y: e.touches[0].clientY,
-          }));
-        }
-      }
-    };
-    document.addEventListener("touchmove", touchMoveHandler);
-    return () => document.removeEventListener("touchmove", touchMoveHandler);
-  }, [thresholdY, defaultSize.y, defaultSize.h, h, y, w]);
-
-  useEffect(() => {
-    const mouseUpHandler = () => {
+    const dragMoveHandler = () => {
       let temp = y - defaultSize.y;
       const HEIGHT = 20;
-      const GAP = 2;
+      const GAP = 1;
       let startIdx = Math.round(temp / (HEIGHT + GAP));
       let endIdx = Math.round((temp + h) / (HEIGHT + GAP)) - 1;
       const myArray = new Array(endIdx - startIdx + 1)
@@ -189,9 +156,13 @@ const Times: FC<ComponentProps> = ({
       }
       setConfig({ x: 0, y: 0, w: 0, h: 0 });
     };
-    document.addEventListener("mouseup", mouseUpHandler);
+    if (isMobile) {
+      document.addEventListener("touchend", dragMoveHandler);
+      return () => document.removeEventListener("touchend", dragMoveHandler);
+    }
+    document.addEventListener("mouseup", dragMoveHandler);
     return () => {
-      document.removeEventListener("mouseup", mouseUpHandler);
+      document.removeEventListener("mouseup", dragMoveHandler);
     };
   }, [
     y,
@@ -203,82 +174,29 @@ const Times: FC<ComponentProps> = ({
     currentAttendee,
     eventRef,
     currentClickedDayIndex,
+    isMobile,
   ]);
-
-  useEffect(() => {
-    const mouseUpHandler = () => {
-      let temp = y - defaultSize.y;
-      const HEIGHT = 20;
-      const GAP = 2;
-      let startIdx = Math.round(temp / (HEIGHT + GAP));
-      let endIdx = Math.round((temp + h) / (HEIGHT + GAP)) - 1;
-      const myArray = new Array(endIdx - startIdx + 1)
-        .fill(0)
-        .map((_, idx) =>
-          addDateWithDays(
-            startDate,
-            currentClickedDayIndex + pageIndex * 7,
-            startIdx + idx + START_TIME
-          )
-        );
-
-      if (myArray.length) {
-        const data = myArray.reduce((acc: Attendee[], cur) => {
-          return update(acc, cur, currentAttendee);
-        }, attendees);
-        const index = getIndexOfAttendees(attendees, currentAttendee);
-        updateDoc(eventRef, { attendees: arrayRemove(attendees[index]) });
-        updateDoc(eventRef, { attendees: arrayUnion(data[0]) });
-      }
-      setConfig({ x: 0, y: 0, w: 0, h: 0 });
-    };
-
-    document.addEventListener("touchend", mouseUpHandler);
-    return () => document.removeEventListener("touchend", mouseUpHandler);
-  }, [
-    y,
-    h,
-    defaultSize.y,
-    pageIndex,
-    startDate,
-    attendees,
-    currentAttendee,
-    eventRef,
-    currentClickedDayIndex,
-  ]);
+  const dargStartHandler = (e: React.TouchEvent | React.MouseEvent) => {
+    const { clientY } = normalizeTouchAndMouseEvent(e.nativeEvent);
+    const el = e.target as HTMLElement;
+    if (el.getAttribute("id")?.includes("time") && el) {
+      const { x, width, height } = el.getBoundingClientRect();
+      const dayIndex = Number(el?.getAttribute("id")?.split("-")[0]);
+      setCurrentClickedDayIndex(dayIndex);
+      setThresholdY(clientY - height / 2);
+      setConfig({
+        x,
+        y: clientY - height / 2,
+        w: width,
+        h: height / 2,
+      });
+    }
+  };
   return (
     <Container
       ref={containerRef}
-      onMouseDown={(e) => {
-        const el = e.target as HTMLElement;
-        if (el.getAttribute("id")?.includes("time") && el) {
-          const { x, y, width, height } = el.getBoundingClientRect();
-          const dayIndex = Number(el?.getAttribute("id")?.split("-")[0]);
-          setCurrentClickedDayIndex(dayIndex);
-          setThresholdY(e.clientY - height / 2);
-          setConfig({
-            x,
-            y: e.clientY - height / 2,
-            w: width,
-            h: height / 2,
-          });
-        }
-      }}
-      onTouchStart={(e) => {
-        const el = e.target as HTMLElement;
-        if (el.getAttribute("id")?.includes("time") && el) {
-          const { x, y, width, height } = el.getBoundingClientRect();
-          const dayIndex = Number(el?.getAttribute("id")?.split("-")[0]);
-          setCurrentClickedDayIndex(dayIndex);
-          setThresholdY(e.touches[0].clientY - height / 2);
-          setConfig({
-            x: x,
-            y: e.touches[0].clientY - height / 2,
-            w: width,
-            h: height / 2,
-          });
-        }
-      }}
+      onMouseDown={!isMobile ? dargStartHandler : undefined}
+      onTouchStart={isMobile ? dargStartHandler : undefined}
     >
       {dayTimeArray.map((hours, dayIndex) => {
         if (isInRange(dayIndex)) {
@@ -329,7 +247,7 @@ export default Times;
 const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.2rem;
+  gap: 0.1rem;
   touch-action: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
