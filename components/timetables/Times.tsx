@@ -42,7 +42,6 @@ const Times: FC<ComponentProps> = ({
   const dateToAttendees: Record<string, string[]> = {};
   const id = useUrlEventId();
   const eventRef = eventsDocs(id);
-
   const containerRef = useRef<HTMLDivElement>(null);
   const [{ x, y, w, h }, setConfig] = useState({ x: 0, y: 0, w: 0, h: 0 });
   const [defaultSize, setDefaultSize] = useState({ w: 0, h: 0, x: 0, y: 0 });
@@ -294,7 +293,6 @@ const Times: FC<ComponentProps> = ({
                       hour
                     ).toISOString()
                   ]?.length;
-
                 return (
                   <EachRowTime
                     key={hour}
@@ -333,6 +331,11 @@ const Container = styled.div`
   grid-template-columns: repeat(7, 1fr);
   gap: 0.2rem;
   touch-action: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 `;
 const UpdaterBox = styled.div<TimeProps>`
   position: fixed;
@@ -360,8 +363,8 @@ const NotAvailableDate = styled.div`
 const TimeUnit = styled.div`
   position: absolute;
   top: -0.1rem;
-  left: -3rem;
-  font-size: 0.5rem;
+  left: -3.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: ${(props) => props.theme.colors.primary};
 `;

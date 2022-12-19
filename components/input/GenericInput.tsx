@@ -44,16 +44,6 @@ const InputBox = styled.input<InputProps>`
   padding: 0 1.6rem;
   width: ${(props) => sizeMap[props.sz]};
   font-size: 1.6rem;
-
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  &[type="number"] {
-    -moz-appearance: textfield;
-  }
 `;
 
 const InputUnit = styled.span`
