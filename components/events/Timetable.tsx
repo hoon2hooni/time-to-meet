@@ -29,7 +29,7 @@ const Timetable: FC<Props> = ({
   };
 
   return (
-    <>
+    <Container>
       <Pagination
         startDate={startDate}
         endDate={endDate}
@@ -48,7 +48,7 @@ const Timetable: FC<Props> = ({
           currentAttendee={currentAttendee}
         />
       </Wrapper>
-    </>
+    </Container>
   );
 };
 
@@ -60,4 +60,12 @@ const Wrapper = styled.div`
   padding: 1rem 4rem;
   margin-top: 2rem;
   background-color: ${(props) => props.theme.colors.secondary};
+`;
+
+const Container = styled.div`
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 `;

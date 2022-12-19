@@ -35,6 +35,8 @@ interface TimeProps {
   h: number;
 }
 
+const initialSelectedArea = { x: 0, y: 0, w: 0, h: 0 };
+
 const Times: FC<ComponentProps> = ({
   pageIndex,
   startDate,
@@ -47,16 +49,22 @@ const Times: FC<ComponentProps> = ({
   const id = useUrlEventId();
   const eventRef = eventsDocs(id);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [{ x, y, w, h }, setConfig] = useState({ x: 0, y: 0, w: 0, h: 0 });
-  const [defaultSize, setDefaultSize] = useState({ w: 0, h: 0, x: 0, y: 0 });
-  const [thresholdY, setThresholdY] = useState(0);
+  const [{ x, y, w, h }, setSelectedArea] = useState(initialSelectedArea);
+  const thresholdRef = useRef(0);
+  const selectedAreaRef = useRef({
+    x: 0,
+    y: 0,
+    w: 0,
+    h: 0,
+  });
+  const [initialTableArea, setInitialTableArea] = useState(initialSelectedArea);
   const [currentClickedDayIndex, setCurrentClickedDayIndex] = useState(0);
   const isMobile = getIsMobile();
   useEffect(() => {
     if (containerRef.current) {
       const { x, y, width, height } =
         containerRef.current.getBoundingClientRect();
-      setDefaultSize({ x, y, w: width, h: height });
+      setInitialTableArea({ x, y, w: width, h: height });
     }
   }, []);
 
@@ -86,57 +94,96 @@ const Times: FC<ComponentProps> = ({
   };
 
   useEffect(() => {
-    const moveHandler = (e: MouseEvent | TouchEvent) => {
+    const dragMoveHandler = (e: MouseEvent | TouchEvent) => {
       const { clientY } = normalizeTouchAndMouseEvent(e);
+      const isNotSelected = selectedAreaRef.current.w === 0;
+
+      const doesMoveBelowTable =
+        clientY > initialTableArea.y + initialTableArea.h;
+      const doesMoveAboveTable = clientY < initialTableArea.y;
+
+      const doesMoveDirectionDown = clientY > thresholdRef.current;
+
+      const upperLimitAreaDownSide =
+        initialTableArea.y + initialTableArea.h - selectedAreaRef.current.y;
+
+      const upperLimitAreaUpSide = thresholdRef.current - initialTableArea.y;
+
+      const isAlreadyMeetLimitDownSide =
+        selectedAreaRef.current.h === upperLimitAreaDownSide;
+
+      const doseMoveDirectionUp = clientY < initialTableArea.y;
+
+      const selectedAreaDownSide = clientY - selectedAreaRef.current.y;
+      const selectedAreaUpSide = thresholdRef.current - clientY;
+
+      const isAlreadyMeetLimitUpSide =
+        selectedAreaRef.current.h === thresholdRef.current - initialTableArea.y;
+
       if (
-        w === 0 ||
-        (clientY > defaultSize.y + defaultSize.h &&
-          h === defaultSize.y + defaultSize.h - y) ||
-        (clientY < defaultSize.y && h === thresholdY - defaultSize.y)
+        isNotSelected ||
+        (doesMoveBelowTable && isAlreadyMeetLimitDownSide) ||
+        (doseMoveDirectionUp && isAlreadyMeetLimitUpSide)
       ) {
         return;
       }
-      if (clientY > thresholdY) {
-        if (clientY > defaultSize.y + defaultSize.h) {
-          setConfig((config) => ({
-            ...config,
-            h: defaultSize.y + defaultSize.h - config.y,
-          }));
-        } else {
-          setConfig((config) => ({ ...config, h: clientY - config.y }));
-        }
-      } else {
-        if (clientY < defaultSize.y) {
-          setConfig((config) => ({
-            ...config,
-            h: thresholdY - defaultSize.y,
-            y: defaultSize.y,
-          }));
-        } else {
-          setConfig((config) => ({
-            ...config,
-            h: thresholdY - clientY,
-            y: clientY,
-          }));
-        }
+
+      if (doesMoveDirectionDown && doesMoveBelowTable) {
+        selectedAreaRef.current.h = upperLimitAreaDownSide;
+        setSelectedArea((area) => ({
+          ...area,
+          h: upperLimitAreaDownSide,
+        }));
+        return;
       }
+
+      if (doesMoveDirectionDown) {
+        selectedAreaRef.current.h = selectedAreaDownSide;
+        setSelectedArea((area) => ({ ...area, h: selectedAreaDownSide }));
+        return;
+      }
+
+      if (doesMoveAboveTable) {
+        selectedAreaRef.current.h = upperLimitAreaUpSide;
+        selectedAreaRef.current.y = initialTableArea.y;
+        setSelectedArea((area) => ({
+          ...area,
+          h: upperLimitAreaUpSide,
+          y: initialTableArea.y,
+        }));
+        return;
+      }
+
+      selectedAreaRef.current.h = selectedAreaUpSide;
+      selectedAreaRef.current.y = clientY;
+      setSelectedArea((config) => ({
+        ...config,
+        h: thresholdRef.current - clientY,
+        y: clientY,
+      }));
     };
+
     if (isMobile) {
-      document.addEventListener("touchmove", moveHandler);
-      return () => document.removeEventListener("touchmove", moveHandler);
+      document.addEventListener("touchmove", dragMoveHandler);
+      return () => document.removeEventListener("touchmove", dragMoveHandler);
     }
-    document.addEventListener("mousemove", moveHandler);
-    return () => document.removeEventListener("mousemove", moveHandler);
-  }, [thresholdY, defaultSize.y, defaultSize.h, h, y, w, isMobile]);
+
+    document.addEventListener("mousemove", dragMoveHandler);
+    return () => document.removeEventListener("mousemove", dragMoveHandler);
+  }, [initialTableArea.y, initialTableArea.h, isMobile]);
 
   useEffect(() => {
-    const dragMoveHandler = () => {
-      let temp = y - defaultSize.y;
+    const dragDoneHandler = () => {
+      if (selectedAreaRef.current.w === 0 || selectedAreaRef.current.h === 0) {
+        return;
+      }
+      let temp = selectedAreaRef.current.y - initialTableArea.y;
       const HEIGHT = 20;
       const GAP = 1;
       let startIdx = Math.round(temp / (HEIGHT + GAP));
-      let endIdx = Math.round((temp + h) / (HEIGHT + GAP)) - 1;
-      const myArray = new Array(endIdx - startIdx + 1)
+      let endIdx =
+        Math.round((temp + selectedAreaRef.current.h) / (HEIGHT + GAP)) - 1;
+      const selectedDates = new Array(endIdx - startIdx + 1)
         .fill(0)
         .map((_, idx) =>
           addDateWithDays(
@@ -146,28 +193,29 @@ const Times: FC<ComponentProps> = ({
           )
         );
 
-      if (myArray.length) {
-        const data = myArray.reduce((acc: Attendee[], cur) => {
+      if (selectedDates.length) {
+        const data = selectedDates.reduce((acc: Attendee[], cur) => {
           return update(acc, cur, currentAttendee);
         }, attendees);
         const index = getIndexOfAttendees(attendees, currentAttendee);
         updateDoc(eventRef, { attendees: arrayRemove(attendees[index]) });
         updateDoc(eventRef, { attendees: arrayUnion(data[0]) });
       }
-      setConfig({ x: 0, y: 0, w: 0, h: 0 });
+      setSelectedArea(initialSelectedArea);
+      selectedAreaRef.current = initialSelectedArea;
     };
+
     if (isMobile) {
-      document.addEventListener("touchend", dragMoveHandler);
-      return () => document.removeEventListener("touchend", dragMoveHandler);
+      document.addEventListener("touchend", dragDoneHandler);
+      return () => document.removeEventListener("touchend", dragDoneHandler);
     }
-    document.addEventListener("mouseup", dragMoveHandler);
+
+    document.addEventListener("mouseup", dragDoneHandler);
     return () => {
-      document.removeEventListener("mouseup", dragMoveHandler);
+      document.removeEventListener("mouseup", dragDoneHandler);
     };
   }, [
-    y,
-    h,
-    defaultSize.y,
+    initialTableArea.y,
     pageIndex,
     startDate,
     attendees,
@@ -176,6 +224,7 @@ const Times: FC<ComponentProps> = ({
     currentClickedDayIndex,
     isMobile,
   ]);
+
   const dargStartHandler = (e: React.TouchEvent | React.MouseEvent) => {
     const { clientY } = normalizeTouchAndMouseEvent(e.nativeEvent);
     const el = e.target as HTMLElement;
@@ -183,8 +232,14 @@ const Times: FC<ComponentProps> = ({
       const { x, width, height } = el.getBoundingClientRect();
       const dayIndex = Number(el?.getAttribute("id")?.split("-")[0]);
       setCurrentClickedDayIndex(dayIndex);
-      setThresholdY(clientY - height / 2);
-      setConfig({
+      thresholdRef.current = clientY - height / 2;
+      selectedAreaRef.current = {
+        x,
+        y: clientY - height / 2,
+        w: width,
+        h: height / 2,
+      };
+      setSelectedArea({
         x,
         y: clientY - height / 2,
         w: width,
@@ -237,7 +292,14 @@ const Times: FC<ComponentProps> = ({
         }
         return <NotAvailableDate key={dayIndex} />;
       })}
-      <UpdaterBox {...{ x, y, w, h }} />
+      <SelectedAreaBox
+        {...{
+          x,
+          y,
+          w,
+          h,
+        }}
+      />
     </Container>
   );
 };
@@ -249,13 +311,9 @@ const Container = styled.div`
   grid-template-columns: repeat(7, 1fr);
   gap: 0.1rem;
   touch-action: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 `;
-const UpdaterBox = styled.div<TimeProps>`
+
+const SelectedAreaBox = styled.div<TimeProps>`
   position: fixed;
   left: ${(props) => props.x}px;
   top: ${(props) => props.y}px;
