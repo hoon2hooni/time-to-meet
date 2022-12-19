@@ -1,8 +1,8 @@
 import { Days, Pagination, Times } from "@components/events";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
+import type { FC } from "react";
 import { useState } from "react";
-import { FC } from "react";
 type Props = {
   startDate: Date;
   endDate: Date;

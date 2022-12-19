@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { addDateWithDays, getDayOfWeek } from "@lib/days";
-import { FC } from "react";
+import type { FC } from "react";
 
 type ComponentProps = {
   startDate: Date;

@@ -1,8 +1,8 @@
 import { ToggleButton } from "@components/icons";
 import styled from "@emotion/styled";
-import { Attendees } from "@eventsTypes";
-import { FC, useEffect, useState } from "react";
-import { Dispatch, SetStateAction } from "react";
+import type { Attendees } from "@eventsTypes";
+import type { Dispatch, FC, SetStateAction } from "react";
+import { useEffect, useState } from "react";
 
 type ComponentProps = {
   eventName: string;

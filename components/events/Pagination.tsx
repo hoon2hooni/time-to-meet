@@ -1,7 +1,7 @@
 import { Arrow } from "@components/icons";
 import styled from "@emotion/styled";
 import { addDateWithDays, getDayOfWeek, getDiffDays } from "@lib/days";
-import { FC } from "react";
+import type { FC } from "react";
 
 type ComponentProps = {
   startDate: Date;

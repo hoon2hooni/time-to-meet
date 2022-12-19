@@ -6,11 +6,10 @@ import {
   NewEventConfirmModal,
 } from "@components/new";
 import styled from "@emotion/styled";
-import { Event } from "@eventsTypes";
+import type { Event } from "@eventsTypes";
 import { db } from "@firebase/clientApp";
 import type { NewEvent } from "@newTypes";
-import { Timestamp } from "firebase/firestore";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";

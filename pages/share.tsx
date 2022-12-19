@@ -4,7 +4,7 @@ import Retention from "@components/common/Retention";
 import styled from "@emotion/styled";
 import { eventsDocs } from "@firebase/clientApp";
 import { dateToPattern } from "@lib/days";
-import { NewEvent } from "@newTypes";
+import type { NewEvent } from "@newTypes";
 import { getDoc } from "firebase/firestore";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useEffect } from "react";

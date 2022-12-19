@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { parseStringDateAndCombine } from "@lib/days";
-import { NewEvent } from "@newTypes";
-import { FC } from "react";
+import type { NewEvent } from "@newTypes";
+import type { FC } from "react";
 const EventInfo: FC<NewEvent> = ({ name, maxCapacity, startDate, endDate }) => {
   return (
     <CalendarInfo>

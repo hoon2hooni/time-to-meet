@@ -1,4 +1,4 @@
-import { Attendees } from "@eventsTypes";
+import type { Attendees } from "@eventsTypes";
 import { eventsDocs } from "@firebase/clientApp";
 import { onSnapshot, Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";

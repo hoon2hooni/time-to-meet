@@ -1,4 +1,4 @@
-import { EmotionJSX } from "@emotion/react/types/jsx-namespace";
+import type { EmotionJSX } from "@emotion/react/types/jsx-namespace";
 import styled from "@emotion/styled";
 import type { ReactNode } from "react";
 interface Props {
