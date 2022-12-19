@@ -15,7 +15,6 @@ const TimetableInfo: FC<ComponentProps> = ({
   eventName,
   attendees,
   currentAttendee,
-  setAttendees,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const isCurrentUser = (name: string) => name === currentAttendee;
@@ -27,18 +26,6 @@ const TimetableInfo: FC<ComponentProps> = ({
         .sort((a, b) => dateToAttendees[b].length - dateToAttendees[a].length)
         .slice(0, 3)
     : undefined;
-  useEffect(() => {
-    if (currentAttendee === "") return;
-    setAttendees((attendees) => {
-      const isExist =
-        attendees.findIndex((attendee) => attendee.name === currentAttendee) !==
-        -1;
-      if (!isExist) {
-        return [...attendees, { name: currentAttendee, availableDates: [] }];
-      }
-      return attendees;
-    });
-  }, [currentAttendee, setAttendees]);
   return (
     <CalendarInfo>
       <AttendeeHeader>{eventName} 참여자</AttendeeHeader>
@@ -106,8 +93,16 @@ const Attendee = styled.div`
   align-items: center;
   font-size: 1.2rem;
   font-weight: 700;
-  width: 20rem;
   margin-top: 1rem;
+  overflow-x: scroll;
+  height: 2rem;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+  -ms-overflow-style: none;
 `;
 
 const Attender = styled.div<{ isCurrentUser: boolean }>`
@@ -117,6 +112,8 @@ const Attender = styled.div<{ isCurrentUser: boolean }>`
       ? props.theme.colors.yellow
       : props.theme.colors.primary};
   font-weight: ${(props) => (props.isCurrentUser ? 700 : 400)};
+  shrink: 0;
+  white-space: nowrap;
 `;
 
 const CalendarInfo = styled.div`

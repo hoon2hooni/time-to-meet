@@ -2,6 +2,10 @@ import styled from "@emotion/styled";
 import type { Attendee } from "@eventsTypes";
 import type { Attendees } from "@eventsTypes";
 import update, { getIndexOfAttendees } from "@firebase/attendeeGenerator";
+import {
+  getErasedAttendeeData,
+  getWriteAttendeeData,
+} from "@firebase/attendeeGenerator";
 import { eventsDocs } from "@firebase/clientApp";
 import { addDateWithDays } from "@lib/days";
 import {
@@ -20,6 +24,7 @@ type ComponentProps = {
   maxCapacity: number;
   attendees: Attendees;
   currentAttendee: string;
+  isEraseMode: boolean;
 };
 
 type EachRowTimeProps = {
@@ -37,6 +42,13 @@ interface TimeProps {
 
 const initialSelectedArea = { x: 0, y: 0, w: 0, h: 0 };
 
+const END_TIME = 24;
+const START_TIME = 8;
+
+const DAY_TIME_ARRAY = new Array(7).fill(
+  new Array(END_TIME - START_TIME).fill(0).map((_, i) => i + START_TIME)
+) as Times[];
+
 const Times: FC<ComponentProps> = ({
   pageIndex,
   startDate,
@@ -44,8 +56,8 @@ const Times: FC<ComponentProps> = ({
   maxCapacity,
   attendees,
   currentAttendee,
+  isEraseMode,
 }) => {
-  const dateToAttendees: Record<string, string[]> = {};
   const id = useUrlEventId();
   const eventRef = eventsDocs(id);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,13 +72,8 @@ const Times: FC<ComponentProps> = ({
   const [initialTableArea, setInitialTableArea] = useState(initialSelectedArea);
   const [currentClickedDayIndex, setCurrentClickedDayIndex] = useState(0);
   const isMobile = getIsMobile();
-  useEffect(() => {
-    if (containerRef.current) {
-      const { x, y, width, height } =
-        containerRef.current.getBoundingClientRect();
-      setInitialTableArea({ x, y, w: width, h: height });
-    }
-  }, []);
+
+  const dateToAttendees: Record<string, string[]> = {};
 
   attendees.forEach(({ name, availableDates }) => {
     availableDates.forEach((availableDate) => {
@@ -79,19 +86,43 @@ const Times: FC<ComponentProps> = ({
     });
   });
 
-  const END_TIME = 24;
-  const START_TIME = 8;
-
-  const dayTimeArray = new Array(7).fill(
-    new Array(END_TIME - START_TIME).fill(0).map((_, i) => i + START_TIME)
-  ) as Times[];
-
   const isInRange = (i: number) => {
     return (
       endDate.getTime() >=
       addDateWithDays(startDate, i + pageIndex * 7).getTime()
     );
   };
+
+  const dargStartHandler = (e: React.TouchEvent | React.MouseEvent) => {
+    const { clientY } = normalizeTouchAndMouseEvent(e.nativeEvent);
+    const el = e.target as HTMLElement;
+    if (el.getAttribute("id")?.includes("time") && el) {
+      const { x, width, height } = el.getBoundingClientRect();
+      const dayIndex = Number(el?.getAttribute("id")?.split("-")[0]);
+      setCurrentClickedDayIndex(dayIndex);
+      thresholdRef.current = clientY - height / 2;
+      selectedAreaRef.current = {
+        x,
+        y: clientY - height / 2,
+        w: width,
+        h: height / 2,
+      };
+      setSelectedArea({
+        x,
+        y: clientY - height / 2,
+        w: width,
+        h: height / 2,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const { x, y, width, height } =
+        containerRef.current.getBoundingClientRect();
+      setInitialTableArea({ x, y, w: width, h: height });
+    }
+  }, []);
 
   useEffect(() => {
     const dragMoveHandler = (e: MouseEvent | TouchEvent) => {
@@ -173,16 +204,43 @@ const Times: FC<ComponentProps> = ({
   }, [initialTableArea.y, initialTableArea.h, isMobile]);
 
   useEffect(() => {
+    const writeSelectedArea = (dates: Date[], index: number) => {
+      const data = getWriteAttendeeData(
+        attendees,
+        dates,
+        currentAttendee,
+        index
+      );
+      return data;
+    };
+
+    const eraseSelectedArea = (dates: Date[], index: number) => {
+      const data = getErasedAttendeeData(
+        attendees,
+        dates,
+        currentAttendee,
+        index
+      );
+      return data;
+    };
+
     const dragDoneHandler = () => {
       if (selectedAreaRef.current.w === 0 || selectedAreaRef.current.h === 0) {
         return;
       }
-      let temp = selectedAreaRef.current.y - initialTableArea.y;
-      const HEIGHT = 20;
+      const fromTableToSelectedArea =
+        selectedAreaRef.current.y - initialTableArea.y;
       const GAP = 1;
-      let startIdx = Math.round(temp / (HEIGHT + GAP));
-      let endIdx =
-        Math.round((temp + selectedAreaRef.current.h) / (HEIGHT + GAP)) - 1;
+      const HEIGHT =
+        (initialTableArea.h - GAP * (END_TIME - START_TIME - 1)) /
+        (END_TIME - START_TIME);
+
+      const startIdx = Math.round(fromTableToSelectedArea / (HEIGHT + GAP));
+      const endIdx =
+        Math.round(
+          (fromTableToSelectedArea + selectedAreaRef.current.h) / (HEIGHT + GAP)
+        ) - 1;
+
       const selectedDates = new Array(endIdx - startIdx + 1)
         .fill(0)
         .map((_, idx) =>
@@ -192,15 +250,18 @@ const Times: FC<ComponentProps> = ({
             startIdx + idx + START_TIME
           )
         );
-
-      if (selectedDates.length) {
-        const data = selectedDates.reduce((acc: Attendee[], cur) => {
-          return update(acc, cur, currentAttendee);
-        }, attendees);
-        const index = getIndexOfAttendees(attendees, currentAttendee);
-        updateDoc(eventRef, { attendees: arrayRemove(attendees[index]) });
-        updateDoc(eventRef, { attendees: arrayUnion(data[0]) });
+      if (!selectedDates.length) {
+        return;
       }
+      const index = getIndexOfAttendees(attendees, currentAttendee);
+      const data = isEraseMode
+        ? eraseSelectedArea(selectedDates, index)
+        : writeSelectedArea(selectedDates, index);
+
+      if (index !== -1) {
+        updateDoc(eventRef, { attendees: arrayRemove(attendees[index]) });
+      }
+      updateDoc(eventRef, { attendees: arrayUnion(data[0]) });
       setSelectedArea(initialSelectedArea);
       selectedAreaRef.current = initialSelectedArea;
     };
@@ -223,37 +284,17 @@ const Times: FC<ComponentProps> = ({
     eventRef,
     currentClickedDayIndex,
     isMobile,
+    initialTableArea.h,
+    isEraseMode,
   ]);
 
-  const dargStartHandler = (e: React.TouchEvent | React.MouseEvent) => {
-    const { clientY } = normalizeTouchAndMouseEvent(e.nativeEvent);
-    const el = e.target as HTMLElement;
-    if (el.getAttribute("id")?.includes("time") && el) {
-      const { x, width, height } = el.getBoundingClientRect();
-      const dayIndex = Number(el?.getAttribute("id")?.split("-")[0]);
-      setCurrentClickedDayIndex(dayIndex);
-      thresholdRef.current = clientY - height / 2;
-      selectedAreaRef.current = {
-        x,
-        y: clientY - height / 2,
-        w: width,
-        h: height / 2,
-      };
-      setSelectedArea({
-        x,
-        y: clientY - height / 2,
-        w: width,
-        h: height / 2,
-      });
-    }
-  };
   return (
     <Container
       ref={containerRef}
       onMouseDown={!isMobile ? dargStartHandler : undefined}
       onTouchStart={isMobile ? dargStartHandler : undefined}
     >
-      {dayTimeArray.map((hours, dayIndex) => {
+      {DAY_TIME_ARRAY.map((hours, dayIndex) => {
         if (isInRange(dayIndex)) {
           return (
             <AvailableDate key={dayIndex}>
@@ -310,7 +351,7 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0.1rem;
-  touch-action: none;
+  flex: 1;
 `;
 
 const SelectedAreaBox = styled.div<TimeProps>`
@@ -325,6 +366,7 @@ const SelectedAreaBox = styled.div<TimeProps>`
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
   border-radius: 0.2rem;
 `;
+
 const AvailableDate = styled.div`
   border-radius: 0.3rem;
   display: grid;
@@ -352,7 +394,7 @@ const EachRowTime = styled.div<EachRowTimeProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 2rem;
+  height: 100%;
   color: ${(props) => {
     if (props.hasCurrentMember) {
       return props.theme.colors.white;

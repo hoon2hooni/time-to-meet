@@ -13,9 +13,7 @@ const Days: FC<ComponentProps> = ({ startDate, pageIndex }) => {
       {new Array(7).fill(0).map((_, i) => {
         return (
           <EachDay key={i}>
-            <div>
-              {addDateWithDays(startDate, i + pageIndex * 7).getDate()}일
-            </div>
+            <div>{addDateWithDays(startDate, i + pageIndex * 7).getDate()}</div>
             <div>
               {getDayOfWeek(addDateWithDays(startDate, i + pageIndex * 7))}
             </div>
@@ -42,6 +40,7 @@ const EachDay = styled.div`
   align-items: center;
   font-size: 1.2rem;
   gap: 0.3rem;
-  height: 5.2rem;
+  height: 5rem;
+  border-radius: 0.5rem;
   background-color: ${(props) => props.theme.colors.white};
 `;

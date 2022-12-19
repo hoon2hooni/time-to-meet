@@ -1,4 +1,5 @@
 import { Days, Pagination, Times } from "@components/events";
+import { Eraser } from "@components/icons";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
 import type { FC } from "react";
@@ -19,7 +20,7 @@ const Timetable: FC<Props> = ({
   currentAttendee,
 }) => {
   const [pageIndex, setPageIndex] = useState(0);
-
+  const [isEraseMode, setIsEraseMode] = useState(false);
   const handleClickPageUp = () => {
     setPageIndex((index) => index + 1);
   };
@@ -38,6 +39,16 @@ const Timetable: FC<Props> = ({
         pageIndex={pageIndex}
       />
       <Wrapper>
+        <EraserWrapper>
+          <BoldText>지우개</BoldText>
+          <div
+            onClick={() => {
+              setIsEraseMode((prev) => !prev);
+            }}
+          >
+            <Eraser isEraseMode={isEraseMode} />
+          </div>
+        </EraserWrapper>
         <Days startDate={startDate} pageIndex={pageIndex} />
         <Times
           pageIndex={pageIndex}
@@ -46,6 +57,7 @@ const Timetable: FC<Props> = ({
           maxCapacity={maxCapacity}
           attendees={attendees}
           currentAttendee={currentAttendee}
+          isEraseMode={isEraseMode}
         />
       </Wrapper>
     </Container>
@@ -54,12 +66,25 @@ const Timetable: FC<Props> = ({
 
 export default Timetable;
 
+const EraserWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+`;
+const BoldText = styled.span`
+  font-size: 1.2rem;
+`;
 const Wrapper = styled.div`
   width: 100%;
-  height: 100%;
   padding: 1rem 4rem;
   margin-top: 2rem;
   background-color: ${(props) => props.theme.colors.secondary};
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 `;
 
 const Container = styled.div`
@@ -68,4 +93,7 @@ const Container = styled.div`
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
