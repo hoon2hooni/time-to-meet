@@ -1,10 +1,10 @@
 import { Button } from "@components/common";
 import { EventInfo } from "@components/common";
 import Retention from "@components/common/Retention";
-import { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
 import { eventsDocs } from "@firebase/clientApp";
 import { dateToPattern } from "@lib/days";
+import { NewEvent } from "@newTypes";
 import { getDoc } from "firebase/firestore";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useEffect } from "react";

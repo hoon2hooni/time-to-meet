@@ -1,7 +1,7 @@
 import { Button } from "@components/common";
 import { EventInfo, Modal } from "@components/common";
-import type { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
+import type { NewEvent } from "@newTypes";
 import type { FC } from "react";
 import type { Control } from "react-hook-form";
 import { useWatch } from "react-hook-form";

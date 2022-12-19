@@ -5,10 +5,10 @@ import {
   NameInput,
   NewEventConfirmModal,
 } from "@components/new";
-import type { NewEvent } from "@customTypes";
 import styled from "@emotion/styled";
-import { Events } from "@eventsTypes";
+import { Event } from "@eventsTypes";
 import { db } from "@firebase/clientApp";
+import type { NewEvent } from "@newTypes";
 import { Timestamp } from "firebase/firestore";
 import { addDoc, collection } from "firebase/firestore";
 import { useRouter } from "next/router";
@@ -17,7 +17,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 import type { NextPageWithLayout } from "./_app";
 
-const fromFormDataToEvent = (data: NewEvent): Omit<Events, "id"> => {
+const fromFormDataToEvent = (data: NewEvent): Omit<Event, "id"> => {
   const { name, maxCapacity, startDate, endDate } = data;
   return {
     name,

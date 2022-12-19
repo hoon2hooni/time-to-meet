@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { Attendees, Events } from "@eventsTypes";
+import { Attendees, Event } from "@eventsTypes";
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import {
@@ -33,10 +33,10 @@ if (app.name && typeof window !== "undefined") {
 }
 const db = getFirestore(app);
 
-const eventConverter: FirestoreDataConverter<Events> = {
-  toFirestore: (data: Events) => data,
+const eventConverter: FirestoreDataConverter<Event> = {
+  toFirestore: (data: Event) => data,
   fromFirestore: (snapshot) => {
-    return snapshot.data() as Events;
+    return snapshot.data() as Event;
   },
 };
 

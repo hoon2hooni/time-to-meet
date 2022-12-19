@@ -1,5 +1,5 @@
 import ErrorText from "@components/common/ErrorText";
-import type { NewEvent } from "@customTypes";
+import type { NewEvent } from "@newTypes";
 import type { FC } from "react";
 import type { FieldErrorsImpl } from "react-hook-form";
 

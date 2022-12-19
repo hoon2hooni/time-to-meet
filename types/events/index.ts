@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-export type Events = {
+export type Event = {
   id: string;
   name: string;
   startDate: Timestamp;

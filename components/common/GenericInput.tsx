@@ -1,6 +1,7 @@
-import type { Size } from "@customTypes";
 import styled from "@emotion/styled";
 import React from "react";
+
+type Size = "small" | "middle" | "large";
 interface InputProps {
   sz: Size;
 }
