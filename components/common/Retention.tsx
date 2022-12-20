@@ -37,6 +37,14 @@ const Container = styled.div`
   background-color: ${(props) => props.theme.colors.primary};
 `;
 
+const ButtonWrapper = styled.div`
+  background-color: ${(props) => props.theme.colors.white};
+  &:active {
+    opacity: 0.5;
+    scale: 0.95;
+    transition: all 0.2s ease-in-out;
+  }
+`;
 const Text = styled.p`
   font-size: 2rem;
   font-weight: 700;

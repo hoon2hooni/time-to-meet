@@ -30,7 +30,7 @@ const Wrapper = styled.button<StyledProps>`
     props.color === "primary"
       ? props.theme.colors.yellow
       : props.theme.colors.gray};
-  font-size: 1.6rem;
+  font-size: ${(props) => (props.size === "sm" ? "1.2rem" : "1.6rem")};
   font-weight: 700;
   border-radius: 0.5rem;
   display: flex;
@@ -47,20 +47,23 @@ const Wrapper = styled.button<StyledProps>`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: ${(props) =>
-        props.color === "primary"
-          ? props.theme.colors.buttonHoverPrimary
-          : props.theme.colors.buttonHoverSecondary};
-      color: ${(props) => props.theme.colors.white};
-      transition: all 0.1s ease-in-out;
+      opacity: 0.5;
+      transition: all 0.2s ease-in-out;
     }
   }
 
-  &:disabled {
-    background-color: ${(props) =>
-      props.color === "primary"
-        ? props.theme.colors.buttonHoverPrimary
-        : props.theme.colors.buttonHoverSecondary};
-    color: ${(props) => props.theme.colors.white};
+  &:active {
+    opacity: 0.5;
+    scale: 0.95;
+    transition: all 0.2s ease-in-out;
   }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 `;

@@ -116,10 +116,19 @@ const Times: FC<ComponentProps> = ({
   };
 
   useEffect(() => {
-    if (containerRef.current) {
-      const { x, y, width, height } =
-        containerRef.current.getBoundingClientRect();
-      setInitialTableArea({ x, y, w: width, h: height });
+    const resizeHandler = () => {
+      if (containerRef.current) {
+        const { x, y, width, height } =
+          containerRef.current.getBoundingClientRect();
+        setInitialTableArea({ x, y, w: width, h: height });
+      }
+    };
+    if (window !== undefined) {
+      resizeHandler();
+      window.addEventListener("resize", resizeHandler);
+      return () => {
+        window.removeEventListener("resize", resizeHandler);
+      };
     }
   }, []);
 
@@ -249,7 +258,10 @@ const Times: FC<ComponentProps> = ({
             startIdx + idx + START_TIME
           )
         );
+
       if (!selectedDates.length) {
+        setSelectedArea(initialSelectedArea);
+        selectedAreaRef.current = initialSelectedArea;
         return;
       }
       const index = getIndexOfAttendees(attendees, currentAttendee);
@@ -379,11 +391,13 @@ const NotAvailableDate = styled.div`
 
 const TimeUnit = styled.div`
   position: absolute;
-  top: -0.1rem;
-  left: -3.5rem;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: ${(props) => props.theme.colors.primary};
+  top: -0rem;
+  left: -3.3rem;
+  font-size: 1rem;
+  color: #3e3e3e;
+  width: 2.5rem;
+  text-align: right;
+  font-weight: 400;
 `;
 
 const EachRowTime = styled.div<EachRowTimeProps>`

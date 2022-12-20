@@ -6,14 +6,15 @@ import useEventsStore from "@hooks/useEventsStore";
 import useUrlEventId from "@hooks/useUrlEventId";
 import closePage from "@lib/closePage";
 import type { NextPageWithLayout } from "@pages/_app";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
 const getLocalStorageKey = (id: string) => {
   return `${id}-currentAttendee`;
 };
 
 const Events: NextPageWithLayout = () => {
   const [windowHeight, setWindowHeight] = useState<number>(0);
+  const router = useRouter();
   useEffect(() => {
     const resizeHandlerForFixedHeight = () => {
       if (window !== undefined) {
@@ -100,7 +101,12 @@ const Events: NextPageWithLayout = () => {
       )}
 
       <Container>
-        <Header>가능한 시간을 입력하세요!</Header>
+        <Header>
+          <Text>가능한 시간을 입력하세요!</Text>
+          <Button size={"sm"} onClick={() => router.push("/")}>
+            모임 만들기
+          </Button>
+        </Header>
         <TimetableInfo
           eventName={eventName}
           attendees={attendees}
@@ -139,6 +145,7 @@ const FullViewWrapper = styled.div`
   height: 100vh;
   flex-direction: column;
 `;
+
 const Container = styled.div`
   padding: 2rem 4rem;
   width: 100%;
@@ -148,7 +155,12 @@ const Header = styled.header`
   color: ${(props) => props.theme.colors.primary};
   display: flex;
   align-items: center;
-  font-size: 2rem;
   font-weight: 700;
   margin-bottom: 2rem;
+  width: 100%;
+`;
+
+const Text = styled.span`
+  font-size: 1.8rem;
+  margin-right: auto;
 `;

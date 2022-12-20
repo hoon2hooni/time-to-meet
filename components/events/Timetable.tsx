@@ -12,6 +12,9 @@ type Props = {
   currentAttendee: string;
 };
 
+type EraserProps = {
+  isEraseMode: boolean;
+};
 const Timetable: FC<Props> = ({
   startDate,
   endDate,
@@ -40,14 +43,14 @@ const Timetable: FC<Props> = ({
       />
       <Wrapper>
         <EraserWrapper>
-          <BoldText>지우개</BoldText>
-          <div
+          <Text isEraseMode={isEraseMode}>지우개</Text>
+          <EraserIconWrapper
             onClick={() => {
               setIsEraseMode((prev) => !prev);
             }}
           >
             <Eraser isEraseMode={isEraseMode} />
-          </div>
+          </EraserIconWrapper>
         </EraserWrapper>
         <Days startDate={startDate} pageIndex={pageIndex} />
         <Times
@@ -74,7 +77,7 @@ const EraserWrapper = styled.div`
   gap: 0.5rem;
   margin-bottom: 1rem;
 `;
-const BoldText = styled.span`
+const Text = styled.span<EraserProps>`
   font-size: 1.2rem;
 `;
 const Wrapper = styled.div`
@@ -96,4 +99,18 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+`;
+
+const EraserIconWrapper = styled.div`
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.5;
+      transition: all 0.2s ease-in-out;
+    }
+  }
+
+  &:active {
+    scale: 1.1;
+    transition: all 0.2s ease-in-out;
+  }
 `;

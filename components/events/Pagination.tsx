@@ -1,6 +1,13 @@
 import { Arrow } from "@components/icons";
 import styled from "@emotion/styled";
-import { addDateWithDays, getDayOfWeek, getDiffDays } from "@lib/days";
+import {
+  addDateWithDays,
+  dateToPattern,
+  getDayOfWeek,
+  getDiffDays,
+  parseStringDateAndCombine,
+} from "@lib/days";
+import { Timestamp } from "firebase/firestore";
 import type { FC } from "react";
 
 type ComponentProps = {
@@ -27,23 +34,46 @@ const Pagination: FC<ComponentProps> = ({
   const firstPageIndex = 0;
   const lastPageIndex = Math.floor(diffDays / 7);
 
-  const isFirstPage = pageIndex !== firstPageIndex;
-  const isLastPage = pageIndex !== lastPageIndex;
-
+  const isFirstPage = pageIndex === firstPageIndex;
+  const isLastPage = pageIndex === lastPageIndex;
   const currentStartDate = addDateWithDays(startDate, pageIndex * 7);
+
+  const currentLastDate =
+    endDate.getTime() > addDateWithDays(currentStartDate, 6).getTime()
+      ? addDateWithDays(currentStartDate, 6)
+      : endDate;
+
+  const parsedCurrentStartDate = parseStringDateAndCombine(
+    dateToPattern(currentStartDate),
+    "-"
+  );
+  const parsedCurrentLastDate = parseStringDateAndCombine(
+    dateToPattern(currentLastDate),
+    "-"
+  );
 
   return (
     <Container>
       <ArrowWrapper
-        isShown={isFirstPage}
+        isShown={!isFirstPage}
         direction={"left"}
         onClick={onClickPageDown}
       >
         <Arrow />
       </ArrowWrapper>
-      {currentStartDate.getDate()}일 {getDayOfWeek(currentStartDate)}요일
+      <TextWrapper>
+        <span>
+          {parsedCurrentStartDate} {getDayOfWeek(currentStartDate)}요일
+        </span>
+        {parsedCurrentStartDate !== parsedCurrentLastDate && (
+          <span>
+            {" - "}
+            {parsedCurrentLastDate} {getDayOfWeek(currentLastDate)}요일
+          </span>
+        )}
+      </TextWrapper>
       <ArrowWrapper
-        isShown={isLastPage}
+        isShown={!isLastPage}
         direction={"right"}
         onClick={onClickPageUp}
       >
@@ -59,6 +89,18 @@ const ArrowWrapper = styled.div<ArrowProps>`
   visibility: ${(props) => (props.isShown ? "visible" : "hidden")};
   transform: ${(props) =>
     props.direction === "left" ? "rotate(-180deg)" : ""};
+  cursor: pointer;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.5;
+      transition: all 0.1s ease-in-out;
+    }
+  }
+  &:active {
+    opacity: 0.5;
+    scale: 0.8;
+    transition: all 0.1s ease-in-out;
+  }
 `;
 
 const Container = styled.div`
@@ -68,4 +110,7 @@ const Container = styled.div`
   padding: 0rem 4rem;
   font-size: 1.5rem;
   font-weight: 700;
+`;
+const TextWrapper = styled.div`
+  font-size: 1.1rem;
 `;
