@@ -40,6 +40,10 @@ const MaxCapacityInput: FC<ComponentProps> = ({ control }) => {
             value: 1,
             message: "인원은 1명 이상이어야 합니다.",
           },
+          max: {
+            value: 20,
+            message: "인원은 20명 이하여야 합니다.",
+          },
         }}
         render={({ field }) => (
           <>
@@ -61,6 +65,11 @@ const MaxCapacityInput: FC<ComponentProps> = ({ control }) => {
               errors={errors}
               fieldName="maxCapacity"
               type="min"
+            />
+            <FormValidationError
+              errors={errors}
+              fieldName="maxCapacity"
+              type="max"
             />
           </>
         )}

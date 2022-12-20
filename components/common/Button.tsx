@@ -44,11 +44,23 @@ const Wrapper = styled.button<StyledProps>`
       : "1.7rem 3.2rem"};
   border: none;
   cursor: pointer;
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: #896300;
+      background-color: ${(props) =>
+        props.color === "primary"
+          ? props.theme.colors.buttonHoverPrimary
+          : props.theme.colors.buttonHoverSecondary};
       color: ${(props) => props.theme.colors.white};
       transition: all 0.1s ease-in-out;
     }
+  }
+
+  &:disabled {
+    background-color: ${(props) =>
+      props.color === "primary"
+        ? props.theme.colors.buttonHoverPrimary
+        : props.theme.colors.buttonHoverSecondary};
+    color: ${(props) => props.theme.colors.white};
   }
 `;

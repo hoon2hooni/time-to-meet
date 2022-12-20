@@ -7,9 +7,11 @@ const theme: Theme = {
     secondary: "#ECECEC",
     white: "#FFFFFF",
     block: "#B8B8B8",
-    error: "#FF0000",
+    error: "#AE0000",
     green: "#2AA000",
     gray: "#CECECE",
+    buttonHoverPrimary: "#896300",
+    buttonHoverSecondary: "#B8B8B8",
   },
 };
 

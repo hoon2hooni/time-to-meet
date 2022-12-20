@@ -6,7 +6,7 @@ import type { FieldErrorsImpl } from "react-hook-form";
 type ComponentProps = {
   errors: Partial<FieldErrorsImpl<NewEvent>>;
   fieldName: keyof NewEvent;
-  type: "required" | "min" | "maxLength";
+  type: "required" | "min" | "maxLength" | "max";
 };
 
 const FormValidationError: FC<ComponentProps> = ({

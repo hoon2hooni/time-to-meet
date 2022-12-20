@@ -1,21 +1,23 @@
 import { Button } from "@components/common";
 import { EventInfo, Modal } from "@components/common";
+import { LoadingButtonSpinner } from "@components/icons";
 import styled from "@emotion/styled";
 import type { NewEvent } from "@newTypes";
 import type { FC } from "react";
 import type { Control } from "react-hook-form";
 import { useWatch } from "react-hook-form";
-
 type ComponentProps = {
   control: Control<NewEvent>;
   onSubmitData: (data: NewEvent) => Promise<void>;
   onCloseModal: () => void;
+  isLoading: boolean;
 };
 
 const NewEventConfirmModal: FC<ComponentProps> = ({
   control,
   onCloseModal,
   onSubmitData,
+  isLoading,
 }) => {
   const startDate = useWatch({
     control,
@@ -53,8 +55,15 @@ const NewEventConfirmModal: FC<ComponentProps> = ({
           onClick={() =>
             onSubmitData({ name, maxCapacity, startDate, endDate })
           }
+          disabled={isLoading}
         >
-          생성하기
+          {isLoading ? (
+            <LoadingWrapper>
+              <LoadingButtonSpinner />
+            </LoadingWrapper>
+          ) : (
+            "생성하기"
+          )}
         </Button>
       </ButtonWrapper>
     </Modal>
@@ -66,6 +75,13 @@ export default NewEventConfirmModal;
 const TextWrapper = styled.div`
   font-size: 1.6rem;
   font-weight: 700;
+`;
+
+const LoadingWrapper = styled.div`
+  width: 5.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 const ButtonWrapper = styled.div`
   display: flex;

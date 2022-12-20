@@ -10,6 +10,7 @@ const ErrorText: FC<ComponentProps> = ({ children }) => {
 
 const Span = styled.span`
   font-weight: 700;
+  font-size: 1.2rem;
   color: ${(props) => props.theme.colors.primary};
   color: ${(props) => props.theme.colors.error};
 `;

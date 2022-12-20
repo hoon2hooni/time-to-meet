@@ -29,11 +29,13 @@ const fromFormDataToEvent = (data: NewEvent): Omit<Event, "id"> => {
 
 const New: NextPageWithLayout = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { register, handleSubmit, control, setValue } = useForm<NewEvent>();
   const handleSubmitData = async (data: NewEvent) => {
     const event = fromFormDataToEvent(data);
     try {
+      setIsLoading(true);
       const eventsRef = await addDoc(collection(db, "events"), event);
       router.push({
         pathname: "/share",
@@ -41,6 +43,8 @@ const New: NextPageWithLayout = () => {
       });
     } catch (e) {
       console.error("네트워크 에러 발생");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -59,6 +63,7 @@ const New: NextPageWithLayout = () => {
           control={control}
           onSubmitData={handleSubmitData}
           onCloseModal={handleCloseModal}
+          isLoading={isLoading}
         />
       )}
       <Header>새로운 모임 생성하기</Header>
@@ -73,9 +78,7 @@ const New: NextPageWithLayout = () => {
               생성하고 나면 <br />
               수정이 불가능해요
             </TextP>
-            <Button width={"100%"} type="submit">
-              <Text>생성하기</Text>
-            </Button>
+            <Button type="submit">생성하기</Button>
           </Wrapper>
         </ButtonWrapper>
       </form>
@@ -111,12 +114,7 @@ const TextP = styled.div`
   text-align: right;
   margin-bottom: 1.2rem;
   line-height: 1.5;
-`;
-
-const Text = styled.span`
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: ${(props) => props.theme.colors.primary};
+  font-size: 1.2rem;
 `;
 
 const Wrapper = styled.div`
