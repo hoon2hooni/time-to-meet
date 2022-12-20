@@ -8,6 +8,7 @@ import closePage from "@lib/closePage";
 import type { NextPageWithLayout } from "@pages/_app";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 const getLocalStorageKey = (id: string) => {
   return `${id}-currentAttendee`;
 };
@@ -57,14 +58,19 @@ const Events: NextPageWithLayout = () => {
     if (window !== undefined) {
       window.localStorage.setItem(getLocalStorageKey(id), name);
     }
+    toast.success(`${name} 님이 입장항였습니다.`);
     return "";
   };
 
   useEffect(() => {
     if (window === undefined || !id) return;
+    const userName = window.localStorage.getItem(getLocalStorageKey(id));
     setCurrentAttendee(
       window.localStorage.getItem(getLocalStorageKey(id)) || ""
     );
+    if (userName) {
+      toast.success(`${userName} 님이 입장항였습니다.`);
+    }
   }, [id]);
 
   if (status === "idle" || status === "loading") {

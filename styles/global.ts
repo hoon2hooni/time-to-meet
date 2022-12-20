@@ -2,6 +2,10 @@ import { css } from "@emotion/react";
 
 const global = css`
   @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+  :root {
+    --toastify-color-success: #ffc222;
+    --toastify-color-error: #ae0000;
+  }
   * {
     box-sizing: border-box;
     color: black;

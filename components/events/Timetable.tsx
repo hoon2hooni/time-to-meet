@@ -3,7 +3,9 @@ import { Eraser } from "@components/icons";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
 import type { FC } from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import type { Id } from "react-toastify";
+import { toast } from "react-toastify";
 type Props = {
   startDate: Date;
   endDate: Date;
@@ -24,6 +26,7 @@ const Timetable: FC<Props> = ({
 }) => {
   const [pageIndex, setPageIndex] = useState(0);
   const [isEraseMode, setIsEraseMode] = useState(false);
+  const toastId = useRef<Id>("");
   const handleClickPageUp = () => {
     setPageIndex((index) => index + 1);
   };
@@ -47,6 +50,12 @@ const Timetable: FC<Props> = ({
           <EraserIconWrapper
             onClick={() => {
               setIsEraseMode((prev) => !prev);
+              if (toast.isActive(toastId.current)) {
+                toast.dismiss(toastId.current);
+              }
+              toastId.current = toast.success(
+                `${isEraseMode ? "재우개 모드 해제!" : "재우개 모드 활성화!"}`
+              );
             }}
           >
             <Eraser isEraseMode={isEraseMode} />

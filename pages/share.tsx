@@ -8,6 +8,8 @@ import type { NewEvent } from "@newTypes";
 import { getDoc } from "firebase/firestore";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useEffect } from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { toast } from "react-toastify";
 export default function Home({
   id,
   name,
@@ -47,7 +49,14 @@ export default function Home({
           </Comment>
           <Wrapper>
             <LinkBox>
-              <TextSpan>{`https://timetomeet.vercel.app/events/${id}`}</TextSpan>
+              <CopyToClipboard
+                text={`https://timetomeet.vercel.app/events/${id}`}
+                onCopy={() => toast.success(
+                  "링크가 복사되었어요! 카톡으로 공유해보세요"
+                )}
+              >
+                <TextSpan>{`https://timetomeet.vercel.app/events/${id}`}</TextSpan>
+              </CopyToClipboard>
             </LinkBox>
             <Button onClick={shareMessage}>공유하기</Button>
           </Wrapper>
