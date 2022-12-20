@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
-import type { Attendee } from "@eventsTypes";
 import type { Attendees } from "@eventsTypes";
-import update, { getIndexOfAttendees } from "@firebase/attendeeGenerator";
+import { getIndexOfAttendees } from "@firebase/attendeeGenerator";
 import {
   getErasedAttendeeData,
   getWriteAttendeeData,
