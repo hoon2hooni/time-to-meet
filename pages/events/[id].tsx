@@ -58,7 +58,7 @@ const Events: NextPageWithLayout = () => {
     if (window !== undefined) {
       window.localStorage.setItem(getLocalStorageKey(id), name);
     }
-    toast.success(`${name} 님이 입장항였습니다.`);
+    toast.success(`${name} 님이 입장하였습니다.`);
     return "";
   };
 

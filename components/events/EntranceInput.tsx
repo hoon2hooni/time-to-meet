@@ -53,4 +53,8 @@ const InputBox = styled.input`
   width: 100%;
   text-align: center;
   font-size: 1.6rem;
+  &: focus {
+    border: 1px solid ${(props) => props.theme.colors.yellow};
+    outline: none;
+  }
 `;
