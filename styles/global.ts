@@ -100,9 +100,12 @@ const global = css`
     vertical-align: baseline;
     font-family: "Roboto", sans-serif;
   }
-  html,
-  body {
+  html {
     font-size: 62.5%;
+  }
+
+  body {
+    font-size: 1.2rem;
   }
 
   /* HTML5 display-role reset for older browsers */

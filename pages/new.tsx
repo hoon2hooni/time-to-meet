@@ -13,6 +13,7 @@ import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 import type { NextPageWithLayout } from "./_app";
 
@@ -42,8 +43,7 @@ const New: NextPageWithLayout = () => {
         query: { id: eventsRef.id },
       });
     } catch (e) {
-      console.error("네트워크 에러 발생");
-    } finally {
+      toast.error("네트워크 에러 발생");
       setIsLoading(false);
     }
   };

@@ -7,9 +7,10 @@ import { dateToPattern } from "@lib/days";
 import type { NewEvent } from "@newTypes";
 import { getDoc } from "firebase/firestore";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { toast } from "react-toastify";
+import { Id, toast } from "react-toastify";
+
 export default function Home({
   id,
   name,
@@ -33,6 +34,8 @@ export default function Home({
     });
   };
 
+  const toastId = useRef<Id>("");
+
   return (
     <>
       <Layout>
@@ -50,12 +53,17 @@ export default function Home({
           <Wrapper>
             <LinkBox>
               <CopyToClipboard
-                text={`https://timetomeet.vercel.app/events/${id}`}
-                onCopy={() =>
-                  toast.success("링크가 복사되었어요! 카톡으로 공유해보세요")
-                }
+                text={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/events/${id}`}
+                onCopy={() => {
+                  if (toast.isActive(toastId.current)) {
+                    toast.dismiss(toastId.current);
+                  }
+                  toastId.current = toast.success(
+                    "링크가 복사되었어요! 카톡으로 공유해보세요"
+                  );
+                }}
               >
-                <TextSpan>{`https://timetomeet.vercel.app/events/${id}`}</TextSpan>
+                <TextSpan>{`${process.env.NEXT_PUBLIC_DOMAIN_URL}/events/${id}`}</TextSpan>
               </CopyToClipboard>
             </LinkBox>
             <Button onClick={shareMessage}>공유하기</Button>
@@ -137,6 +145,23 @@ const LinkBox = styled.div`
   align-items: center;
   margin-right: 1rem;
   border-radius: 0.5rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  &: active {
+    opacity: 0.5;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.5;
+      transition: all 0.1s ease-in-out;
+    }
+  }
 `;
 
 const TextSpan = styled.span`

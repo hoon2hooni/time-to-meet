@@ -6,6 +6,7 @@ import useEventsStore from "@hooks/useEventsStore";
 import useUrlEventId from "@hooks/useUrlEventId";
 import closePage from "@lib/closePage";
 import type { NextPageWithLayout } from "@pages/_app";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -15,7 +16,6 @@ const getLocalStorageKey = (id: string) => {
 
 const Events: NextPageWithLayout = () => {
   const [windowHeight, setWindowHeight] = useState<number>(0);
-  const router = useRouter();
   useEffect(() => {
     const resizeHandlerForFixedHeight = () => {
       if (window !== undefined) {
@@ -109,9 +109,7 @@ const Events: NextPageWithLayout = () => {
       <Container>
         <Header>
           <Text>가능한 시간을 입력하세요!</Text>
-          <Button size={"sm"} onClick={() => router.push("/")}>
-            모임 만들기
-          </Button>
+          <StyledLink href="/">모임 만들기</StyledLink>
         </Header>
         <TimetableInfo
           eventName={eventName}
@@ -167,6 +165,15 @@ const Header = styled.header`
 `;
 
 const Text = styled.span`
-  font-size: 1.8rem;
+  font-size: 2rem;
   margin-right: auto;
+`;
+
+const StyledLink = styled(Link)`
+  color: ${(props) => props.theme.colors.primary};
+  &:hover,
+  &:active {
+    color: ${(props) => props.theme.colors.yellow};
+  }
+  cursor: pointer;
 `;

@@ -48,7 +48,7 @@ const NewEventConfirmModal: FC<ComponentProps> = ({
       />
       <TextWrapper>이대로 모임을 생성할까요?</TextWrapper>
       <ButtonWrapper>
-        <Button color="secondary" onClick={onCloseModal}>
+        <Button color="secondary" onClick={onCloseModal} disabled={isLoading}>
           수정하기
         </Button>
         <Button
