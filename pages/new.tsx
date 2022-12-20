@@ -96,7 +96,7 @@ const Layout = styled.div`
 `;
 
 const Header = styled.header`
-  color: ${(props) => props.theme.colors.yellow};
+  color: ${(props) => props.theme.colors.header};
   display: flex;
   align-items: center;
   font-size: 2.4rem;

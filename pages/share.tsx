@@ -51,9 +51,9 @@ export default function Home({
             <LinkBox>
               <CopyToClipboard
                 text={`https://timetomeet.vercel.app/events/${id}`}
-                onCopy={() => toast.success(
-                  "링크가 복사되었어요! 카톡으로 공유해보세요"
-                )}
+                onCopy={() =>
+                  toast.success("링크가 복사되었어요! 카톡으로 공유해보세요")
+                }
               >
                 <TextSpan>{`https://timetomeet.vercel.app/events/${id}`}</TextSpan>
               </CopyToClipboard>
@@ -111,7 +111,7 @@ const WrapperMain = styled.main`
 const Header = styled.header`
   font-size: 3.2rem;
   font-weight: 700;
-  color: ${(props) => props.theme.colors.yellow};
+  color: ${(props) => props.theme.colors.header};
   margin-bottom: 2rem;
 `;
 

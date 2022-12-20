@@ -12,6 +12,7 @@ const theme: Theme = {
     gray: "#CECECE",
     buttonHoverPrimary: "#896300",
     buttonHoverSecondary: "#B8B8B8",
+    header: "#EDAC00",
   },
 };
 
