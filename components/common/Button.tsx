@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
+import { getIsMobile } from "@lib/handleCrossPlatform";
 import type { ComponentProps, FC } from "react";
-
 type ButtonProps = {
   color?: "primary" | "secondary";
   size?: "sm" | "md" | "lg";
@@ -44,9 +44,11 @@ const Wrapper = styled.button<StyledProps>`
       : "1.7rem 3.2rem"};
   border: none;
   cursor: pointer;
-  &:hover {
-    background-color: #896300;
-    color: ${(props) => props.theme.colors.white};
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: #896300;
+      color: ${(props) => props.theme.colors.white};
+      transition: all 0.1s ease-in-out;
+    }
   }
-  transition: all 0.1s ease-in-out;
 `;
