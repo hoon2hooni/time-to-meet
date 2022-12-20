@@ -111,6 +111,5 @@ const EraserIconWrapper = styled.div`
 
   &:active {
     scale: 1.1;
-    transition: all 0.2s ease-in-out;
   }
 `;

@@ -44,7 +44,12 @@ const InputBox = styled.input<InputProps>`
   border: none;
   padding: 0 1.6rem;
   width: ${(props) => sizeMap[props.sz]};
+  border-radius: 0.5rem;
   font-size: 1.6rem;
+  &: focus {
+    border: 1px solid ${(props) => props.theme.colors.yellow};
+    outline: none;
+  }
 `;
 
 const InputUnit = styled.span`

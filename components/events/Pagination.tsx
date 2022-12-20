@@ -99,7 +99,6 @@ const ArrowWrapper = styled.div<ArrowProps>`
   &:active {
     opacity: 0.5;
     scale: 0.8;
-    transition: all 0.1s ease-in-out;
   }
 `;
 

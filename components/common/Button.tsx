@@ -48,14 +48,13 @@ const Wrapper = styled.button<StyledProps>`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       opacity: 0.5;
-      transition: all 0.2s ease-in-out;
+      transition: all 0.1s ease-in-out;
     }
   }
 
   &:active {
     opacity: 0.5;
     scale: 0.95;
-    transition: all 0.2s ease-in-out;
   }
 
   &:disabled {
