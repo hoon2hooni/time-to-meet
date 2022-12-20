@@ -54,7 +54,7 @@ const Timetable: FC<Props> = ({
                 toast.dismiss(toastId.current);
               }
               toastId.current = toast.success(
-                `${isEraseMode ? "재우개 모드 해제!" : "재우개 모드 활성화!"}`
+                `${isEraseMode ? "지우개 모드 해제!" : "지우개 모드 활성화!"}`
               );
             }}
           >
