@@ -69,7 +69,7 @@ const Events: NextPageWithLayout = () => {
       window.localStorage.getItem(getLocalStorageKey(id)) || ""
     );
     if (userName) {
-      toast.success(`${userName} 님이 입장항였습니다.`);
+      toast.success(`${userName} 님이 입장하였습니다.`);
     }
   }, [id]);
 
