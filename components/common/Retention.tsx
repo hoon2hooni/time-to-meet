@@ -20,7 +20,7 @@ const Retention = () => {
         <Text>타임투밋</Text>
       </Wrapper>
       <StyledLink href="https://open.kakao.com/o/sg36S8Te">
-        의견 보내기
+        에 의견보내기!
       </StyledLink>
     </Container>
   );
@@ -55,13 +55,18 @@ const Wrapper = styled.div`
   margin-top: 1rem;
   width: 9.5rem;
   justify-content: space-between;
+  margin-bottom: 0.5rem;
 `;
 
 const StyledLink = styled(Link)`
   font-size: 1.4rem;
   font-weight: 700;
   color: ${(props) => props.theme.colors.white};
-  margin-top: 0.5rem;
+  &:hover,
+  &:active {
+    color: ${(props) => props.theme.colors.yellow};
+  }
+  cursor: pointer;
 `;
 
 export default Retention;
