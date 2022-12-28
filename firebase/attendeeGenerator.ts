@@ -70,4 +70,26 @@ export const getIndexOfAttendees = (attendees: Attendees, name: string) => {
   return attendees.findIndex((attendee) => attendee.name === name);
 };
 
+export const writeSelectedArea = (
+  dates: Date[],
+  index: number,
+  attendees: Attendees,
+  currentAttendee: string
+) => {
+  const data = getWriteAttendeeData(attendees, dates, currentAttendee, index);
+  return data[0];
+};
+
+
+export const eraseSelectedArea = (
+  dates: Date[],
+  index: number,
+  attendees: Attendees,
+  currentAttendee: string
+) => {
+  const data = getErasedAttendeeData(attendees, dates, currentAttendee, index);
+  return data[0];
+};
+
+
 export default update;
