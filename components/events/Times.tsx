@@ -11,6 +11,7 @@ import {
   getIsMobile,
   normalizeTouchAndMouseEvent,
 } from "@lib/handleCrossPlatform";
+import useResizeEvent from "@lib/hooks/useResizeEvent";
 import useUrlEventId from "@lib/hooks/useUrlEventId";
 import { arrayUnion, updateDoc } from "firebase/firestore";
 import { arrayRemove } from "firebase/firestore";
@@ -115,22 +116,15 @@ const Times: FC<ComponentProps> = ({
     }
   };
 
-  useEffect(() => {
-    const resizeHandler = () => {
-      if (containerRef.current) {
-        const { x, y, width, height } =
-          containerRef.current.getBoundingClientRect();
-        setInitialTableArea({ x, y, w: width, h: height });
-      }
-    };
-    if (window !== undefined) {
-      resizeHandler();
-      window.addEventListener("resize", resizeHandler);
-      return () => {
-        window.removeEventListener("resize", resizeHandler);
-      };
+  const resizeTimeTableHandler = () => {
+    if (containerRef.current) {
+      const { x, y, width, height } =
+        containerRef.current.getBoundingClientRect();
+      setInitialTableArea({ x, y, w: width, h: height });
     }
-  }, []);
+  };
+
+  useResizeEvent(resizeTimeTableHandler);
 
   useEffect(() => {
     const dragMoveHandler = (e: MouseEvent | TouchEvent) => {
@@ -357,14 +351,12 @@ const Times: FC<ComponentProps> = ({
 };
 
 export default Times;
-
 const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0.1rem;
   flex: 1;
 `;
-
 const SelectedAreaBox = styled.div<TimeProps>`
   position: fixed;
   left: ${(props) => props.x}px;
