@@ -1,4 +1,6 @@
-# 타임투밋 <img src="./assets/icons/thumbnail.svg" width="5%" >
+
+# 타임투밋 <img src="./assets/icons/thumbnail.svg" width="23" >
+
 
 [타임투밋](https://www.time2meet.xyz/)은 실시간으로 일정 조율을 할 수 있는 웹 기반 어플리케이션 입니다.
 
