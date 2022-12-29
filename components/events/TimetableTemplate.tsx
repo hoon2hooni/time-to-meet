@@ -1,4 +1,4 @@
-import { Days, Pagination, Times } from "@components/events";
+import { Days, Pagination, Timetable } from "@components/events";
 import { Eraser } from "@components/icons";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
@@ -17,7 +17,7 @@ type Props = {
 type EraserProps = {
   isEraseMode: boolean;
 };
-const Timetable: FC<Props> = ({
+const TimetableTemplate: FC<Props> = ({
   startDate,
   endDate,
   maxCapacity,
@@ -62,7 +62,7 @@ const Timetable: FC<Props> = ({
           </EraserIconWrapper>
         </EraserWrapper>
         <Days startDate={startDate} pageIndex={pageIndex} />
-        <Times
+        <Timetable
           pageIndex={pageIndex}
           startDate={startDate}
           endDate={endDate}
@@ -76,7 +76,7 @@ const Timetable: FC<Props> = ({
   );
 };
 
-export default Timetable;
+export default TimetableTemplate;
 
 const EraserWrapper = styled.div`
   display: flex;
