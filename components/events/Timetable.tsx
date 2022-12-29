@@ -19,7 +19,7 @@ import { generateSelectedArea, getTableIndex } from "@lib/tableHelper";
 import { arrayUnion, updateDoc } from "firebase/firestore";
 import { arrayRemove } from "firebase/firestore";
 import { FC, useCallback, useRef, useState } from "react";
-type Times = number[];
+
 type ComponentProps = {
   startDate: Date;
   endDate: Date;
@@ -50,9 +50,9 @@ const START_TIME = 8;
 
 const DAY_TIME_ARRAY = new Array(7).fill(
   new Array(END_TIME - START_TIME).fill(0).map((_, i) => i + START_TIME)
-) as Times[];
+) as number[][];
 
-const Times: FC<ComponentProps> = ({
+const Timetable: FC<ComponentProps> = ({
   pageIndex,
   startDate,
   endDate,
@@ -214,7 +214,7 @@ const Times: FC<ComponentProps> = ({
   );
 };
 
-export default Times;
+export default Timetable;
 
 const Container = styled.div`
   display: grid;
