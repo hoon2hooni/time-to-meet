@@ -1,5 +1,5 @@
 import { Button, ErrorBox, Modal } from "@components/common";
-import { EntranceInput, Timetable, TimetableInfo } from "@components/events";
+import { EntranceInput, TimetableTemplate, TimetableInfo } from "@components/events";
 import { LoadingSpinner } from "@components/icons";
 import styled from "@emotion/styled";
 import useEventsStore from "@hooks/useEventsStore";
@@ -117,7 +117,7 @@ const Events: NextPageWithLayout = () => {
           setAttendees={setAttendees}
         />
       </Container>
-      <Timetable
+      <TimetableTemplate
         startDate={startDate?.toDate() || new Date()}
         endDate={endDate?.toDate() || new Date()}
         maxCapacity={maxCapacity}
