@@ -1,15 +1,17 @@
+import Portal from "@components/Portal";
 import styled from "@emotion/styled";
 import type { FC, ReactNode } from "react";
-
 type ModalProps = {
   children: ReactNode;
 };
 
 const Modal: FC<ModalProps> = ({ children }) => {
   return (
-    <Container>
-      <Content>{children}</Content>
-    </Container>
+    <Portal>
+      <Container>
+        <Content>{children}</Content>
+      </Container>
+    </Portal>
   );
 };
 
