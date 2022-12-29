@@ -66,9 +66,11 @@ const Timetable: FC<ComponentProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const currentSelectedAreaRef = useRef<TimeProps>(initialSelectedArea);
   const initialTableAreaRef = useRef<TimeProps>(initialSelectedArea);
-  const { startClientX, startClientY, setInit } = useMouseAndTouchStartLocation({
-    ref: containerRef,
-  });
+  const { startClientX, startClientY, setInit } = useMouseAndTouchStartLocation(
+    {
+      ref: containerRef,
+    }
+  );
   const hasNotStartMove = startClientX === 0 && startClientY === 0;
   const currentTableIndex = useRef(0);
   const { moveClientY, setInitMove } = useMouseAndTouchMoveLocation({

@@ -13,9 +13,10 @@ export const getWriteAttendeeData = (
   index: number
 ) => {
   if (index === -1) {
-    return [
-      { name, availableDates: dates.map((time) => Timestamp.fromDate(time)) },
-    ];
+    return {
+      name,
+      availableDates: dates.map((time) => Timestamp.fromDate(time)),
+    };
   }
   const availableDates = attendees[index].availableDates;
   const withoutDuplicatedDates = dates.filter(
@@ -35,7 +36,7 @@ export const getErasedAttendeeData = (
   index: number
 ) => {
   if (index === -1) {
-    return [{ name, availableDates: [] }];
+    return { name, availableDates: [] };
   }
   const availableDates = attendees[index].availableDates;
   const afterErasedAvailableDates = availableDates.filter(
