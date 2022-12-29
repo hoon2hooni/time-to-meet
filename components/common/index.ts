@@ -5,4 +5,5 @@ export { default as EventInfo } from "./EventInfo";
 export { default as GenericInput } from "./GenericInput";
 export { default as InputTemplate } from "./InputTemplate";
 export { default as Modal } from "./Modal";
+export { default as Portal } from "./Portal";
 export { default as Retention } from "./Retention";
