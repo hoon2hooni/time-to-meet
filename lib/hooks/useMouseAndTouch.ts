@@ -1,7 +1,7 @@
 import { normalizeTouchAndMouseEvent } from "@lib/handleCrossPlatform";
 import { getIsMobile } from "@lib/handleCrossPlatform";
 import type { RefObject } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 type MouseEventType = "mousemove" | "mousedown";
 type TouchEventType = "touchmove" | "touchstart";
 type MouseAndTouchEventConfig = {

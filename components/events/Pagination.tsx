@@ -7,7 +7,6 @@ import {
   getDiffDays,
   parseStringDateAndCombine,
 } from "@lib/days";
-import { Timestamp } from "firebase/firestore";
 import type { FC } from "react";
 
 type ComponentProps = {
