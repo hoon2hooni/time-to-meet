@@ -8,7 +8,11 @@ import {
   getWriteAttendeeData,
 } from "@lib/dataTransformer";
 import { addDateWithDays, getSelectedDates, isInRange } from "@lib/days";
-import useMoveStart, { useMoveDone, useMoving } from "@lib/hooks/useMoveStart";
+import {
+  useMouseAndTouchEnd,
+  useMouseAndTouchMoveLocation,
+  useMouseAndTouchStartLocation,
+} from "@lib/hooks/useMouseAndTouch";
 import useResizeEvent from "@lib/hooks/useResizeEvent";
 import useUrlEventId from "@lib/hooks/useUrlEventId";
 import { generateSelectedArea, getTableIndex } from "@lib/tableHelper";
@@ -62,12 +66,12 @@ const Times: FC<ComponentProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const currentSelectedAreaRef = useRef<TimeProps>(initialSelectedArea);
   const initialTableAreaRef = useRef<TimeProps>(initialSelectedArea);
-  const { startClientX, startClientY, setInit } = useMoveStart({
+  const { startClientX, startClientY, setInit } = useMouseAndTouchStartLocation({
     ref: containerRef,
   });
   const hasNotStartMove = startClientX === 0 && startClientY === 0;
   const currentTableIndex = useRef(0);
-  const { moveClientY, setInitMove } = useMoving({
+  const { moveClientY, setInitMove } = useMouseAndTouchMoveLocation({
     skipEvent: hasNotStartMove,
   });
 
@@ -162,7 +166,7 @@ const Times: FC<ComponentProps> = ({
     setInitMove,
   ]);
 
-  useMoveDone(updateAttendeesAndResetSelectedArea);
+  useMouseAndTouchEnd(updateAttendeesAndResetSelectedArea);
   const dateToAttendees = generateDateToAttendees(attendees);
   return (
     <Container ref={containerRef}>
