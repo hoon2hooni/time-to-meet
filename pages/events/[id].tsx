@@ -4,10 +4,9 @@ import { LoadingSpinner } from "@components/icons";
 import styled from "@emotion/styled";
 import useEventsStore from "@hooks/useEventsStore";
 import useUrlEventId from "@hooks/useUrlEventId";
-import closePage from "@lib/closePage";
+import { closePage } from "@lib/handleCrossPlatform";
 import type { NextPageWithLayout } from "@pages/_app";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 const getLocalStorageKey = (id: string) => {

@@ -1,3 +1,12 @@
+interface TimeProps {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+const END_TIME = 24;
+const START_TIME = 8;
 const THREE_WEEKS_DAYS = 21;
 const DAY_MILE_SECONDS = 24 * 60 * 60 * 1000;
 export const getDiffDays = (date1: Date, date2: Date) => {
@@ -49,3 +58,43 @@ export const parseStringDateAndCombine = (date: string, pattern: string) => {
     parsedDate[1][0] === "0" ? parsedDate[1][1] : parsedDate[1]
   }월 ${parsedDate[2][0] === "0" ? parsedDate[2][1] : parsedDate[2]}일`;
 };
+
+export function getSelectedDates(
+  selectedArea: TimeProps,
+  table: TimeProps,
+  startDate: Date,
+  currentTableIndex: number,
+  pageIndex: number
+) {
+  const fromTableToSelectedArea = selectedArea.y - table.y;
+  const GAP = 1;
+  const HEIGHT =
+    (table.h - GAP * (END_TIME - START_TIME - 1)) / (END_TIME - START_TIME);
+
+  const startIdx = Math.round(fromTableToSelectedArea / (HEIGHT + GAP));
+  const endIdx =
+    Math.round((fromTableToSelectedArea + selectedArea.h) / (HEIGHT + GAP)) - 1;
+  if (endIdx - startIdx + 1 < 0) return [];
+
+  const selectedDates = new Array(endIdx - startIdx + 1)
+    .fill(0)
+    .map((_, idx) =>
+      addDateWithDays(
+        startDate,
+        currentTableIndex + pageIndex * 7,
+        startIdx + idx + START_TIME
+      )
+    );
+  return selectedDates;
+}
+
+export function isInRange(
+  endDate: Date,
+  startDate: Date,
+  pageIndex: number,
+  i: number
+) {
+  return (
+    endDate.getTime() >= addDateWithDays(startDate, i + pageIndex * 7).getTime()
+  );
+}

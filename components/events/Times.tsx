@@ -1,16 +1,17 @@
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
-import { getIndexOfAttendees } from "@firebase/attendeeGenerator";
-import {
-  eraseSelectedArea,
-  writeSelectedArea,
-} from "@firebase/attendeeGenerator";
 import { eventsDocs } from "@firebase/clientApp";
-import { addDateWithDays } from "@lib/days";
+import {
+  generateDateToAttendees,
+  getErasedAttendeeData,
+  getIndexOfAttendees,
+  getWriteAttendeeData,
+} from "@lib/dataTransformer";
+import { addDateWithDays, getSelectedDates, isInRange } from "@lib/days";
 import useMoveStart, { useMoveDone, useMoving } from "@lib/hooks/useMoveStart";
 import useResizeEvent from "@lib/hooks/useResizeEvent";
 import useUrlEventId from "@lib/hooks/useUrlEventId";
-import { getTableIndex, getXOfTable } from "@lib/rectangularEngine";
+import { generateSelectedArea, getTableIndex } from "@lib/tableHelper";
 import { arrayUnion, updateDoc } from "firebase/firestore";
 import { arrayRemove } from "firebase/firestore";
 import { FC, useCallback, useRef, useState } from "react";
@@ -46,13 +47,6 @@ const START_TIME = 8;
 const DAY_TIME_ARRAY = new Array(7).fill(
   new Array(END_TIME - START_TIME).fill(0).map((_, i) => i + START_TIME)
 ) as Times[];
-const getCurrentColumnWidth = (totalWidth: number) => (totalWidth - 1 * 6) / 7;
-
-const getCurrentX = (area: number, startClientX: number) => {
-  const widthWidthGap = area / 7;
-  const tableIndex = getTableIndex(widthWidthGap, startClientX);
-  return getXOfTable(1, getCurrentColumnWidth(area), tableIndex);
-};
 
 const Times: FC<ComponentProps> = ({
   pageIndex,
@@ -93,10 +87,6 @@ const Times: FC<ComponentProps> = ({
     startClientX,
     currentWidth
   );
-
-  const dateToAttendees = generateDateToAttendees(attendees);
-  const isInRange = isInRangeRefac(endDate, startDate, pageIndex);
-
   const resizeTimeTableHandler = () => {
     if (containerRef.current) {
       const { x, y, width, height } =
@@ -139,17 +129,17 @@ const Times: FC<ComponentProps> = ({
       currentAttendee
     );
     const toBeUpdatedCurrentAttendeeDoc = isEraseMode
-      ? eraseSelectedArea(
-          selectedDates,
-          currentAttendeeIndex,
+      ? getErasedAttendeeData(
           attendees,
-          currentAttendee
+          selectedDates,
+          currentAttendee,
+          currentAttendeeIndex
         )
-      : writeSelectedArea(
-          selectedDates,
-          currentAttendeeIndex,
+      : getWriteAttendeeData(
           attendees,
-          currentAttendee
+          selectedDates,
+          currentAttendee,
+          currentAttendeeIndex
         );
 
     if (currentAttendeeIndex !== -1) {
@@ -173,11 +163,11 @@ const Times: FC<ComponentProps> = ({
   ]);
 
   useMoveDone(updateAttendeesAndResetSelectedArea);
-
+  const dateToAttendees = generateDateToAttendees(attendees);
   return (
     <Container ref={containerRef}>
       {DAY_TIME_ARRAY.map((hours, dayIndex) => {
-        if (isInRange(dayIndex)) {
+        if (isInRange(endDate, startDate, pageIndex, dayIndex)) {
           return (
             <AvailableDate key={dayIndex}>
               {hours.map((hour) => {
@@ -221,6 +211,7 @@ const Times: FC<ComponentProps> = ({
 };
 
 export default Times;
+
 const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -288,130 +279,3 @@ const EachRowTime = styled.div<EachRowTimeProps>`
     return props.theme.colors.white;
   }};
 `;
-
-const generateSelectedAreaUpperSide = (
-  initialTableArea: { x: number; y: number; w: number; h: number },
-  startClientX: number,
-  moveClientY: number,
-  startClientY: number
-) => {
-  const currentY =
-    moveClientY >= initialTableArea.y ? moveClientY : initialTableArea.y;
-  const currentH = startClientY - currentY;
-  return {
-    x: getCurrentX(initialTableArea.w, startClientX),
-    y: currentY,
-    w: getCurrentColumnWidth(initialTableArea.w),
-    h: currentH,
-  };
-};
-
-const generateSelectedAreaBelow = (
-  initialTableArea: { x: number; y: number; w: number; h: number },
-  startClientY: number,
-  currentWidth: number,
-  moveClientY: number,
-  currentX: number
-) => {
-  const startHeight =
-    (initialTableArea.h - (END_TIME - START_TIME - 1)) /
-    (END_TIME - START_TIME) /
-    3;
-
-  const currentY = startClientY;
-  const currentW = currentWidth;
-  const currentH =
-    moveClientY >= initialTableArea.y + initialTableArea.h
-      ? initialTableArea.y + initialTableArea.h - currentY
-      : moveClientY - startClientY;
-
-  return {
-    x: currentX,
-    y: currentY,
-    w: currentW,
-    h: Math.max(currentH, startHeight),
-  };
-};
-
-function isInRangeRefac(endDate: Date, startDate: Date, pageIndex: number) {
-  return (i: number) => {
-    return (
-      endDate.getTime() >=
-      addDateWithDays(startDate, i + pageIndex * 7).getTime()
-    );
-  };
-}
-
-function generateDateToAttendees(attendees: Attendees) {
-  const dateToAttendees: Record<string, string[]> = {};
-  attendees.forEach(({ name, availableDates }) => {
-    availableDates.forEach((availableDate) => {
-      const date = availableDate.toDate().toISOString();
-      if (dateToAttendees[date]) {
-        dateToAttendees[date].push(name);
-      } else {
-        dateToAttendees[date] = [name];
-      }
-    });
-  });
-  return dateToAttendees;
-}
-
-function generateSelectedArea(
-  hasNotStartMove: boolean,
-  moveClientY: number,
-  startClientY: number,
-  initialTableArea: { x: number; y: number; w: number; h: number },
-  startClientX: number,
-  currentWidth: number
-) {
-  if (hasNotStartMove) {
-    return initialSelectedArea;
-  }
-
-  if (moveClientY <= startClientY && moveClientY !== 0) {
-    return generateSelectedAreaUpperSide(
-      initialTableArea,
-      startClientX,
-      moveClientY,
-      startClientY
-    );
-  }
-
-  return generateSelectedAreaBelow(
-    initialTableArea,
-    startClientY,
-    currentWidth,
-    moveClientY,
-    getCurrentX(initialTableArea.w, startClientX)
-  );
-}
-
-function getSelectedDates(
-  selectedArea: TimeProps,
-  table: TimeProps,
-  startDate: Date,
-  currentTableIndex: number,
-  pageIndex: number
-) {
-  const fromTableToSelectedArea = selectedArea.y - table.y;
-  const GAP = 1;
-  const HEIGHT =
-    (table.h - GAP * (END_TIME - START_TIME - 1)) / (END_TIME - START_TIME);
-
-  const startIdx = Math.round(fromTableToSelectedArea / (HEIGHT + GAP));
-  const endIdx =
-    Math.round((fromTableToSelectedArea + selectedArea.h) / (HEIGHT + GAP)) - 1;
-  if (endIdx - startIdx + 1 < 0) return [];
-
-  const selectedDates = new Array(endIdx - startIdx + 1)
-    .fill(0)
-    .map((_, idx) =>
-      addDateWithDays(
-        startDate,
-        currentTableIndex + pageIndex * 7,
-        startIdx + idx + START_TIME
-      )
-    );
-  return selectedDates;
-}

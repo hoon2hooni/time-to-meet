@@ -1,15 +1,8 @@
 // Import the functions you need from the SDKs you need
-import type { Attendees, Event } from "@eventsTypes";
+import type { Event } from "@eventsTypes";
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
-import {
-  doc,
-  DocumentData,
-  DocumentReference,
-  Firestore,
-  FirestoreDataConverter,
-  getFirestore,
-} from "firebase/firestore";
+import { doc, FirestoreDataConverter, getFirestore } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
