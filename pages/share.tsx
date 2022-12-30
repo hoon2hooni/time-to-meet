@@ -1,5 +1,6 @@
 import { Button } from "@components/common";
 import { EventInfo } from "@components/common";
+import { Toast } from "@components/common";
 import Retention from "@components/common/Retention";
 import styled from "@emotion/styled";
 import { eventsDocs } from "@firebase/clientApp";
@@ -7,9 +8,8 @@ import { dateToPattern } from "@lib/days";
 import type { NewEvent } from "@newTypes";
 import { getDoc } from "firebase/firestore";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { Id, toast } from "react-toastify";
 
 export default function Home({
   id,
@@ -18,6 +18,8 @@ export default function Home({
   endDate,
   startDate,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  //TODO 토스트 관련 더 좋은 방법 찾기
+  const [showToast, setShowToast] = useState(0);
   useEffect(() => {
     if (window.Kakao?.isInitialized()) {
       return;
@@ -34,8 +36,6 @@ export default function Home({
     });
   };
 
-  const toastId = useRef<Id>("");
-
   return (
     <>
       <Layout>
@@ -50,17 +50,15 @@ export default function Home({
           <Comment>
             <strong>카톡으로 링크를 공유하면 매칭이 시작되요</strong>
           </Comment>
+          {showToast > 0 && (
+            <Toast message="링크가 복사 되었습니다!" key={showToast} />
+          )}
           <Wrapper>
             <LinkBox>
               <CopyToClipboard
                 text={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/events/${id}`}
                 onCopy={() => {
-                  if (toast.isActive(toastId.current)) {
-                    toast.dismiss(toastId.current);
-                  }
-                  toastId.current = toast.success(
-                    "링크가 복사되었어요! 카톡으로 공유해보세요"
-                  );
+                  setShowToast((prev) => prev + 1);
                 }}
               >
                 <TextSpan>{`${process.env.NEXT_PUBLIC_DOMAIN_URL}/events/${id}`}</TextSpan>
@@ -155,7 +153,7 @@ const LinkBox = styled.div`
   &: active {
     opacity: 0.5;
   }
-  
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       opacity: 0.5;

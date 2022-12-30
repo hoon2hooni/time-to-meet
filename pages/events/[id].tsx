@@ -12,7 +12,6 @@ import { closePage } from "@lib/handleCrossPlatform";
 import type { NextPageWithLayout } from "@pages/_app";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 const getLocalStorageKey = (id: string) => {
   return `${id}-currentAttendee`;
 };
@@ -61,7 +60,7 @@ const Events: NextPageWithLayout = () => {
     if (window !== undefined) {
       window.localStorage.setItem(getLocalStorageKey(id), name);
     }
-    toast.success(`${name} 님이 입장하였습니다.`);
+    //TODO 모달 활용해서 알림해주기
     return "";
   };
 
@@ -72,7 +71,7 @@ const Events: NextPageWithLayout = () => {
       window.localStorage.getItem(getLocalStorageKey(id)) || ""
     );
     if (userName) {
-      toast.success(`${userName} 님이 입장하였습니다.`);
+      //TODO 모달 활용해서 알림해주기
     }
   }, [id]);
 
@@ -108,7 +107,6 @@ const Events: NextPageWithLayout = () => {
           <EntranceInput onClickEntrance={handleClickEntrance} />
         </Modal>
       )}
-
       <Container>
         <Header>
           <Text>가능한 시간을 입력하세요!</Text>

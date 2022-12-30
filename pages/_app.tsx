@@ -1,5 +1,3 @@
-import "react-toastify/dist/ReactToastify.css";
-
 import { Global, ThemeProvider } from "@emotion/react";
 import global from "@styles/global";
 import theme from "@styles/theme";
@@ -7,7 +5,7 @@ import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import type { ReactElement, ReactNode } from "react";
-import { ToastContainer } from "react-toastify";
+
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -44,7 +42,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       <ThemeProvider theme={theme}>
         <Global styles={global} />
         {getLayout(<Component {...pageProps} />)}
-        <ToastContainer />
       </ThemeProvider>
     </>
   );

@@ -1,11 +1,11 @@
+import { Toast } from "@components/common";
 import { Days, Pagination, Timetable } from "@components/events";
 import { Eraser } from "@components/icons";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
 import type { FC } from "react";
-import { useRef, useState } from "react";
-import type { Id } from "react-toastify";
-import { toast } from "react-toastify";
+import { useState } from "react";
+
 type Props = {
   startDate: Date;
   endDate: Date;
@@ -26,7 +26,8 @@ const TimetableTemplate: FC<Props> = ({
 }) => {
   const [pageIndex, setPageIndex] = useState(0);
   const [isEraseMode, setIsEraseMode] = useState(false);
-  const toastId = useRef<Id>("");
+  const [showToast, setShowToast] = useState(0);
+  // const toastId = useRef<Id>("");
   const handleClickPageUp = () => {
     setPageIndex((index) => index + 1);
   };
@@ -34,7 +35,9 @@ const TimetableTemplate: FC<Props> = ({
   const handleClickPageDown = () => {
     setPageIndex((index) => index - 1);
   };
-
+  const toastMessage = isEraseMode
+    ? "지우개 모드 활성화!"
+    : "지우개 모드 해제!";
   return (
     <Container>
       <Pagination
@@ -50,17 +53,13 @@ const TimetableTemplate: FC<Props> = ({
           <EraserIconWrapper
             onClick={() => {
               setIsEraseMode((prev) => !prev);
-              if (toast.isActive(toastId.current)) {
-                toast.dismiss(toastId.current);
-              }
-              toastId.current = toast.success(
-                `${isEraseMode ? "지우개 모드 해제!" : "지우개 모드 활성화!"}`
-              );
+              setShowToast((prev) => prev + 1);
             }}
           >
             <Eraser isEraseMode={isEraseMode} />
           </EraserIconWrapper>
         </EraserWrapper>
+        {showToast > 0 && <Toast message={toastMessage} key={showToast} />}
         <Days startDate={startDate} pageIndex={pageIndex} />
         <Timetable
           pageIndex={pageIndex}

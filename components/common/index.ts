@@ -7,3 +7,4 @@ export { default as InputTemplate } from "./InputTemplate";
 export { default as Modal } from "./Modal";
 export { default as Portal } from "./Portal";
 export { default as Retention } from "./Retention";
+export { default as Toast } from "./Toast";
