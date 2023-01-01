@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
-import { eventsDocs } from "@firebase/clientApp";
+import { updateCurrentAttendeeEventDocRef } from "@firebase/clientApp";
 import {
   generateDateToAttendees,
   getErasedAttendeeData,
@@ -16,8 +16,6 @@ import {
 import useResizeEvent from "@lib/hooks/useResizeEvent";
 import useUrlEventId from "@lib/hooks/useUrlEventId";
 import { generateSelectedArea, getTableIndex } from "@lib/tableHelper";
-import { arrayUnion, updateDoc } from "firebase/firestore";
-import { arrayRemove } from "firebase/firestore";
 import { FC, useCallback, useRef, useState } from "react";
 
 type ComponentProps = {
@@ -62,7 +60,6 @@ const Timetable: FC<ComponentProps> = ({
   isEraseMode,
 }) => {
   const id = useUrlEventId();
-  const eventRef = eventsDocs(id);
   const containerRef = useRef<HTMLDivElement>(null);
   const currentSelectedAreaRef = useRef<TimeProps>(initialSelectedArea);
   const initialTableAreaRef = useRef<TimeProps>(initialSelectedArea);
@@ -147,15 +144,13 @@ const Timetable: FC<ComponentProps> = ({
           currentAttendee,
           currentAttendeeIndex
         );
+    updateCurrentAttendeeEventDocRef(
+      id,
+      attendees,
+      currentAttendeeIndex,
+      toBeUpdatedCurrentAttendeeDoc
+    );
 
-    if (currentAttendeeIndex !== -1) {
-      updateDoc(eventRef, {
-        attendees: arrayRemove(attendees[currentAttendeeIndex]),
-      });
-    }
-    updateDoc(eventRef, {
-      attendees: arrayUnion(toBeUpdatedCurrentAttendeeDoc),
-    });
     resetSelectedArea();
   }, [
     attendees,
@@ -164,8 +159,8 @@ const Timetable: FC<ComponentProps> = ({
     setInit,
     startDate,
     pageIndex,
-    eventRef,
     setInitMove,
+    id,
   ]);
 
   useMouseAndTouchEnd(updateAttendeesAndResetSelectedArea);

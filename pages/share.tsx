@@ -3,7 +3,7 @@ import { EventInfo } from "@components/common";
 import { Toast } from "@components/common";
 import Retention from "@components/common/Retention";
 import styled from "@emotion/styled";
-import { eventsDocs } from "@firebase/clientApp";
+import { getEventDocRef } from "@firebase/clientApp";
 import { dateToPattern } from "@lib/days";
 import type { NewEvent } from "@newTypes";
 import { getDoc } from "firebase/firestore";
@@ -83,15 +83,14 @@ export const getServerSideProps: GetServerSideProps<
     };
   }
 
-  const eventRef = await getDoc(eventsDocs(id));
-
-  if (!eventRef.exists()) {
+  const eventSnapshot = await getDoc(getEventDocRef(id));
+  if (!eventSnapshot.exists()) {
     return {
       notFound: true,
     };
   }
 
-  const eachEvent = eventRef.data();
+  const eachEvent = eventSnapshot.data();
   const { name, maxCapacity } = eachEvent;
   const startDate = dateToPattern(eachEvent.startDate.toDate());
   const endDate = dateToPattern(eachEvent.endDate.toDate());

@@ -7,9 +7,9 @@ import {
 } from "@components/new";
 import styled from "@emotion/styled";
 import type { Event } from "@eventsTypes";
-import { db } from "@firebase/clientApp";
+import { addEvent } from "@firebase/clientApp";
 import type { NewEvent } from "@newTypes";
-import { addDoc, collection, Timestamp } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -36,10 +36,10 @@ const New: NextPageWithLayout = () => {
     const event = fromFormDataToEvent(data);
     try {
       setIsLoading(true);
-      const eventsRef = await addDoc(collection(db, "events"), event);
+      const newEventRef = await addEvent(event);
       router.push({
         pathname: "/share",
-        query: { id: eventsRef.id },
+        query: { id: newEventRef.id },
       });
     } catch (e) {
       //TODO 에러처리

@@ -1,5 +1,5 @@
 import type { Attendees } from "@eventsTypes";
-import { eventsDocs } from "@firebase/clientApp";
+import { getEventDocRef } from "@firebase/clientApp";
 import { onSnapshot, Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
 type Status = "loading" | "success" | "error" | "idle";
@@ -16,11 +16,11 @@ const useEventsStore = (id = "") => {
       return;
     }
     setStatus("loading");
-    const eventRef = eventsDocs(id || "");
+    const eventDocRef = getEventDocRef(id || "");
     const unsubscribe = onSnapshot(
-      eventRef,
-      (eventDoc) => {
-        const event = eventDoc?.data();
+      eventDocRef,
+      (eventDocSnapshot) => {
+        const event = eventDocSnapshot?.data();
         if (!event) {
           setStatus("error");
           return;
