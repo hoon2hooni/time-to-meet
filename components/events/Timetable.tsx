@@ -202,7 +202,17 @@ const Timetable: FC<ComponentProps> = ({
             </AvailableDate>
           );
         }
-        return <NotAvailableDate key={dayIndex} />;
+        return (
+          <NotAvailableDate
+            key={dayIndex}
+            onMouseDownCapture={(e) => {
+              e.stopPropagation();
+            }}
+            onTouchStartCapture={(e) => {
+              e.stopPropagation();
+            }}
+          />
+        );
       })}
       <SelectedAreaBox {...currentSelectedAreaRef.current} />
     </Container>
