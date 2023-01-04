@@ -4,6 +4,12 @@ interface TimeProps {
   w: number;
   h: number;
 }
+interface Time {
+  days?: number;
+  hours?: number;
+  seconds?: number;
+  minutes?: number;
+}
 
 const END_TIME = 24;
 const START_TIME = 8;
@@ -21,22 +27,28 @@ export const getDayOfWeek = (date: Date) => {
   return dayNames[d % 7];
 };
 
-export const secondsToDate = (seconds: number) => {
-  return new Date(seconds * 1000);
+export const getMilliSecondsFromTime = (time: Time) => {
+  const SEC = 1000;
+  const MIN = 60 * SEC;
+  const HR = 60 * MIN;
+  const D = 24 * HR;
+
+  const { days = 0, hours = 0, seconds = 0, minutes = 0 } = time;
+
+  return days * D + hours * HR + minutes * MIN + seconds * SEC;
 };
 
-export const addDateWithDays = (date: Date, days: number, hours = 0) => {
-  return new Date(
-    date.getTime() + days * DAY_MILE_SECONDS + hours * 1000 * 60 * 60
-  );
+export const addDateAndTime = (date: Date, time: Time) => {
+  return new Date(date.getTime() + getMilliSecondsFromTime(time));
 };
 
 export const dateToPattern = (date: Date) => {
   return date.toISOString().split("T")[0];
 };
 
+//TODO setMaxDate, getMaxDate 리펙토링
 export const setMaxDate = (date: Date) => {
-  const maxDate = addDateWithDays(date, THREE_WEEKS_DAYS - 1);
+  const maxDate = addDateAndTime(date, { days: THREE_WEEKS_DAYS - 1 });
   return dateToPattern(maxDate);
 };
 
@@ -46,6 +58,7 @@ export const getMaxDate = (s: string) => {
   }
 };
 
+//TODO: 순수함수로 변경
 export const notWithinThreeWeeks = (startDate: string, endDate: string) => {
   const st = new Date(startDate).getTime();
   const et = new Date(endDate).getTime();
@@ -59,6 +72,7 @@ export const parseStringDateAndCombine = (date: string, pattern: string) => {
   }월 ${parsedDate[2][0] === "0" ? parsedDate[2][1] : parsedDate[2]}일`;
 };
 
+//TODO: 너무 큰 함수 리펙토링
 export function getSelectedDates(
   selectedArea: TimeProps,
   table: TimeProps,
@@ -76,15 +90,12 @@ export function getSelectedDates(
     Math.round((fromTableToSelectedArea + selectedArea.h) / (HEIGHT + GAP)) - 1;
   if (endIdx - startIdx + 1 < 0) return [];
 
-  const selectedDates = new Array(endIdx - startIdx + 1)
-    .fill(0)
-    .map((_, idx) =>
-      addDateWithDays(
-        startDate,
-        currentTableIndex + pageIndex * 7,
-        startIdx + idx + START_TIME
-      )
-    );
+  const selectedDates = new Array(endIdx - startIdx + 1).fill(0).map((_, idx) =>
+    addDateAndTime(startDate, {
+      days: currentTableIndex + pageIndex * 7,
+      hours: startIdx + idx + START_TIME,
+    })
+  );
   return selectedDates;
 }
 
@@ -95,6 +106,7 @@ export function isInRange(
   i: number
 ) {
   return (
-    endDate.getTime() >= addDateWithDays(startDate, i + pageIndex * 7).getTime()
+    endDate.getTime() >=
+    addDateAndTime(startDate, { days: i + pageIndex * 7 }).getTime()
   );
 }

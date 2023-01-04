@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { addDateWithDays, getDayOfWeek } from "@lib/days";
+import { addDateAndTime, getDayOfWeek } from "@lib/days";
 import type { FC } from "react";
 type ComponentProps = {
   startDate: Date;
@@ -12,9 +12,13 @@ const Days: FC<ComponentProps> = ({ startDate, pageIndex }) => {
       {new Array(7).fill(0).map((_, i) => {
         return (
           <EachDay key={i}>
-            <div>{addDateWithDays(startDate, i + pageIndex * 7).getDate()}</div>
             <div>
-              {getDayOfWeek(addDateWithDays(startDate, i + pageIndex * 7))}
+              {addDateAndTime(startDate, { days: i + pageIndex * 7 }).getDate()}
+            </div>
+            <div>
+              {getDayOfWeek(
+                addDateAndTime(startDate, { days: i + pageIndex * 7 })
+              )}
             </div>
           </EachDay>
         );

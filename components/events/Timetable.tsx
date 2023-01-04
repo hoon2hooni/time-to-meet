@@ -7,7 +7,7 @@ import {
   getIndexOfAttendees,
   getWriteAttendeeData,
 } from "@lib/dataTransformer";
-import { addDateWithDays, getSelectedDates, isInRange } from "@lib/days";
+import { addDateAndTime, getSelectedDates, isInRange } from "@lib/days";
 import {
   useMouseAndTouchEnd,
   useMouseAndTouchMoveLocation,
@@ -171,32 +171,30 @@ const Timetable: FC<ComponentProps> = ({
         if (isInRange(endDate, startDate, pageIndex, dayIndex)) {
           return (
             <AvailableDate key={dayIndex}>
-              {hours.map((hour) => {
+              {hours.map((hours) => {
                 const currentAttendeeCount =
                   dateToAttendees[
-                    addDateWithDays(
-                      startDate,
-                      dayIndex + pageIndex * 7,
-                      hour
-                    ).toISOString()
+                    addDateAndTime(startDate, {
+                      days: dayIndex + pageIndex * 7,
+                      hours,
+                    }).toISOString()
                   ]?.length;
                 return (
                   <EachRowTime
-                    key={hour}
+                    key={hours}
                     maxCapacity={maxCapacity}
                     currentAttendeeCount={currentAttendeeCount}
-                    id={`${dayIndex}-${hour}-time`}
+                    id={`${dayIndex}-${hours}-time`}
                     hasCurrentMember={
                       !!dateToAttendees[
-                        addDateWithDays(
-                          startDate,
-                          dayIndex + pageIndex * 7,
-                          hour
-                        ).toISOString()
+                        addDateAndTime(startDate, {
+                          days: dayIndex + pageIndex * 7,
+                          hours,
+                        }).toISOString()
                       ]?.includes(currentAttendee)
                     }
                   >
-                    {dayIndex === 0 && <TimeUnit>{hour}:00</TimeUnit>}
+                    {dayIndex === 0 && <TimeUnit>{hours}:00</TimeUnit>}
                     {currentAttendeeCount}
                   </EachRowTime>
                 );

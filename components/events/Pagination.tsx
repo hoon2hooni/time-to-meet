@@ -1,7 +1,7 @@
 import { Arrow } from "@components/icons";
 import styled from "@emotion/styled";
 import {
-  addDateWithDays,
+  addDateAndTime,
   dateToPattern,
   getDayOfWeek,
   getDiffDays,
@@ -35,11 +35,11 @@ const Pagination: FC<ComponentProps> = ({
 
   const isFirstPage = pageIndex === firstPageIndex;
   const isLastPage = pageIndex === lastPageIndex;
-  const currentStartDate = addDateWithDays(startDate, pageIndex * 7);
+  const currentStartDate = addDateAndTime(startDate, { days: pageIndex * 7 });
 
   const currentLastDate =
-    endDate.getTime() > addDateWithDays(currentStartDate, 6).getTime()
-      ? addDateWithDays(currentStartDate, 6)
+    endDate.getTime() > addDateAndTime(currentStartDate, { days: 6 }).getTime()
+      ? addDateAndTime(currentStartDate, { days: 6 })
       : endDate;
 
   const parsedCurrentStartDate = parseStringDateAndCombine(
