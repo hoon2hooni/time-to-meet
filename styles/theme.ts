@@ -9,6 +9,7 @@ const theme: Theme = {
     block: "#B8B8B8",
     error: "#AE0000",
     green: "#2AA000",
+    lightGreen: "#9ECE8E",
     gray: "#CECECE",
     buttonHoverPrimary: "#896300",
     buttonHoverSecondary: "#B8B8B8",

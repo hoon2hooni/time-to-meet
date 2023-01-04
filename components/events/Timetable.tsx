@@ -5,6 +5,7 @@ import {
   generateDateToAttendees,
   getErasedAttendeeData,
   getIndexOfAttendees,
+  getMaxNumberOfAttendees,
   getWriteAttendeeData,
 } from "@lib/dataTransformer";
 import { addDateAndTime, getSelectedDates, isInRange } from "@lib/days";
@@ -22,14 +23,13 @@ type ComponentProps = {
   startDate: Date;
   endDate: Date;
   pageIndex: number;
-  maxCapacity: number;
   attendees: Attendees;
   currentAttendee: string;
   isEraseMode: boolean;
 };
 
 type EachRowTimeProps = {
-  maxCapacity: number;
+  maxNumberOfAttendees: number;
   currentAttendeeCount?: number;
   hasCurrentMember: boolean;
 };
@@ -54,7 +54,6 @@ const Timetable: FC<ComponentProps> = ({
   pageIndex,
   startDate,
   endDate,
-  maxCapacity,
   attendees,
   currentAttendee,
   isEraseMode,
@@ -165,6 +164,7 @@ const Timetable: FC<ComponentProps> = ({
 
   useMouseAndTouchEnd(updateAttendeesAndResetSelectedArea);
   const dateToAttendees = generateDateToAttendees(attendees);
+  const maxNumberOfAttendees = getMaxNumberOfAttendees(dateToAttendees);
   return (
     <Container ref={containerRef}>
       {DAY_TIME_ARRAY.map((hours, dayIndex) => {
@@ -182,7 +182,7 @@ const Timetable: FC<ComponentProps> = ({
                 return (
                   <EachRowTime
                     key={hours}
-                    maxCapacity={maxCapacity}
+                    maxNumberOfAttendees={maxNumberOfAttendees}
                     currentAttendeeCount={currentAttendeeCount}
                     id={`${dayIndex}-${hours}-time`}
                     hasCurrentMember={
@@ -270,21 +270,20 @@ const EachRowTime = styled.div<EachRowTimeProps>`
   justify-content: center;
   align-items: center;
   height: 100%;
-  color: ${(props) => {
-    if (props.hasCurrentMember) {
-      return props.theme.colors.white;
-    }
-    return props.theme.colors.primary;
-  }};
+  color: ${(props) => props.theme.colors.white};
   border-radius: 0.3rem;
   font-size: 1.5rem;
   background-color: ${(props) => {
-    if (props.currentAttendeeCount === props.maxCapacity) {
+    if (!props.currentAttendeeCount) {
+      return props.theme.colors.white;
+    }
+    if (props.currentAttendeeCount === props.maxNumberOfAttendees) {
       return props.theme.colors.green;
     }
     if (props.hasCurrentMember) {
       return props.theme.colors.yellow;
     }
-    return props.theme.colors.white;
+
+    return props.theme.colors.lightGreen;
   }};
 `;

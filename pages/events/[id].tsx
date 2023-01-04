@@ -126,7 +126,6 @@ const Events: NextPageWithLayout = () => {
       <TimetableTemplate
         startDate={startDate?.toDate() || new Date()}
         endDate={endDate?.toDate() || new Date()}
-        maxCapacity={maxCapacity}
         attendees={attendees}
         currentAttendee={currentAttendee}
       />

@@ -67,3 +67,11 @@ export const generateDateToAttendees = (attendees: Attendees) => {
   });
   return dateToAttendees;
 };
+
+export const transformObjToValueLengthArray = <T>(obj: Record<string, T[]>) => {
+  return Object.values(obj).map((obj) => obj.length);
+};
+
+export const getMaxNumberOfAttendees = (attendees: Record<string, string[]>) => {
+  return Math.max(...transformObjToValueLengthArray(attendees));
+};

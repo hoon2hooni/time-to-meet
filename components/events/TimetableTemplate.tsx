@@ -10,7 +10,6 @@ import { useState } from "react";
 type Props = {
   startDate: Date;
   endDate: Date;
-  maxCapacity: number;
   attendees: Attendees;
   currentAttendee: string;
 };
@@ -21,7 +20,6 @@ type EraserProps = {
 const TimetableTemplate: FC<Props> = ({
   startDate,
   endDate,
-  maxCapacity,
   attendees,
   currentAttendee,
 }) => {
@@ -66,7 +64,6 @@ const TimetableTemplate: FC<Props> = ({
           pageIndex={pageIndex}
           startDate={startDate}
           endDate={endDate}
-          maxCapacity={maxCapacity}
           attendees={attendees}
           currentAttendee={currentAttendee}
           isEraseMode={isEraseMode}

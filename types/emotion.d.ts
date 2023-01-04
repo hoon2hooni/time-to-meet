@@ -10,6 +10,7 @@ declare module "@emotion/react" {
       block: string;
       error: string;
       green: string;
+      lightGreen: string;
       gray: string;
       buttonHoverPrimary: string;
       buttonHoverSecondary: string;
