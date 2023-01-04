@@ -3,6 +3,7 @@ import { Days, Pagination, Timetable } from "@components/events";
 import { Eraser } from "@components/icons";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
+import useToast from "@lib/hooks/useToast";
 import type { FC } from "react";
 import { useState } from "react";
 
@@ -26,7 +27,7 @@ const TimetableTemplate: FC<Props> = ({
 }) => {
   const [pageIndex, setPageIndex] = useState(0);
   const [isEraseMode, setIsEraseMode] = useState(false);
-  const [showToast, setShowToast] = useState(0);
+  const { isToastOpen, toastKeyVal, toggleToast } = useToast();
   // const toastId = useRef<Id>("");
   const handleClickPageUp = () => {
     setPageIndex((index) => index + 1);
@@ -53,13 +54,13 @@ const TimetableTemplate: FC<Props> = ({
           <EraserIconWrapper
             onClick={() => {
               setIsEraseMode((prev) => !prev);
-              setShowToast((prev) => prev + 1);
+              toggleToast();
             }}
           >
             <Eraser isEraseMode={isEraseMode} />
           </EraserIconWrapper>
         </EraserWrapper>
-        {showToast > 0 && <Toast message={toastMessage} key={showToast} />}
+        {isToastOpen && <Toast message={toastMessage} key={toastKeyVal} />}
         <Days startDate={startDate} pageIndex={pageIndex} />
         <Timetable
           pageIndex={pageIndex}

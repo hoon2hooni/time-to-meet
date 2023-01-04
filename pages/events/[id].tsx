@@ -1,4 +1,4 @@
-import { Button, ErrorBox, Modal } from "@components/common";
+import { Button, ErrorBox, Modal, Toast } from "@components/common";
 import {
   EntranceInput,
   TimetableInfo,
@@ -9,6 +9,7 @@ import styled from "@emotion/styled";
 import useEventsStore from "@hooks/useEventsStore";
 import useUrlEventId from "@hooks/useUrlEventId";
 import { closePage } from "@lib/handleCrossPlatform";
+import useToast from "@lib/hooks/useToast";
 import type { NextPageWithLayout } from "@pages/_app";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ const getLocalStorageKey = (id: string) => {
 
 const Events: NextPageWithLayout = () => {
   const [windowHeight, setWindowHeight] = useState<number>(0);
+  const { isToastOpen, toggleToast } = useToast();
   useEffect(() => {
     const resizeHandlerForFixedHeight = () => {
       if (window !== undefined) {
@@ -60,20 +62,19 @@ const Events: NextPageWithLayout = () => {
     if (window !== undefined) {
       window.localStorage.setItem(getLocalStorageKey(id), name);
     }
-    //TODO 모달 활용해서 알림해주기
+    toggleToast();
     return "";
   };
 
   useEffect(() => {
     if (window === undefined || !id) return;
-    const userName = window.localStorage.getItem(getLocalStorageKey(id));
-    setCurrentAttendee(
-      window.localStorage.getItem(getLocalStorageKey(id)) || ""
-    );
-    if (userName) {
-      //TODO 모달 활용해서 알림해주기
+    const previousAttendee =
+      window.localStorage.getItem(getLocalStorageKey(id)) || "";
+    if (previousAttendee) {
+      setCurrentAttendee(previousAttendee);
+      toggleToast();
     }
-  }, [id]);
+  }, [id, toggleToast]);
 
   if (status === "idle" || status === "loading") {
     return (
@@ -106,6 +107,9 @@ const Events: NextPageWithLayout = () => {
         <Modal>
           <EntranceInput onClickEntrance={handleClickEntrance} />
         </Modal>
+      )}
+      {isToastOpen && (
+        <Toast message={`${currentAttendee}님이 입장하셨습니다.`} />
       )}
       <Container>
         <Header>
