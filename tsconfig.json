@@ -27,6 +27,7 @@
       "@hooks/*": ["lib/hooks/*"],
       "@eventsTypes": ["types/events"],
       "@newTypes": ["types/new"],
+      "@dateTypes": ["types/date"],
       "@firebase/*": ["firebase/*"]
     }
   },

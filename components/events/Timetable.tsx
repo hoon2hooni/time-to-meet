@@ -248,7 +248,7 @@ const AvailableDate = styled.div`
 `;
 
 const NotAvailableDate = styled.div`
-  background-color: ${(props) => props.theme.colors.block}};
+  background-color: ${(props) => props.theme.colors.block};
 `;
 
 const TimeUnit = styled.div`

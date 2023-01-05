@@ -6,9 +6,6 @@ declare global {
       NEXT_PUBLIC_DOMAIN_URL: string;
     }
   }
-  interface Window {
-    Kakao: any;
-  }
 }
 
 export {};

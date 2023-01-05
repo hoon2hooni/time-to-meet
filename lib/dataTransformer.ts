@@ -2,6 +2,7 @@
  * 생성
  */
 
+import type { DateISO } from "@dateTypes";
 import type { Attendees } from "@eventsTypes";
 import { Timestamp } from "firebase/firestore";
 
@@ -72,6 +73,8 @@ export const transformObjToValueLengthArray = <T>(obj: Record<string, T[]>) => {
   return Object.values(obj).map((obj) => obj.length);
 };
 
-export const getMaxNumberOfAttendees = (attendees: Record<string, string[]>) => {
+export const getMaxNumberOfAttendees = (
+  attendees: Record<DateISO, string[]>
+) => {
   return Math.max(...transformObjToValueLengthArray(attendees));
 };
