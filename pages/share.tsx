@@ -8,9 +8,9 @@ import { dateToPattern } from "@lib/days";
 import type { NewEvent } from "@newTypes";
 import { getDoc } from "firebase/firestore";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import Script from "next/script";
 import { useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-
 export default function Home({
   id,
   name,
@@ -19,13 +19,14 @@ export default function Home({
   startDate,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   //TODO 토스트 관련 더 좋은 방법 찾기
+  const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
   const [showToast, setShowToast] = useState(0);
   useEffect(() => {
     if (window.Kakao?.isInitialized()) {
       return;
     }
     window.Kakao?.init(process.env.NEXT_PUBLIC_KAKAO_API_KEY);
-  }, []);
+  }, [isKakaoLoaded]);
 
   const shareMessage = () => {
     window?.Kakao.Share.sendCustom({
@@ -38,6 +39,12 @@ export default function Home({
 
   return (
     <>
+      <Script
+        src="https://developers.kakao.com/sdk/js/kakao.js"
+        onLoad={() => {
+          setIsKakaoLoaded(true);
+        }}
+      />
       <Layout>
         <WrapperMain>
           <Header>모임이 생성되었어요!</Header>
@@ -64,7 +71,9 @@ export default function Home({
                 <TextSpan>{`${process.env.NEXT_PUBLIC_DOMAIN_URL}/events/${id}`}</TextSpan>
               </CopyToClipboard>
             </LinkBox>
-            <Button onClick={shareMessage}>공유하기</Button>
+            <Button onClick={shareMessage} disabled={!isKakaoLoaded}>
+              공유하기
+            </Button>
           </Wrapper>
         </WrapperMain>
         <Retention />
