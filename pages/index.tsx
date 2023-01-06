@@ -29,7 +29,13 @@ export default function Home() {
         >
           새로운 모임 만들기
         </Button>
-        <Image src={landingImage} width={294} height={515} alt={"모임"} />
+        <Image
+          src={landingImage}
+          width={294}
+          height={515}
+          priority
+          alt={"모임"}
+        />
         <Footer>
           <FooterLogoWrapper>
             <Thumbnail width={20} height={20} />
