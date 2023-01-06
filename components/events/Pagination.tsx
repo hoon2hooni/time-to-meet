@@ -12,7 +12,7 @@ import type { FC } from "react";
 type ComponentProps = {
   startDate: Date;
   endDate: Date;
-  pageIndex: number;
+  currentPageIndex: number;
   onClickPageUp: () => void;
   onClickPageDown: () => void;
 };
@@ -25,7 +25,7 @@ type ArrowProps = {
 const Pagination: FC<ComponentProps> = ({
   startDate,
   endDate,
-  pageIndex,
+  currentPageIndex,
   onClickPageDown,
   onClickPageUp,
 }) => {
@@ -33,9 +33,11 @@ const Pagination: FC<ComponentProps> = ({
   const firstPageIndex = 0;
   const lastPageIndex = Math.floor(diffDays / 7);
 
-  const isFirstPage = pageIndex === firstPageIndex;
-  const isLastPage = pageIndex === lastPageIndex;
-  const currentStartDate = addDateAndTime(startDate, { days: pageIndex * 7 });
+  const isFirstPage = currentPageIndex === firstPageIndex;
+  const isLastPage = currentPageIndex === lastPageIndex;
+  const currentStartDate = addDateAndTime(startDate, {
+    days: currentPageIndex * 7,
+  });
 
   const currentLastDate =
     endDate.getTime() > addDateAndTime(currentStartDate, { days: 6 }).getTime()

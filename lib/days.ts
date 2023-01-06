@@ -72,14 +72,24 @@ export const parseStringDateAndCombine = (date: string, pattern: string) => {
   }월 ${parsedDate[2][0] === "0" ? parsedDate[2][1] : parsedDate[2]}일`;
 };
 
-//TODO: 너무 큰 함수 리펙토링
-export function getSelectedDates(
+export function getSelectedDatesWithSelectedArea(
   selectedArea: TimeProps,
   table: TimeProps,
   startDate: Date,
   currentTableIndex: number,
   pageIndex: number
 ) {
+  const { startIdx, endIdx } = getIndexesFromTable(selectedArea, table);
+  return getSelectedDates({
+    startIdx,
+    endIdx,
+    startDate,
+    currentTableIndex,
+    pageIndex,
+  });
+}
+
+function getIndexesFromTable(selectedArea: TimeProps, table: TimeProps) {
   const fromTableToSelectedArea = selectedArea.y - table.y;
   const GAP = 1;
   const HEIGHT =
@@ -88,12 +98,29 @@ export function getSelectedDates(
   const startIdx = Math.round(fromTableToSelectedArea / (HEIGHT + GAP));
   const endIdx =
     Math.round((fromTableToSelectedArea + selectedArea.h) / (HEIGHT + GAP)) - 1;
-  if (endIdx - startIdx + 1 < 0) return [];
+  return { startIdx, endIdx };
+}
 
+export function getSelectedDates({
+  endIdx = 15,
+  startIdx = 0,
+  startDate,
+  currentTableIndex,
+  pageIndex,
+  startTime = 8,
+}: {
+  endIdx?: number;
+  startIdx?: number;
+  startDate: Date;
+  currentTableIndex: number;
+  pageIndex: number;
+  startTime?: number;
+}) {
+  if (endIdx - startIdx + 1 < 0) return [];
   const selectedDates = new Array(endIdx - startIdx + 1).fill(0).map((_, idx) =>
     addDateAndTime(startDate, {
       days: currentTableIndex + pageIndex * 7,
-      hours: startIdx + idx + START_TIME,
+      hours: startIdx + idx + startTime,
     })
   );
   return selectedDates;

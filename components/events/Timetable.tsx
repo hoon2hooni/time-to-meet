@@ -1,14 +1,14 @@
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
-import { updateCurrentAttendeeEventDocRef } from "@firebase/clientApp";
 import {
   generateDateToAttendees,
-  getErasedAttendeeData,
-  getIndexOfAttendees,
   getMaxNumberOfAttendees,
-  getWriteAttendeeData,
 } from "@lib/dataTransformer";
-import { addDateAndTime, getSelectedDates, isInRange } from "@lib/days";
+import {
+  addDateAndTime,
+  getSelectedDatesWithSelectedArea,
+  isInRange,
+} from "@lib/days";
 import {
   useMouseAndTouchEnd,
   useMouseAndTouchMoveLocation,
@@ -17,12 +17,13 @@ import {
 import useResizeEvent from "@lib/hooks/useResizeEvent";
 import useUrlEventId from "@lib/hooks/useUrlEventId";
 import { generateSelectedArea, getTableIndex } from "@lib/tableHelper";
+import updateCurrentAttendee from "@lib/updateCurrentAttendee";
 import { FC, useCallback, useRef, useState } from "react";
 
 type ComponentProps = {
   startDate: Date;
   endDate: Date;
-  pageIndex: number;
+  currentPageIndex: number;
   attendees: Attendees;
   currentAttendee: string;
   isEraseMode: boolean;
@@ -51,7 +52,7 @@ const DAY_TIME_ARRAY = new Array(7).fill(
 ) as number[][];
 
 const Timetable: FC<ComponentProps> = ({
-  pageIndex,
+  currentPageIndex,
   startDate,
   endDate,
   attendees,
@@ -113,12 +114,12 @@ const Timetable: FC<ComponentProps> = ({
       return;
     }
 
-    const selectedDates = getSelectedDates(
+    const selectedDates = getSelectedDatesWithSelectedArea(
       currentSelectedArea,
       initialTableAreaRef.current,
       startDate,
       currentTableIndex.current,
-      pageIndex
+      currentPageIndex
     );
 
     if (!selectedDates.length) {
@@ -126,30 +127,16 @@ const Timetable: FC<ComponentProps> = ({
       return;
     }
 
-    const currentAttendeeIndex = getIndexOfAttendees(
+    const method = {
+      type: isEraseMode ? "delete" : "write",
+    } as const;
+    updateCurrentAttendee({
       attendees,
-      currentAttendee
-    );
-    const toBeUpdatedCurrentAttendeeDoc = isEraseMode
-      ? getErasedAttendeeData(
-          attendees,
-          selectedDates,
-          currentAttendee,
-          currentAttendeeIndex
-        )
-      : getWriteAttendeeData(
-          attendees,
-          selectedDates,
-          currentAttendee,
-          currentAttendeeIndex
-        );
-    updateCurrentAttendeeEventDocRef(
+      currentAttendee,
+      method,
+      selectedDates,
       id,
-      attendees,
-      currentAttendeeIndex,
-      toBeUpdatedCurrentAttendeeDoc
-    );
-
+    });
     resetSelectedArea();
   }, [
     attendees,
@@ -157,7 +144,7 @@ const Timetable: FC<ComponentProps> = ({
     isEraseMode,
     setInit,
     startDate,
-    pageIndex,
+    currentPageIndex,
     setInitMove,
     id,
   ]);
@@ -168,14 +155,14 @@ const Timetable: FC<ComponentProps> = ({
   return (
     <Container ref={containerRef}>
       {DAY_TIME_ARRAY.map((hours, dayIndex) => {
-        if (isInRange(endDate, startDate, pageIndex, dayIndex)) {
+        if (isInRange(endDate, startDate, currentPageIndex, dayIndex)) {
           return (
             <AvailableDate key={dayIndex}>
               {hours.map((hours) => {
                 const currentAttendeeCount =
                   dateToAttendees[
                     addDateAndTime(startDate, {
-                      days: dayIndex + pageIndex * 7,
+                      days: dayIndex + currentPageIndex * 7,
                       hours,
                     }).toISOString()
                   ]?.length;
@@ -188,7 +175,7 @@ const Timetable: FC<ComponentProps> = ({
                     hasCurrentMember={
                       !!dateToAttendees[
                         addDateAndTime(startDate, {
-                          days: dayIndex + pageIndex * 7,
+                          days: dayIndex + currentPageIndex * 7,
                           hours,
                         }).toISOString()
                       ]?.includes(currentAttendee)
@@ -226,6 +213,7 @@ const Container = styled.div`
   grid-template-columns: repeat(7, 1fr);
   gap: 0.1rem;
   flex: 1;
+  cursor: pointer;
 `;
 const SelectedAreaBox = styled.div<TimeProps>`
   position: fixed;

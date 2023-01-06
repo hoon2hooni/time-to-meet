@@ -3,10 +3,10 @@ import { Days, Pagination, Timetable } from "@components/events";
 import { Eraser } from "@components/icons";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
+import { getDiffDays } from "@lib/days";
 import useToast from "@lib/hooks/useToast";
 import type { FC } from "react";
 import { useState } from "react";
-
 type Props = {
   startDate: Date;
   endDate: Date;
@@ -23,20 +23,22 @@ const TimetableTemplate: FC<Props> = ({
   attendees,
   currentAttendee,
 }) => {
-  const [pageIndex, setPageIndex] = useState(0);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [isEraseMode, setIsEraseMode] = useState(false);
   const { isToastOpen, toastKeyVal, toggleToast } = useToast();
   // const toastId = useRef<Id>("");
   const handleClickPageUp = () => {
-    setPageIndex((index) => index + 1);
+    setCurrentPageIndex((index) => index + 1);
   };
 
   const handleClickPageDown = () => {
-    setPageIndex((index) => index - 1);
+    setCurrentPageIndex((index) => index - 1);
   };
   const toastMessage = isEraseMode
     ? "지우개 모드 활성화!"
     : "지우개 모드 해제!";
+  const diffDays = getDiffDays(startDate, endDate);
+  const lastPageIndex = Math.floor(diffDays / 7);
   return (
     <Container>
       <Pagination
@@ -44,7 +46,7 @@ const TimetableTemplate: FC<Props> = ({
         endDate={endDate}
         onClickPageUp={handleClickPageUp}
         onClickPageDown={handleClickPageDown}
-        pageIndex={pageIndex}
+        currentPageIndex={currentPageIndex}
       />
       <Wrapper>
         <EraserWrapper>
@@ -59,9 +61,16 @@ const TimetableTemplate: FC<Props> = ({
           </EraserIconWrapper>
         </EraserWrapper>
         {isToastOpen && <Toast message={toastMessage} key={toastKeyVal} />}
-        <Days startDate={startDate} pageIndex={pageIndex} />
+        <Days
+          startDate={startDate}
+          endDate={endDate}
+          currentPageIndex={currentPageIndex}
+          lastPageIndex={lastPageIndex}
+          currentAttendee={currentAttendee}
+          attendees={attendees}
+        />
         <Timetable
-          pageIndex={pageIndex}
+          currentPageIndex={currentPageIndex}
           startDate={startDate}
           endDate={endDate}
           attendees={attendees}

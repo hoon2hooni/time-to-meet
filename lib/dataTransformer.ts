@@ -5,7 +5,6 @@
 import type { DateISO } from "@dateTypes";
 import type { Attendees } from "@eventsTypes";
 import { Timestamp } from "firebase/firestore";
-
 //TODO refactoring, 테스트 코드 생성
 export const getWriteAttendeeData = (
   attendees: Attendees,
@@ -30,7 +29,7 @@ export const getWriteAttendeeData = (
   };
 };
 
-export const getErasedAttendeeData = (
+export const getDeletedAttendeeData = (
   attendees: Attendees,
   dates: Date[],
   name: string,
