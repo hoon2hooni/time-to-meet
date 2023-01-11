@@ -192,7 +192,6 @@ const Timetable: FC<ComponentProps> = ({
                       ]?.includes(currentAttendee)
                     }
                   >
-                    {dayIndex === 0 && <TimeUnit>{hours}:00</TimeUnit>}
                     {currentAttendeeCount}
                   </EachRowTime>
                 );
@@ -212,6 +211,11 @@ const Timetable: FC<ComponentProps> = ({
           />
         );
       })}
+      <TimesWrapper height={initialTableArea.h}>
+        {DAY_TIME_ARRAY[0].map((hour) => (
+          <TimeUnit key={hour}>{hour}:00</TimeUnit>
+        ))}
+      </TimesWrapper>
       <SelectedAreaBox {...currentSelectedAreaRef.current} />
     </Container>
   );
@@ -225,6 +229,7 @@ const Container = styled.div`
   gap: 0.1rem;
   flex: 1;
   cursor: pointer;
+  position: relative;
 `;
 const SelectedAreaBox = styled.div<TimeProps>`
   position: fixed;
@@ -249,16 +254,26 @@ const AvailableDate = styled.div`
 const NotAvailableDate = styled.div`
   background-color: ${(props) => props.theme.colors.block};
 `;
+const TimesWrapper = styled.div<{ height: number }>`
+  border-radius: 0.3rem;
+  display: grid;
+  grid-template-rows: repeat(16, 1fr);
+  gap: 0.2rem;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: ${(props) => props.height}px;
+`;
 
 const TimeUnit = styled.div`
-  position: absolute;
   top: -0rem;
-  left: -3.3rem;
+  left: -3.2rem;
   font-size: 1rem;
   color: #3e3e3e;
   width: 2.5rem;
   text-align: right;
   font-weight: 400;
+  position: relative;
 `;
 
 const EachRowTime = styled.div<EachRowTimeProps>`
