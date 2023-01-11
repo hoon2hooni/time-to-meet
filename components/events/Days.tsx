@@ -70,21 +70,24 @@ const Days: FC<ComponentProps> = ({
   currentAttendee,
 }) => {
   const id = useUrlEventId();
-  const checkboxes: checkboxes = new Array(lastPageIndex + 1);
-  for (let pageIndex = 0; pageIndex < checkboxes.length; pageIndex++) {
-    checkboxes[pageIndex] = new Array(7).fill(0).map((_, dayIndex) => {
-      return {
-        status: isInRange(endDate, startDate, pageIndex, dayIndex)
-          ? "unchecked"
-          : "disabled",
-      } as Checkbox;
-    });
-  }
-
   const [checkStatusArrayState, dispatch] = useReducer(
     checkboxReducer,
-    checkboxes
+    [],
+    () => {
+      const checkboxes: checkboxes = new Array(lastPageIndex + 1);
+      for (let pageIndex = 0; pageIndex < checkboxes.length; pageIndex++) {
+        checkboxes[pageIndex] = new Array(7).fill(0).map((_, dayIndex) => {
+          return {
+            status: isInRange(endDate, startDate, pageIndex, dayIndex)
+              ? "unchecked"
+              : "disabled",
+          } as Checkbox;
+        });
+      }
+      return checkboxes;
+    }
   );
+
   //Todo onClickHandler만들어야 함
   const onClickCheckbox =
     ({
