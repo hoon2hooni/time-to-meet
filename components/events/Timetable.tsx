@@ -9,6 +9,7 @@ import {
   getSelectedDatesWithSelectedArea,
   isInRange,
 } from "@lib/days";
+import useDelay from "@lib/hooks/useDelay";
 import {
   useMouseAndTouchEnd,
   useMouseAndTouchMoveLocation,
@@ -18,7 +19,7 @@ import useResizeEvent from "@lib/hooks/useResizeEvent";
 import useUrlEventId from "@lib/hooks/useUrlEventId";
 import { generateSelectedArea, getTableIndex } from "@lib/tableHelper";
 import updateCurrentAttendee from "@lib/updateCurrentAttendee";
-import { FC, useCallback, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 
 type ComponentProps = {
   startDate: Date;
@@ -62,6 +63,10 @@ const Timetable: FC<ComponentProps> = ({
   isEraseMode,
   startWeekOfMonday,
 }) => {
+  /**
+   * 유저가 접속을 했을때 바로 입력이 되는것을 막아주는 delay입니다.
+   */
+  const isUserReady = useDelay(500, currentAttendee);
   const id = useUrlEventId();
   const containerRef = useRef<HTMLDivElement>(null);
   const currentSelectedAreaRef = useRef<TimeProps>(initialSelectedArea);
@@ -69,6 +74,7 @@ const Timetable: FC<ComponentProps> = ({
   const { startClientX, startClientY, setInit } = useMouseAndTouchStartLocation(
     {
       ref: containerRef,
+      skipEvent: !isUserReady,
     }
   );
   const hasNotStartMove = startClientX === 0 && startClientY === 0;
