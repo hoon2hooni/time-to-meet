@@ -64,6 +64,9 @@ const ArrowWrapper = styled.div<ArrowProps>`
   position: relative;
   align-items: center;
   display: flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  justify-content: center;
   visibility: ${(props) => (props.isShown ? "visible" : "hidden")};
   transform: ${(props) =>
     props.direction === "left" ? "rotate(-180deg)" : ""};
@@ -80,12 +83,6 @@ const ArrowWrapper = styled.div<ArrowProps>`
   }
 `;
 
-const BadgeRightArrowWrapper = styled.div`
-  position: relative;
-  align-items: center;
-  display: flex;
-`;
-
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
@@ -100,6 +97,6 @@ const TextWrapper = styled.div`
 
 const BadgeWrapper = styled.div`
   position: absolute;
-  right: 2rem;
+  right: 2.5rem;
   font-size: 1.2rem;
 `;
