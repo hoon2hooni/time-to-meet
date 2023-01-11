@@ -37,7 +37,7 @@ export default function Home() {
           width={294}
           height={515}
           priority
-          alt={"모임"}
+          alt="타임투밋 캘린더로 모임 시간 맞추기"
         />
         <Footer>
           <FooterLogoWrapper>
