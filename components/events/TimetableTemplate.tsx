@@ -18,6 +18,7 @@ type Props = {
   endDate: Date;
   attendees: Attendees;
   currentAttendee: string;
+  maxCapacity: number;
 };
 
 type EraserProps = {
@@ -28,6 +29,7 @@ const TimetableTemplate: FC<Props> = ({
   endDate,
   attendees,
   currentAttendee,
+  maxCapacity,
 }) => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [isEraseMode, setIsEraseMode] = useState(false);
@@ -94,6 +96,7 @@ const TimetableTemplate: FC<Props> = ({
           attendees={attendees}
           currentAttendee={currentAttendee}
           isEraseMode={isEraseMode}
+          maxCapacity={maxCapacity}
         />
       </Wrapper>
     </Container>

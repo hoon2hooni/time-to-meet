@@ -136,6 +136,7 @@ const Events: NextPageWithLayout = () => {
           endDate={endDate?.toDate() || new Date()}
           attendees={attendees}
           currentAttendee={currentAttendee}
+          maxCapacity={maxCapacity}
         />
       </ContainerWrapper>
     </>

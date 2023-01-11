@@ -1,9 +1,6 @@
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
-import {
-  generateDateToAttendees,
-  getMaxNumberOfAttendees,
-} from "@lib/dataTransformer";
+import { generateDateToAttendees } from "@lib/dataTransformer";
 import {
   addDateAndTime,
   getSelectedDatesWithSelectedArea,
@@ -19,7 +16,7 @@ import useResizeEvent from "@lib/hooks/useResizeEvent";
 import useUrlEventId from "@lib/hooks/useUrlEventId";
 import { generateSelectedArea, getTableIndex } from "@lib/tableHelper";
 import updateCurrentAttendee from "@lib/updateCurrentAttendee";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useRef, useState } from "react";
 
 type ComponentProps = {
   startDate: Date;
@@ -30,10 +27,11 @@ type ComponentProps = {
   isEraseMode: boolean;
   startWeekOfMonday: Date;
   endWeekOfSunday: Date;
+  maxCapacity: number;
 };
 
 type EachRowTimeProps = {
-  maxNumberOfAttendees: number;
+  maxCapacity: number;
   currentAttendeeCount?: number;
   hasCurrentMember: boolean;
 };
@@ -62,6 +60,7 @@ const Timetable: FC<ComponentProps> = ({
   currentAttendee,
   isEraseMode,
   startWeekOfMonday,
+  maxCapacity,
 }) => {
   /**
    * 유저가 접속을 했을때 바로 입력이 되는것을 막아주는 delay입니다.
@@ -160,7 +159,6 @@ const Timetable: FC<ComponentProps> = ({
 
   useMouseAndTouchEnd(updateAttendeesAndResetSelectedArea);
   const dateToAttendees = generateDateToAttendees(attendees);
-  const maxNumberOfAttendees = getMaxNumberOfAttendees(dateToAttendees);
   return (
     <Container ref={containerRef}>
       {DAY_TIME_ARRAY.map((hours, dayIndex) => {
@@ -186,7 +184,7 @@ const Timetable: FC<ComponentProps> = ({
                 return (
                   <EachRowTime
                     key={hours}
-                    maxNumberOfAttendees={maxNumberOfAttendees}
+                    maxCapacity={maxCapacity}
                     currentAttendeeCount={currentAttendeeCount}
                     id={`${dayIndex}-${hours}-time`}
                     hasCurrentMember={
@@ -297,7 +295,7 @@ const EachRowTime = styled.div<EachRowTimeProps>`
     if (!props.currentAttendeeCount) {
       return props.theme.colors.white;
     }
-    if (props.currentAttendeeCount === props.maxNumberOfAttendees) {
+    if (props.currentAttendeeCount === props.maxCapacity) {
       return props.theme.colors.green;
     }
     if (props.hasCurrentMember) {
