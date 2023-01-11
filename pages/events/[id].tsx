@@ -180,4 +180,5 @@ const StyledLink = styled(Link)`
     color: ${(props) => props.theme.colors.yellow};
   }
   cursor: pointer;
+  z-index: 100;
 `;
