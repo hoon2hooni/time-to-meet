@@ -1,4 +1,4 @@
-import { Button } from "@components/common";
+import { Button, MetaOgTwitterUrlTsx } from "@components/common";
 import {
   DateInputs,
   MaxCapacityInput,
@@ -56,32 +56,39 @@ const New: NextPageWithLayout = () => {
   };
 
   return (
-    <Layout>
-      {modalOpen && (
-        <NewEventConfirmModal
-          control={control}
-          onSubmitData={handleSubmitData}
-          onCloseModal={handleCloseModal}
-          isLoading={isLoading}
-        />
-      )}
-      <Header>새로운 모임 생성하기</Header>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <NameInput control={control} register={register} />
-        <MaxCapacityInput control={control} />
-        <DateInputs control={control} setValue={setValue} register={register} />
-        {/* TODO 나중에 시간범위 설정 가능하게 할 예정 */}
-        <ButtonWrapper>
-          <Wrapper>
-            <TextP>
-              생성하고 나면 <br />
-              수정이 불가능해요
-            </TextP>
-            <Button type="submit">생성하기</Button>
-          </Wrapper>
-        </ButtonWrapper>
-      </form>
-    </Layout>
+    <>
+      <MetaOgTwitterUrlTsx path="/new" />
+      <Layout>
+        {modalOpen && (
+          <NewEventConfirmModal
+            control={control}
+            onSubmitData={handleSubmitData}
+            onCloseModal={handleCloseModal}
+            isLoading={isLoading}
+          />
+        )}
+        <Header>새로운 모임 생성하기</Header>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <NameInput control={control} register={register} />
+          <MaxCapacityInput control={control} />
+          <DateInputs
+            control={control}
+            setValue={setValue}
+            register={register}
+          />
+          {/* TODO 나중에 시간범위 설정 가능하게 할 예정 */}
+          <ButtonWrapper>
+            <Wrapper>
+              <TextP>
+                생성하고 나면 <br />
+                수정이 불가능해요
+              </TextP>
+              <Button type="submit">생성하기</Button>
+            </Wrapper>
+          </ButtonWrapper>
+        </form>
+      </Layout>
+    </>
   );
 };
 

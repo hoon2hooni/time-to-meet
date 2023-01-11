@@ -1,6 +1,9 @@
-import { Button } from "@components/common";
-import { EventInfo } from "@components/common";
-import { Toast } from "@components/common";
+import {
+  Button,
+  EventInfo,
+  MetaOgTwitterUrlTsx,
+  Toast,
+} from "@components/common";
 import Retention from "@components/common/Retention";
 import styled from "@emotion/styled";
 import { getEventDocRef } from "@firebase/clientApp";
@@ -39,6 +42,7 @@ export default function Home({
 
   return (
     <>
+      <MetaOgTwitterUrlTsx path={`/events/${id}`} />
       <Script
         src="https://developers.kakao.com/sdk/js/kakao.js"
         onLoad={() => {

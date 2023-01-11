@@ -1,4 +1,10 @@
-import { Button, ErrorBox, Modal, Toast } from "@components/common";
+import {
+  Button,
+  ErrorBox,
+  MetaOgTwitterUrlTsx,
+  Modal,
+  Toast,
+} from "@components/common";
 import {
   EntranceInput,
   TimetableInfo,
@@ -102,34 +108,37 @@ const Events: NextPageWithLayout = () => {
   }
 
   return (
-    <ContainerWrapper height={windowHeight}>
-      {!currentAttendee && (
-        <Modal>
-          <EntranceInput onClickEntrance={handleClickEntrance} />
-        </Modal>
-      )}
-      {isToastOpen && (
-        <Toast message={`${currentAttendee}님이 입장하셨습니다.`} />
-      )}
-      <Container>
-        <Header>
-          <Text>가능한 시간을 입력하세요!</Text>
-          <StyledLink href="/">모임 만들기</StyledLink>
-        </Header>
-        <TimetableInfo
-          eventName={eventName}
+    <>
+      <MetaOgTwitterUrlTsx path={`/events/${id}`} />
+      <ContainerWrapper height={windowHeight}>
+        {!currentAttendee && (
+          <Modal>
+            <EntranceInput onClickEntrance={handleClickEntrance} />
+          </Modal>
+        )}
+        {isToastOpen && (
+          <Toast message={`${currentAttendee}님이 입장하셨습니다.`} />
+        )}
+        <Container>
+          <Header>
+            <Text>가능한 시간을 입력하세요!</Text>
+            <StyledLink href="/">모임 만들기</StyledLink>
+          </Header>
+          <TimetableInfo
+            eventName={eventName}
+            attendees={attendees}
+            currentAttendee={currentAttendee}
+            setAttendees={setAttendees}
+          />
+        </Container>
+        <TimetableTemplate
+          startDate={startDate?.toDate() || new Date()}
+          endDate={endDate?.toDate() || new Date()}
           attendees={attendees}
           currentAttendee={currentAttendee}
-          setAttendees={setAttendees}
         />
-      </Container>
-      <TimetableTemplate
-        startDate={startDate?.toDate() || new Date()}
-        endDate={endDate?.toDate() || new Date()}
-        attendees={attendees}
-        currentAttendee={currentAttendee}
-      />
-    </ContainerWrapper>
+      </ContainerWrapper>
+    </>
   );
 };
 

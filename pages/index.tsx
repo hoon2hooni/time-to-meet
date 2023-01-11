@@ -1,5 +1,5 @@
 import landingImage from "@assets/images/landing_image.png";
-import { Button } from "@components/common";
+import { Button, MetaOgTwitterUrlTsx } from "@components/common";
 import { Thumbnail } from "@components/icons";
 import styled from "@emotion/styled";
 import Image from "next/image";
@@ -9,18 +9,21 @@ export default function Home() {
   const router = useRouter();
   return (
     <>
+      <MetaOgTwitterUrlTsx />
       <Layout>
         <LogoWrapper>
           <Thumbnail width={20} height={20} />
-          <LogoName>타임투밋</LogoName>
+          <LogoName as="h1">타임투밋</LogoName>
         </LogoWrapper>
         <Text>매번 날짜 투표 만들지 말고!</Text>
-        <Header>
-          카톡으로 하는 <br /> 모임시간 자동 매칭
-        </Header>
+        <header>
+          <HeaderText as="h2">
+            카톡으로 하는 <br /> 모임시간 자동 매칭
+          </HeaderText>
+        </header>
         <LogoBiggerWrapper>
           <Thumbnail />
-          <p>타임투밋</p>
+          <BiggerLogoText as="h2">타임투밋</BiggerLogoText>
         </LogoBiggerWrapper>
         <Button
           size="lg"
@@ -39,7 +42,9 @@ export default function Home() {
         <Footer>
           <FooterLogoWrapper>
             <Thumbnail width={20} height={20} />
-            <LogoName style={{ color: "white" }}>타임투밋</LogoName>
+            <LogoName style={{ color: "white" }} as="h3">
+              타임투밋
+            </LogoName>
           </FooterLogoWrapper>
           <Wrapper>
             <p>ver 1.0</p>
@@ -84,18 +89,19 @@ const LogoWrapper = styled.div`
   margin-left: 3rem;
 `;
 
-const Header = styled.header`
+const HeaderText = styled.header`
   font-size: 2.6rem;
   color: ${(props) => props.theme.colors.primary};
   line-height: 1.2;
   text-align: center;
   font-weight: 700;
+`;
 
-  & > p {
-    font-weight: 400;
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-  }
+const BiggerLogoText = styled.h1`
+  text-align: center;
+  margin: 2rem 0rem;
+  font-weight: 700;
+  margin-left: 1rem;
 `;
 
 const LogoBiggerWrapper = styled(LogoWrapper)`
