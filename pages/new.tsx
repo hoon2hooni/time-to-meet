@@ -8,6 +8,7 @@ import {
 import styled from "@emotion/styled";
 import type { Event } from "@eventsTypes";
 import { addEvent } from "@firebase/clientApp";
+import { subtractDateAndTime } from "@lib/days";
 import type { NewEvent } from "@newTypes";
 import { Timestamp } from "firebase/firestore";
 import { useRouter } from "next/router";
@@ -17,12 +18,27 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import type { NextPageWithLayout } from "./_app";
 
 const fromFormDataToEvent = (data: NewEvent): Omit<Event, "id"> => {
+  /**
+   * startDate와 endDate는 html의 input type=date에서 제공 받습니다.
+   * 이로인해 2022-12-21형식으로 받게 됩니다.
+   * 이를 date로 변환할 경우 UTC기준 00시로 제공되기에 
+   * 한국의 00시로 맞추어주기 위해 9시간뺍니다.
+   */
+  const KOR_UTC_DIFFERENCE_HOUR = 9;
   const { name, maxCapacity, startDate, endDate } = data;
   return {
     name,
     maxCapacity,
-    startDate: Timestamp.fromDate(new Date(startDate)),
-    endDate: Timestamp.fromDate(new Date(endDate)),
+    startDate: Timestamp.fromDate(
+      subtractDateAndTime(new Date(startDate), {
+        hours: KOR_UTC_DIFFERENCE_HOUR,
+      })
+    ),
+    endDate: Timestamp.fromDate(
+      subtractDateAndTime(new Date(endDate), {
+        hours: KOR_UTC_DIFFERENCE_HOUR,
+      })
+    ),
     attendees: [],
   };
 };
