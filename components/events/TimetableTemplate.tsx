@@ -3,7 +3,13 @@ import { Days, Pagination, Timetable } from "@components/events";
 import { Eraser } from "@components/icons";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
-import { getDiffDays } from "@lib/days";
+import {
+  addDateAndTime,
+  getDaysDifferenceFromMonday,
+  getDaysDifferenceFromSundayReverse,
+  getDiffDays,
+  subtractDateAndTime,
+} from "@lib/days";
 import useToast from "@lib/hooks/useToast";
 import type { FC } from "react";
 import { useState } from "react";
@@ -26,7 +32,13 @@ const TimetableTemplate: FC<Props> = ({
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [isEraseMode, setIsEraseMode] = useState(false);
   const { isToastOpen, toastKeyVal, toggleToast } = useToast();
-  // const toastId = useRef<Id>("");
+  const startWeekOfMonday = subtractDateAndTime(startDate, {
+    days: getDaysDifferenceFromMonday(startDate),
+  });
+  const endWeekOfSunday = addDateAndTime(endDate, {
+    days: getDaysDifferenceFromSundayReverse(endDate),
+  });
+
   const handleClickPageUp = () => {
     setCurrentPageIndex((index) => index + 1);
   };
@@ -37,11 +49,13 @@ const TimetableTemplate: FC<Props> = ({
   const toastMessage = isEraseMode
     ? "지우개 모드 활성화!"
     : "지우개 모드 해제!";
-  const diffDays = getDiffDays(startDate, endDate);
+  const diffDays = getDiffDays(startWeekOfMonday, endWeekOfSunday);
   const lastPageIndex = Math.floor(diffDays / 7);
   return (
     <Container>
       <Pagination
+        endWeekOfSunday={endWeekOfSunday}
+        startWeekOfMonday={startWeekOfMonday}
         startDate={startDate}
         endDate={endDate}
         onClickPageUp={handleClickPageUp}
@@ -62,6 +76,8 @@ const TimetableTemplate: FC<Props> = ({
         </EraserWrapper>
         {isToastOpen && <Toast message={toastMessage} key={toastKeyVal} />}
         <Days
+          endWeekOfSunday={endWeekOfSunday}
+          startWeekOfMonday={startWeekOfMonday}
           startDate={startDate}
           endDate={endDate}
           currentPageIndex={currentPageIndex}
@@ -70,6 +86,8 @@ const TimetableTemplate: FC<Props> = ({
           attendees={attendees}
         />
         <Timetable
+          endWeekOfSunday={endWeekOfSunday}
+          startWeekOfMonday={startWeekOfMonday}
           currentPageIndex={currentPageIndex}
           startDate={startDate}
           endDate={endDate}

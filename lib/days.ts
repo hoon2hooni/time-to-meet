@@ -27,6 +27,14 @@ export const getDayOfWeek = (date: Date) => {
   return dayNames[d % 7];
 };
 
+export const getDaysDifferenceFromMonday = (date: Date) => {
+  return date.getDay() - 1 < 0 ? 6 : date.getDay() - 1;
+};
+
+export const getDaysDifferenceFromSundayReverse = (date: Date) => {
+  return Math.abs(date.getDay() - 7) % 7;
+};
+
 export const getMilliSecondsFromTime = (time: Time) => {
   const SEC = 1000;
   const MIN = 60 * SEC;
@@ -40,6 +48,10 @@ export const getMilliSecondsFromTime = (time: Time) => {
 
 export const addDateAndTime = (date: Date, time: Time) => {
   return new Date(date.getTime() + getMilliSecondsFromTime(time));
+};
+
+export const subtractDateAndTime = (date: Date, time: Time) => {
+  return new Date(date.getTime() - getMilliSecondsFromTime(time));
 };
 
 export const dateToPattern = (date: Date) => {
@@ -128,12 +140,17 @@ export function getSelectedDates({
 
 export function isInRange(
   endDate: Date,
-  startDate: Date,
+  startWeekOfMonday: Date,
   pageIndex: number,
-  i: number
+  i: number,
+  startDate = startWeekOfMonday
 ) {
   return (
     endDate.getTime() >=
-    addDateAndTime(startDate, { days: i + pageIndex * 7 }).getTime()
+      addDateAndTime(startWeekOfMonday, {
+        days: i + pageIndex * 7,
+      }).getTime() &&
+    addDateAndTime(startWeekOfMonday, { days: i + pageIndex * 7 }).getTime() >=
+      startDate.getTime()
   );
 }

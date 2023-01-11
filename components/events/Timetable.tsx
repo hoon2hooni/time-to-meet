@@ -27,6 +27,8 @@ type ComponentProps = {
   attendees: Attendees;
   currentAttendee: string;
   isEraseMode: boolean;
+  startWeekOfMonday: Date;
+  endWeekOfSunday: Date;
 };
 
 type EachRowTimeProps = {
@@ -58,6 +60,7 @@ const Timetable: FC<ComponentProps> = ({
   attendees,
   currentAttendee,
   isEraseMode,
+  startWeekOfMonday,
 }) => {
   const id = useUrlEventId();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -155,7 +158,15 @@ const Timetable: FC<ComponentProps> = ({
   return (
     <Container ref={containerRef}>
       {DAY_TIME_ARRAY.map((hours, dayIndex) => {
-        if (isInRange(endDate, startDate, currentPageIndex, dayIndex)) {
+        if (
+          isInRange(
+            endDate,
+            startWeekOfMonday,
+            currentPageIndex,
+            dayIndex,
+            startDate
+          )
+        ) {
           return (
             <AvailableDate key={dayIndex}>
               {hours.map((hours) => {

@@ -13,6 +13,8 @@ type ComponentProps = {
   lastPageIndex: number;
   currentAttendee: string;
   attendees: Attendees;
+  startWeekOfMonday: Date;
+  endWeekOfSunday: Date;
 };
 
 type CheckMarkWrapperProps = {
@@ -68,6 +70,8 @@ const Days: FC<ComponentProps> = ({
   lastPageIndex,
   attendees,
   currentAttendee,
+  startWeekOfMonday,
+  endWeekOfSunday,
 }) => {
   const id = useUrlEventId();
   const [checkStatusArrayState, dispatch] = useReducer(
@@ -78,7 +82,13 @@ const Days: FC<ComponentProps> = ({
       for (let pageIndex = 0; pageIndex < checkboxes.length; pageIndex++) {
         checkboxes[pageIndex] = new Array(7).fill(0).map((_, dayIndex) => {
           return {
-            status: isInRange(endDate, startDate, pageIndex, dayIndex)
+            status: isInRange(
+              endDate,
+              startWeekOfMonday,
+              pageIndex,
+              dayIndex,
+              startDate
+            )
               ? "unchecked"
               : "disabled",
           } as Checkbox;
@@ -122,13 +132,13 @@ const Days: FC<ComponentProps> = ({
         return (
           <EachDay key={dayIndex + currentPageIndex * 7}>
             <div>
-              {addDateAndTime(startDate, {
+              {addDateAndTime(startWeekOfMonday, {
                 days: dayIndex + currentPageIndex * 7,
               }).getDate()}
             </div>
             <div>
               {getDayOfWeek(
-                addDateAndTime(startDate, {
+                addDateAndTime(startWeekOfMonday, {
                   days: dayIndex + currentPageIndex * 7,
                 })
               )}

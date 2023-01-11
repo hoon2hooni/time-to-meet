@@ -13,6 +13,8 @@ type ComponentProps = {
   startDate: Date;
   endDate: Date;
   currentPageIndex: number;
+  startWeekOfMonday: Date;
+  endWeekOfSunday: Date;
   onClickPageUp: () => void;
   onClickPageDown: () => void;
 };
@@ -28,8 +30,10 @@ const Pagination: FC<ComponentProps> = ({
   currentPageIndex,
   onClickPageDown,
   onClickPageUp,
+  endWeekOfSunday,
+  startWeekOfMonday,
 }) => {
-  const diffDays = getDiffDays(startDate, endDate);
+  const diffDays = getDiffDays(endWeekOfSunday, startWeekOfMonday);
   const firstPageIndex = 0;
   const lastPageIndex = Math.floor(diffDays / 7);
 
