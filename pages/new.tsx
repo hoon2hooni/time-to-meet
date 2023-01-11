@@ -1,4 +1,4 @@
-import { Button, MetaOgTwitterUrlTsx } from "@components/common";
+import { Button, MetaOgTwitterUrl } from "@components/common";
 import {
   DateInputs,
   MaxCapacityInput,
@@ -57,7 +57,7 @@ const New: NextPageWithLayout = () => {
 
   return (
     <>
-      <MetaOgTwitterUrlTsx path="/new" />
+      <MetaOgTwitterUrl path="/new" />
       <Layout>
         {modalOpen && (
           <NewEventConfirmModal

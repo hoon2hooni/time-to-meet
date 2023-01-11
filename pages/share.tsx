@@ -1,7 +1,7 @@
 import {
   Button,
   EventInfo,
-  MetaOgTwitterUrlTsx,
+  MetaOgTwitterUrl,
   Toast,
 } from "@components/common";
 import Retention from "@components/common/Retention";
@@ -42,7 +42,7 @@ export default function Home({
 
   return (
     <>
-      <MetaOgTwitterUrlTsx path={`/events/${id}`} />
+      <MetaOgTwitterUrl path={`/events/${id}`} />
       <Script
         src="https://developers.kakao.com/sdk/js/kakao.js"
         onLoad={() => {

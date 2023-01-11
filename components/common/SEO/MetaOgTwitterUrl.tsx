@@ -3,7 +3,7 @@ import Head from "next/head";
 type ComponentProps = {
   path?: string;
 };
-export default function MetaOgTwitterUrlTsx({ path = "" }: ComponentProps) {
+export default function MetaOgTwitterUrl({ path = "" }: ComponentProps) {
   return (
     <Head>
       <meta

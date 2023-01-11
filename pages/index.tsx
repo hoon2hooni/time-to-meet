@@ -1,5 +1,5 @@
 import landingImage from "@assets/images/landing_image.png";
-import { Button, MetaOgTwitterUrlTsx } from "@components/common";
+import { Button, MetaOgTwitterUrl } from "@components/common";
 import { Thumbnail } from "@components/icons";
 import styled from "@emotion/styled";
 import Image from "next/image";
@@ -9,16 +9,16 @@ export default function Home() {
   const router = useRouter();
   return (
     <>
-      <MetaOgTwitterUrlTsx />
+      <MetaOgTwitterUrl />
       <Layout>
         <LogoWrapper>
           <Thumbnail width={20} height={20} />
           <LogoName as="h1">타임투밋</LogoName>
         </LogoWrapper>
-        <Text>매번 날짜 투표 만들지 말고!</Text>
+        <Text>티키타카 투표 없이도</Text>
         <header>
           <HeaderText as="h2">
-            카톡으로 하는 <br /> 모임시간 자동 매칭
+            누구 하나 빠짐없는 <br /> 모임 시간 맞추기
           </HeaderText>
         </header>
         <LogoBiggerWrapper>

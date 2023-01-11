@@ -1,7 +1,7 @@
 import {
   Button,
   ErrorBox,
-  MetaOgTwitterUrlTsx,
+  MetaOgTwitterUrl,
   Modal,
   Toast,
 } from "@components/common";
@@ -109,7 +109,7 @@ const Events: NextPageWithLayout = () => {
 
   return (
     <>
-      <MetaOgTwitterUrlTsx path={`/events/${id}`} />
+      <MetaOgTwitterUrl path={`/events/${id}`} />
       <ContainerWrapper height={windowHeight}>
         {!currentAttendee && (
           <Modal>
