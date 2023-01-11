@@ -44,20 +44,16 @@ const Pagination: FC<ComponentProps> = ({
           월
         </span>
       </TextWrapper>
-      <BadgeRightArrowWrapper>
-        {!isLastPage && (
-          <BadgeWrapper>
-            <Badge>다음주도 있어요!</Badge>
-          </BadgeWrapper>
-        )}
-        <ArrowWrapper
-          isShown={!isLastPage}
-          direction={"right"}
-          onClick={onClickPageUp}
-        >
-          <Arrow />
-        </ArrowWrapper>
-      </BadgeRightArrowWrapper>
+      <ArrowWrapper
+        isShown={!isLastPage}
+        direction={"right"}
+        onClick={onClickPageUp}
+      >
+        <BadgeWrapper>
+          <Badge>다음주도 있어요!</Badge>
+        </BadgeWrapper>
+        <Arrow />
+      </ArrowWrapper>
     </Container>
   );
 };
@@ -65,9 +61,9 @@ const Pagination: FC<ComponentProps> = ({
 export default Pagination;
 
 const ArrowWrapper = styled.div<ArrowProps>`
-  display: flex;
+  position: relative;
   align-items: center;
-  justify-content: center;
+  display: flex;
   visibility: ${(props) => (props.isShown ? "visible" : "hidden")};
   transform: ${(props) =>
     props.direction === "left" ? "rotate(-180deg)" : ""};
