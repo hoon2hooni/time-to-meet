@@ -1,22 +1,14 @@
+import Badge from "@components/common/Badge";
 import { Arrow } from "@components/icons";
 import styled from "@emotion/styled";
-import {
-  addDateAndTime,
-  dateToPattern,
-  getDayOfWeek,
-  getDiffDays,
-  parseStringDateAndCombine,
-} from "@lib/days";
 import type { FC } from "react";
 
 type ComponentProps = {
-  startDate: Date;
-  endDate: Date;
   currentPageIndex: number;
   startWeekOfMonday: Date;
-  endWeekOfSunday: Date;
   onClickPageUp: () => void;
   onClickPageDown: () => void;
+  totalNumberOfTableDays: number;
 };
 
 type ArrowProps = {
@@ -25,37 +17,17 @@ type ArrowProps = {
 };
 
 const Pagination: FC<ComponentProps> = ({
-  startDate,
-  endDate,
   currentPageIndex,
   onClickPageDown,
   onClickPageUp,
-  endWeekOfSunday,
   startWeekOfMonday,
+  totalNumberOfTableDays,
 }) => {
-  const diffDays = getDiffDays(endWeekOfSunday, startWeekOfMonday);
   const firstPageIndex = 0;
-  const lastPageIndex = Math.floor(diffDays / 7);
+  const lastPageIndex = Math.floor(totalNumberOfTableDays / 7);
 
   const isFirstPage = currentPageIndex === firstPageIndex;
   const isLastPage = currentPageIndex === lastPageIndex;
-  const currentStartDate = addDateAndTime(startDate, {
-    days: currentPageIndex * 7,
-  });
-
-  const currentLastDate =
-    endDate.getTime() > addDateAndTime(currentStartDate, { days: 6 }).getTime()
-      ? addDateAndTime(currentStartDate, { days: 6 })
-      : endDate;
-
-  const parsedCurrentStartDate = parseStringDateAndCombine(
-    dateToPattern(currentStartDate),
-    "-"
-  );
-  const parsedCurrentLastDate = parseStringDateAndCombine(
-    dateToPattern(currentLastDate),
-    "-"
-  );
 
   return (
     <Container>
@@ -68,22 +40,24 @@ const Pagination: FC<ComponentProps> = ({
       </ArrowWrapper>
       <TextWrapper>
         <span>
-          {parsedCurrentStartDate} {getDayOfWeek(currentStartDate)}요일
+          {startWeekOfMonday.getFullYear()}년 {startWeekOfMonday.getMonth() + 1}
+          월
         </span>
-        {parsedCurrentStartDate !== parsedCurrentLastDate && (
-          <span>
-            {" - "}
-            {parsedCurrentLastDate} {getDayOfWeek(currentLastDate)}요일
-          </span>
-        )}
       </TextWrapper>
-      <ArrowWrapper
-        isShown={!isLastPage}
-        direction={"right"}
-        onClick={onClickPageUp}
-      >
-        <Arrow />
-      </ArrowWrapper>
+      <BadgeRightArrowWrapper>
+        {!isLastPage && (
+          <BadgeWrapper>
+            <Badge>다음주도 있어요!</Badge>
+          </BadgeWrapper>
+        )}
+        <ArrowWrapper
+          isShown={!isLastPage}
+          direction={"right"}
+          onClick={onClickPageUp}
+        >
+          <Arrow />
+        </ArrowWrapper>
+      </BadgeRightArrowWrapper>
     </Container>
   );
 };
@@ -91,6 +65,9 @@ const Pagination: FC<ComponentProps> = ({
 export default Pagination;
 
 const ArrowWrapper = styled.div<ArrowProps>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   visibility: ${(props) => (props.isShown ? "visible" : "hidden")};
   transform: ${(props) =>
     props.direction === "left" ? "rotate(-180deg)" : ""};
@@ -107,6 +84,12 @@ const ArrowWrapper = styled.div<ArrowProps>`
   }
 `;
 
+const BadgeRightArrowWrapper = styled.div`
+  position: relative;
+  align-items: center;
+  display: flex;
+`;
+
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
@@ -117,4 +100,10 @@ const Container = styled.div`
 `;
 const TextWrapper = styled.div`
   font-size: 1.1rem;
+`;
+
+const BadgeWrapper = styled.div`
+  position: absolute;
+  right: 2rem;
+  font-size: 1.2rem;
 `;

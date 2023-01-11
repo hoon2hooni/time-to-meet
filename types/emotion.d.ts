@@ -15,6 +15,8 @@ declare module "@emotion/react" {
       buttonHoverPrimary: string;
       buttonHoverSecondary: string;
       header: string;
+      orange: string;
+      lightOrange: string;
     };
   }
 }

@@ -14,7 +14,6 @@ type ComponentProps = {
   currentAttendee: string;
   attendees: Attendees;
   startWeekOfMonday: Date;
-  endWeekOfSunday: Date;
 };
 
 type CheckMarkWrapperProps = {
@@ -71,7 +70,6 @@ const Days: FC<ComponentProps> = ({
   attendees,
   currentAttendee,
   startWeekOfMonday,
-  endWeekOfSunday,
 }) => {
   const id = useUrlEventId();
   const [checkStatusArrayState, dispatch] = useReducer(

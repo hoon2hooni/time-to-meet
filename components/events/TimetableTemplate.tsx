@@ -49,18 +49,19 @@ const TimetableTemplate: FC<Props> = ({
   const toastMessage = isEraseMode
     ? "지우개 모드 활성화!"
     : "지우개 모드 해제!";
-  const diffDays = getDiffDays(startWeekOfMonday, endWeekOfSunday);
-  const lastPageIndex = Math.floor(diffDays / 7);
+  const totalNumberOfTableDays = getDiffDays(
+    startWeekOfMonday,
+    endWeekOfSunday
+  );
+  const lastPageIndex = Math.floor(totalNumberOfTableDays / 7);
   return (
     <Container>
       <Pagination
-        endWeekOfSunday={endWeekOfSunday}
         startWeekOfMonday={startWeekOfMonday}
-        startDate={startDate}
-        endDate={endDate}
         onClickPageUp={handleClickPageUp}
         onClickPageDown={handleClickPageDown}
         currentPageIndex={currentPageIndex}
+        totalNumberOfTableDays={totalNumberOfTableDays}
       />
       <Wrapper>
         <EraserWrapper>
@@ -76,7 +77,6 @@ const TimetableTemplate: FC<Props> = ({
         </EraserWrapper>
         {isToastOpen && <Toast message={toastMessage} key={toastKeyVal} />}
         <Days
-          endWeekOfSunday={endWeekOfSunday}
           startWeekOfMonday={startWeekOfMonday}
           startDate={startDate}
           endDate={endDate}

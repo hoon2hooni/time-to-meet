@@ -14,6 +14,8 @@ const theme: Theme = {
     buttonHoverPrimary: "#896300",
     buttonHoverSecondary: "#B8B8B8",
     header: "#EDAC00",
+    orange: "#E5A600",
+    lightOrange: "#FFEDBD",
   },
 };
 
