@@ -1,6 +1,6 @@
-import { ToggleButton } from "@components/icons";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
+import { ToggleButton } from "@icons";
 import type { Dispatch, FC, SetStateAction } from "react";
 import { useState } from "react";
 

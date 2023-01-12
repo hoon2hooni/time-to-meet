@@ -10,10 +10,10 @@ import {
   TimetableInfo,
   TimetableTemplate,
 } from "@components/events";
-import { LoadingSpinner } from "@components/icons";
 import styled from "@emotion/styled";
 import useEventsStore from "@hooks/useEventsStore";
 import useUrlEventId from "@hooks/useUrlEventId";
+import { LoadingSpinner } from "@icons";
 import { closePage } from "@lib/handleCrossPlatform";
 import useToast from "@lib/hooks/useToast";
 import type { NextPageWithLayout } from "@pages/_app";

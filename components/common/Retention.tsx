@@ -1,6 +1,6 @@
 import { Button } from "@components/common";
-import { Thumbnail } from "@components/icons";
 import styled from "@emotion/styled";
+import { Thumbnail } from "@icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 const Retention = () => {

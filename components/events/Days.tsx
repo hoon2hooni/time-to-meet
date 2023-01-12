@@ -1,6 +1,6 @@
-import { CheckMark } from "@components/icons";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
+import { CheckMark } from "@icons";
 import { addDateAndTime, getDayOfWeek, getSelectedDates } from "@lib/days";
 import { isInRange } from "@lib/days";
 import useUrlEventId from "@lib/hooks/useUrlEventId";

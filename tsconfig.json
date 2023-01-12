@@ -28,7 +28,8 @@
       "@eventsTypes": ["types/events"],
       "@newTypes": ["types/new"],
       "@dateTypes": ["types/date"],
-      "@firebase/*": ["firebase/*"]
+      "@firebase/*": ["firebase/*"],
+      "@icons": ["components/common/icons"]
     }
   },
   "include": [

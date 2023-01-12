@@ -1,5 +1,5 @@
-import { ThumbnailError } from "@components/icons";
 import styled from "@emotion/styled";
+import { ThumbnailError } from "@icons";
 import type { FC, ReactNode } from "react";
 
 type ComponentProps = {

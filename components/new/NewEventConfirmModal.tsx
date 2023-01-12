@@ -1,7 +1,7 @@
 import { Button } from "@components/common";
 import { EventInfo, Modal } from "@components/common";
-import { LoadingButtonSpinner } from "@components/icons";
 import styled from "@emotion/styled";
+import { LoadingButtonSpinner } from "@icons";
 import type { NewEvent } from "@newTypes";
 import type { FC } from "react";
 import type { Control } from "react-hook-form";

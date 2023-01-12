@@ -1,8 +1,8 @@
 import { Toast } from "@components/common";
 import { Days, Pagination, Timetable } from "@components/events";
-import { Eraser } from "@components/icons";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
+import { Eraser } from "@icons";
 import {
   addDateAndTime,
   getDaysDifferenceFromMonday,

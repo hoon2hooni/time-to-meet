@@ -1,6 +1,6 @@
-import { CheckIcon } from "@components/icons";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
+import { CheckIcon } from "@icons";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
 
