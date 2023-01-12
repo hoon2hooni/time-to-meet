@@ -1,4 +1,3 @@
-import { Toast } from "@components/common";
 import { Days, Pagination, Timetable } from "@components/events";
 import styled from "@emotion/styled";
 import type { Attendees } from "@eventsTypes";
@@ -11,6 +10,7 @@ import {
   subtractDateAndTime,
 } from "@lib/days";
 import useToast from "@lib/hooks/useToast";
+import { Toast } from "@ui";
 import type { FC } from "react";
 import { useState } from "react";
 type Props = {

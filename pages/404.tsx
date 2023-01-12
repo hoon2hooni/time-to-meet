@@ -1,6 +1,6 @@
-import { Button } from "@components/common";
-import { ErrorBox } from "@components/common";
 import styled from "@emotion/styled";
+import { Button } from "@ui";
+import { ErrorBox } from "@ui";
 import { useRouter } from "next/router";
 const Custom404 = () => {
   const router = useRouter();

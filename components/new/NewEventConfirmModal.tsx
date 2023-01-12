@@ -1,8 +1,8 @@
-import { Button } from "@components/common";
-import { EventInfo, Modal } from "@components/common";
 import styled from "@emotion/styled";
 import { LoadingButtonSpinner } from "@icons";
 import type { NewEvent } from "@newTypes";
+import { Button } from "@ui";
+import { EventInfo, Modal } from "@ui";
 import type { FC } from "react";
 import type { Control } from "react-hook-form";
 import { useWatch } from "react-hook-form";

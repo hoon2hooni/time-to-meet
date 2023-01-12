@@ -1,7 +1,7 @@
-import { Clarity, GA } from "@components/common";
 import { Global, ThemeProvider } from "@emotion/react";
 import global from "@styles/global";
 import theme from "@styles/theme";
+import { Clarity, GA } from "@ui";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import Head from "next/head";

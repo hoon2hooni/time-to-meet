@@ -1,7 +1,7 @@
 import landingImage from "@assets/images/landing_image.png";
-import { Button, MetaOgTwitterUrl } from "@components/common";
 import styled from "@emotion/styled";
 import { Thumbnail } from "@icons";
+import { Button, MetaOgTwitterUrl } from "@ui";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";

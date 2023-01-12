@@ -1,14 +1,8 @@
-import {
-  Button,
-  EventInfo,
-  MetaOgTwitterUrl,
-  Toast,
-} from "@components/common";
-import Retention from "@components/common/Retention";
 import styled from "@emotion/styled";
 import { getEventDocRef } from "@firebase/clientApp";
 import { dateToPattern } from "@lib/days";
 import type { NewEvent } from "@newTypes";
+import { Button, EventInfo, MetaOgTwitterUrl, Retention, Toast } from "@ui";
 import { getDoc } from "firebase/firestore";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Script from "next/script";

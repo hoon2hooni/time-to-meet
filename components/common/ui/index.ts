@@ -1,3 +1,5 @@
+export { Clarity, GA, MetaOgTwitterUrl } from "../SEO";
+export { default as Badge } from "./Badge";
 export { default as Button } from "./Button";
 export { default as ErrorBox } from "./ErrorBox";
 export { default as ErrorText } from "./ErrorText";
@@ -7,5 +9,4 @@ export { default as InputTemplate } from "./InputTemplate";
 export { default as Modal } from "./Modal";
 export { default as Portal } from "./Portal";
 export { default as Retention } from "./Retention";
-export { Clarity, GA, MetaOgTwitterUrl } from "./SEO";
 export { default as Toast } from "./Toast";

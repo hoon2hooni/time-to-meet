@@ -1,7 +1,7 @@
-import { GenericInput, InputTemplate } from "@components/common";
 import { FormValidationError } from "@components/new";
 import { getMaxDate, notWithinThreeWeeks } from "@lib/days";
 import type { NewEvent } from "@newTypes";
+import { GenericInput, InputTemplate } from "@ui";
 import type { FC } from "react";
 import { useEffect } from "react";
 import type {

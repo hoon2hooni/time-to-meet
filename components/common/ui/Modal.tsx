@@ -1,5 +1,5 @@
-import { Portal } from "@components/common";
 import styled from "@emotion/styled";
+import { Portal } from "@ui";
 import type { FC, ReactNode } from "react";
 type ModalProps = {
   children: ReactNode;

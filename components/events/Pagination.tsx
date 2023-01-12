@@ -1,6 +1,6 @@
-import Badge from "@components/common/Badge";
 import styled from "@emotion/styled";
 import { Arrow } from "@icons";
+import { Badge } from "@ui";
 import type { FC } from "react";
 
 type ComponentProps = {

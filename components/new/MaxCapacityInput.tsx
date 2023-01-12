@@ -1,6 +1,6 @@
-import { GenericInput, InputTemplate } from "@components/common";
 import { FormValidationError } from "@components/new";
 import type { NewEvent } from "@newTypes";
+import { GenericInput, InputTemplate } from "@ui";
 import type { FC } from "react";
 import type { ChangeEvent } from "react";
 import type { Control } from "react-hook-form";

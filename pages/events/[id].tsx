@@ -1,11 +1,4 @@
 import {
-  Button,
-  ErrorBox,
-  MetaOgTwitterUrl,
-  Modal,
-  Toast,
-} from "@components/common";
-import {
   EntranceInput,
   TimetableInfo,
   TimetableTemplate,
@@ -17,6 +10,7 @@ import { LoadingSpinner } from "@icons";
 import { closePage } from "@lib/handleCrossPlatform";
 import useToast from "@lib/hooks/useToast";
 import type { NextPageWithLayout } from "@pages/_app";
+import { Button, ErrorBox, MetaOgTwitterUrl, Modal, Toast } from "@ui";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 const getLocalStorageKey = (id: string) => {

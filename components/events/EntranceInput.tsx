@@ -1,6 +1,6 @@
-import { Button } from "@components/common";
 import styled from "@emotion/styled";
 import useTemporaryError from "@lib/hooks/useTemporaryError";
+import { Button } from "@ui";
 import type { FC } from "react";
 import { useForm } from "react-hook-form";
 type ComponentProps = {

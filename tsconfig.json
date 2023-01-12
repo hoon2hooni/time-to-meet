@@ -29,7 +29,8 @@
       "@newTypes": ["types/new"],
       "@dateTypes": ["types/date"],
       "@firebase/*": ["firebase/*"],
-      "@icons": ["components/common/icons"]
+      "@icons": ["components/common/icons"],
+      "@ui": ["components/common/ui"]
     }
   },
   "include": [
