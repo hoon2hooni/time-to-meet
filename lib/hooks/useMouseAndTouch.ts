@@ -66,19 +66,16 @@ const useMouseAndTouchLocation = ({
 
   useEffect(() => {
     const eventHandler = (e: MouseEvent | TouchEvent) => {
-      if (skipEvent) {
-        return;
-      }
       setEvent(normalizeTouchAndMouseEvent(e));
     };
     const element = ref?.current ?? window;
 
-    if (element) {
+    if (element && !skipEvent) {
       element.addEventListener(eventType, eventHandler as EventListener);
     }
 
     return () => {
-      if (element) {
+      if (element && !skipEvent) {
         element.removeEventListener(eventType, eventHandler as EventListener);
       }
     };
