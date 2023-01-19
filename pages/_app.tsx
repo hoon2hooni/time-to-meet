@@ -24,6 +24,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           name="description"
           content="팀플,회의,모임 시간 매번 카톡 투표 만들지말고 링크 하나만 올려보세요. 사이드프로젝트 필수앱 타임투밋!"
         />
+        {/* 페이스북 */}
         {/* og url과 twitter url은 동적으로  */}
         <meta property="og:title" content="타임투밋" />
         <meta property="og:type" content="website" />
@@ -38,6 +39,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         <meta property="og:description" content="타임투밋, 카톡으로 약속잡기" />
         <meta property="og:image:width" content="400" />
         <meta property="og:image:height" content="339" />
+        {/* 트위터 */}
         <meta
           property="twitter:title"
           content="타임투밋 - 빠짐없는 모임 시간 맞추기"
@@ -46,6 +48,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           property="twitter:image"
           content="https://www.time2meet.xyz/og_image.png/"
         ></meta>
+        {/* 네이버 */}
+        <meta
+          name="naver-site-verification"
+          content="2035a068f90c47d90d831e79ff453ef0ae3cf051"
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
