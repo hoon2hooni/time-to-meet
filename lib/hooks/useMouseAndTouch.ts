@@ -1,7 +1,7 @@
 import { normalizeTouchAndMouseEvent } from "@lib/handleCrossPlatform";
 import { getIsMobile } from "@lib/handleCrossPlatform";
 import type { RefObject } from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 type MouseEventType = "mousemove" | "mousedown";
 type TouchEventType = "touchmove" | "touchstart";
 type MouseAndTouchEventConfig = {
@@ -14,29 +14,45 @@ type ExceptEventType = Omit<MouseAndTouchEventConfig, "eventType">;
 export const useMouseAndTouchStartLocation = (config: ExceptEventType = {}) => {
   const isMobile = getIsMobile();
   const eventType = isMobile ? "touchstart" : "mousedown";
-  const { clientX, clientY, setStart } = useMouseAndTouchLocation({
+  const {
+    clientX,
+    clientY,
+    setEvent: setStart,
+  } = useMouseAndTouchLocation({
     eventType: eventType,
     ...config,
   });
+  const initializeMouseAndTouchStart = useCallback(
+    () => setStart({ clientX: 0, clientY: 0 }),
+    [setStart]
+  );
   return {
     startClientX: clientX,
     startClientY: clientY,
     setInit: setStart,
+    initializeMouseAndTouchStart,
   } as const;
 };
 
 export const useMouseAndTouchMoveLocation = (config: ExceptEventType = {}) => {
   const isMobile = getIsMobile();
   const eventType = isMobile ? "touchmove" : "mousemove";
-  const { clientX, clientY, setStart } = useMouseAndTouchLocation({
+  const {
+    clientX,
+    clientY,
+    setEvent: setMove,
+  } = useMouseAndTouchLocation({
     eventType: eventType,
     ...config,
   });
-
+  const initializeMouseAndTouchMove = useCallback(
+    () => setMove({ clientX: 0, clientY: 0 }),
+    [setMove]
+  );
   return {
     moveClientX: clientX,
     moveClientY: clientY,
-    setInitMove: setStart,
+    initializeMouseAndTouchMove,
   } as const;
 };
 
@@ -81,5 +97,5 @@ const useMouseAndTouchLocation = ({
     };
   }, [ref, eventType, skipEvent]);
 
-  return { clientX, clientY, setStart: setEvent } as const;
+  return { clientX, clientY, setEvent } as const;
 };

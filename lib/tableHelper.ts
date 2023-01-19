@@ -2,97 +2,92 @@ const PADDING_X = 40;
 const COLUMN_COUNT = 7;
 const END_TIME = 24;
 const START_TIME = 8;
-const initialSelectedArea = { x: 0, y: 0, w: 0, h: 0 };
+const initialArea = { x: 0, y: 0, w: 0, h: 0 };
 
 export const generateSelectedArea = (
   hasNotStartMove: boolean,
-  moveClientY: number,
+  currentClientY: number,
   startClientY: number,
-  initialTableArea: { x: number; y: number; w: number; h: number },
-  startClientX: number,
-  currentWidth: number
+  timetableArea: { x: number; y: number; w: number; h: number },
+  startClientX: number
 ) => {
   if (hasNotStartMove) {
-    return initialSelectedArea;
+    return initialArea;
   }
-
-  if (moveClientY <= startClientY && moveClientY !== 0) {
-    return generateSelectedAreaUpperSide(
-      initialTableArea,
+  if (currentClientY <= startClientY && currentClientY !== 0) {
+    return generateSelectedAreaWhenUserMoveUp(
+      timetableArea,
       startClientX,
-      moveClientY,
+      currentClientY,
       startClientY
     );
   }
 
-  return generateSelectedAreaBelow(
-    initialTableArea,
+  return generateSelectedAreaWhenUserMoveDown(
+    timetableArea,
     startClientY,
-    currentWidth,
-    moveClientY,
-    getCurrentX(initialTableArea.w, startClientX)
+    currentClientY,
+    startClientX
   );
 };
 
-const generateSelectedAreaUpperSide = (
-  initialTableArea: { x: number; y: number; w: number; h: number },
+const generateSelectedAreaWhenUserMoveUp = (
+  timetableArea: { x: number; y: number; w: number; h: number },
   startClientX: number,
-  moveClientY: number,
+  currentClientY: number,
   startClientY: number
 ) => {
-  const currentY =
-    moveClientY >= initialTableArea.y ? moveClientY : initialTableArea.y;
-  const currentH = startClientY - currentY;
+  const selectedAreaY =
+    currentClientY >= timetableArea.y ? currentClientY : timetableArea.y;
+  const selectedAreaHeight = startClientY - selectedAreaY;
   return {
-    x: getCurrentX(initialTableArea.w, startClientX),
-    y: currentY,
-    w: getCurrentColumnWidth(initialTableArea.w),
-    h: currentH,
+    x: getSelectedAreaX(timetableArea.w, startClientX),
+    y: selectedAreaY,
+    w: getSelectedAreaWidth(timetableArea.w),
+    h: selectedAreaHeight,
   };
 };
 
-const generateSelectedAreaBelow = (
-  initialTableArea: { x: number; y: number; w: number; h: number },
+const generateSelectedAreaWhenUserMoveDown = (
+  timetableArea: { x: number; y: number; w: number; h: number },
   startClientY: number,
-  currentWidth: number,
-  moveClientY: number,
-  currentX: number
+  currentClientY: number,
+  startClientX: number
 ) => {
-  const startHeight =
-    (initialTableArea.h - (END_TIME - START_TIME - 1)) /
+  const minHeight =
+    (timetableArea.h - (END_TIME - START_TIME - 1)) /
     (END_TIME - START_TIME) /
     3;
 
-  const currentY = startClientY;
-  const currentW = currentWidth;
-  const currentH =
-    moveClientY >= initialTableArea.y + initialTableArea.h
-      ? initialTableArea.y + initialTableArea.h - currentY
-      : moveClientY - startClientY;
+  const selectedAreaY = startClientY;
+  const selectedAreaHeight =
+    currentClientY >= timetableArea.y + timetableArea.h
+      ? timetableArea.y + timetableArea.h - selectedAreaY
+      : currentClientY - startClientY;
 
   return {
-    x: currentX,
-    y: currentY,
-    w: currentW,
-    h: Math.max(currentH, startHeight),
+    x: getSelectedAreaX(timetableArea.w, startClientX),
+    y: selectedAreaY,
+    w: getSelectedAreaWidth(timetableArea.w),
+    h: Math.max(selectedAreaHeight, minHeight),
   };
 };
 
-const getCurrentX = (area: number, startClientX: number) => {
+const getSelectedAreaX = (area: number, startClientX: number) => {
   const widthWidthGap = area / COLUMN_COUNT;
-  const tableIndex = getTableIndex(widthWidthGap, startClientX);
-  return getXOfTable(1, getCurrentColumnWidth(area), tableIndex);
+  return getXOfTable(
+    1,
+    getSelectedAreaWidth(area),
+    getColumnIndexAtTimetable(widthWidthGap, startClientX)
+  );
 };
 
-
-export const getTableIndex = (width: number, clientX: number) => {
+export const getColumnIndexAtTimetable = (width: number, clientX: number) => {
   return Math.floor((clientX - PADDING_X) / width);
 };
-
 
 export const getXOfTable = (gap: number, width: number, index: number) => {
   return PADDING_X + index * (gap + width);
 };
 
-
-const getCurrentColumnWidth = (totalWidth: number) => (totalWidth - 1 * 6) / 7;
+const getSelectedAreaWidth = (totalWidth: number) => (totalWidth - 1 * 6) / 7;

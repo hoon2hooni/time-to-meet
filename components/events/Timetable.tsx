@@ -14,7 +14,10 @@ import {
 } from "@lib/hooks/useMouseAndTouch";
 import useResizeEvent from "@lib/hooks/useResizeEvent";
 import useUrlEventId from "@lib/hooks/useUrlEventId";
-import { generateSelectedArea, getTableIndex } from "@lib/tableHelper";
+import {
+  generateSelectedArea,
+  getColumnIndexAtTimetable,
+} from "@lib/tableHelper";
 import updateCurrentAttendee from "@lib/updateCurrentAttendee";
 import { FC, useCallback, useRef, useState } from "react";
 
@@ -43,7 +46,7 @@ interface TimeProps {
   h: number;
 }
 
-const initialSelectedArea = { x: 0, y: 0, w: 0, h: 0 };
+const initialArea = { x: 0, y: 0, w: 0, h: 0 };
 
 const END_TIME = 24;
 const START_TIME = 8;
@@ -68,25 +71,24 @@ const Timetable: FC<ComponentProps> = ({
   const isUserReady = useDelay(500, currentAttendee);
   const id = useUrlEventId();
   const containerRef = useRef<HTMLDivElement>(null);
-  const currentSelectedAreaRef = useRef<TimeProps>(initialSelectedArea);
-  const initialTableAreaRef = useRef<TimeProps>(initialSelectedArea);
-  const { startClientX, startClientY, setInit } = useMouseAndTouchStartLocation(
-    {
+  const currentSelectedAreaRef = useRef<TimeProps>(initialArea);
+  const timetableAreaRef = useRef<TimeProps>(initialArea);
+  const { startClientX, startClientY, initializeMouseAndTouchStart } =
+    useMouseAndTouchStartLocation({
       ref: containerRef,
       skipEvent: !isUserReady,
-    }
-  );
+    });
   const hasNotStartMove = startClientX === 0 && startClientY === 0;
-  const currentTableIndex = useRef(0);
-  const { moveClientY, setInitMove } = useMouseAndTouchMoveLocation({
-    skipEvent: hasNotStartMove,
-  });
+  const columnIndexOfSelectedAreaRef = useRef(0);
+  const { moveClientY, initializeMouseAndTouchMove } =
+    useMouseAndTouchMoveLocation({
+      skipEvent: hasNotStartMove,
+    });
 
-  const [initialTableArea, setInitialTableArea] = useState(initialSelectedArea);
-  const currentWidth = (initialTableArea.w - 1 * 6) / 7;
+  const [timetableArea, setTimetableArea] = useState(initialArea);
 
-  currentTableIndex.current = getTableIndex(
-    initialTableArea.w / 7,
+  columnIndexOfSelectedAreaRef.current = getColumnIndexAtTimetable(
+    timetableArea.w / 7,
     startClientX
   );
 
@@ -94,16 +96,16 @@ const Timetable: FC<ComponentProps> = ({
     hasNotStartMove,
     moveClientY,
     startClientY,
-    initialTableArea,
-    startClientX,
-    currentWidth
+    timetableArea,
+    startClientX
   );
+
   const resizeTimeTableHandler = () => {
     if (containerRef.current) {
       const { x, y, width, height } =
         containerRef.current.getBoundingClientRect();
-      setInitialTableArea({ x, y, w: width, h: height });
-      initialTableAreaRef.current = { x, y, w: width, h: height };
+      setTimetableArea({ x, y, w: width, h: height });
+      timetableAreaRef.current = { x, y, w: width, h: height };
     }
   };
 
@@ -111,9 +113,9 @@ const Timetable: FC<ComponentProps> = ({
 
   const updateAttendeesAndResetSelectedArea = useCallback(() => {
     const resetSelectedArea = () => {
-      setInit({ clientX: 0, clientY: 0 });
-      currentSelectedAreaRef.current = initialSelectedArea;
-      setInitMove({ clientX: 0, clientY: 0 });
+      initializeMouseAndTouchStart();
+      initializeMouseAndTouchMove();
+      currentSelectedAreaRef.current = initialArea;
     };
 
     const currentSelectedArea = currentSelectedAreaRef.current;
@@ -124,9 +126,9 @@ const Timetable: FC<ComponentProps> = ({
 
     const selectedDates = getSelectedDatesWithSelectedArea(
       currentSelectedArea,
-      initialTableAreaRef.current,
+      timetableAreaRef.current,
       startDate,
-      currentTableIndex.current,
+      columnIndexOfSelectedAreaRef.current,
       currentPageIndex
     );
 
@@ -150,10 +152,10 @@ const Timetable: FC<ComponentProps> = ({
     attendees,
     currentAttendee,
     isEraseMode,
-    setInit,
     startDate,
     currentPageIndex,
-    setInitMove,
+    initializeMouseAndTouchMove,
+    initializeMouseAndTouchStart,
     id,
   ]);
 
@@ -215,7 +217,7 @@ const Timetable: FC<ComponentProps> = ({
           />
         );
       })}
-      <TimesWrapper height={initialTableArea.h}>
+      <TimesWrapper height={timetableArea.h}>
         {DAY_TIME_ARRAY[0].map((hour) => (
           <TimeUnit key={hour}>{hour}:00</TimeUnit>
         ))}
