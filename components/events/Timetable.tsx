@@ -80,7 +80,7 @@ const Timetable: FC<ComponentProps> = ({
     });
   const hasNotStartMove = startClientX === 0 && startClientY === 0;
   const columnIndexOfSelectedAreaRef = useRef(0);
-  const { moveClientY, initializeMouseAndTouchMove } =
+  const { moveClientX, moveClientY, initializeMouseAndTouchMove } =
     useMouseAndTouchMoveLocation({
       skipEvent: hasNotStartMove,
     });
@@ -97,7 +97,8 @@ const Timetable: FC<ComponentProps> = ({
     moveClientY,
     startClientY,
     timetableArea,
-    startClientX
+    startClientX,
+    moveClientX
   );
 
   const resizeTimeTableHandler = () => {
