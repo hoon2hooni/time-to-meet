@@ -4,87 +4,151 @@ const END_TIME = 24;
 const START_TIME = 8;
 const initialArea = { x: 0, y: 0, w: 0, h: 0 };
 
-export const generateSelectedArea = (
-  hasNotStartMove: boolean,
-  currentClientY: number,
-  startClientY: number,
-  timetableArea: { x: number; y: number; w: number; h: number },
-  startClientX: number,
-  currentClientX: number
-) => {
+type ClientX = {
+  startClientX: number;
+  currentClientX: number;
+};
+
+type ClientY = {
+  startClientY: number;
+  currentClientY: number;
+};
+
+type Client = ClientX & ClientY;
+
+type Area = {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+};
+
+type LimitClient = {
+  minClientX: number;
+  maxClientX: number;
+};
+
+type GenerateSelectedAreaConfig = {
+  hasNotStartMove: boolean;
+  client: Client;
+  timetableArea: Area;
+  limitClient: LimitClient;
+};
+type GenerateSelectedArea = (config: GenerateSelectedAreaConfig) => Area;
+
+export const generateSelectedArea: GenerateSelectedArea = ({
+  hasNotStartMove,
+  client,
+  timetableArea,
+  limitClient,
+}) => {
+  const { startClientX, startClientY, currentClientX, currentClientY } = client;
+  const clientX = { startClientX, currentClientX };
+  const clientY = { startClientY, currentClientY };
+
   if (hasNotStartMove) {
     return initialArea;
   }
 
-  if (currentClientY <= startClientY && currentClientY !== 0) {
-    return generateSelectedAreaWhenUserMoveUp(
-      timetableArea,
-      startClientX,
-      currentClientY,
-      startClientY,
-      currentClientX
-    );
-  }
-
-  return generateSelectedAreaWhenUserMoveDown(
-    timetableArea,
-    startClientY,
-    currentClientY,
-    startClientX,
-    currentClientX
-  );
-};
-
-const generateSelectedAreaWhenUserMoveUp = (
-  timetableArea: { x: number; y: number; w: number; h: number },
-  startClientX: number,
-  currentClientY: number,
-  startClientY: number,
-  currentClientX: number
-) => {
-  const selectedAreaY =
-    currentClientY >= timetableArea.y ? currentClientY : timetableArea.y;
-  const selectedAreaHeight = startClientY - selectedAreaY;
-  const { selectedAreaX, selectedAreaWidth } = getSelectedAreaWidthAndX({
-    startClientX,
-    currentClientX,
+  const { x, w } = getXAndWidthOfSelectedArea({
+    clientX,
     timetableWidth: timetableArea.w,
+    limitClient,
   });
-
+  const { y, h } = getYAndHeightOfSelectedArea(timetableArea, clientY);
   return {
-    x: selectedAreaX,
-    y: selectedAreaY,
-    w: selectedAreaWidth,
-    h: selectedAreaHeight,
+    x,
+    y,
+    w,
+    h,
   };
 };
 
-const generateSelectedAreaWhenUserMoveDown = (
-  timetableArea: { x: number; y: number; w: number; h: number },
-  startClientY: number,
-  currentClientY: number,
-  startClientX: number,
-  currentClientX: number
-) => {
+const getXAndWidthOfSelectedArea = ({
+  clientX,
+  timetableWidth,
+  limitClient,
+}: {
+  clientX: ClientX;
+  timetableWidth: number;
+  limitClient: LimitClient;
+}) => {
+  const { startClientX, currentClientX } = clientX;
+  const { minClientX, maxClientX } = limitClient;
+
+  if (currentClientX === 0) {
+    const selectedAreaX = getSelectedAreaX(timetableWidth, startClientX);
+    const timetableEachColumnArea = getTimetableColumnAreaWidth(timetableWidth);
+    return {
+      x: selectedAreaX,
+      w: timetableEachColumnArea,
+    };
+  }
+
+  if (currentClientX >= startClientX) {
+    const selectedAreaX = getSelectedAreaX(timetableWidth, startClientX);
+    const timetableEachColumnArea = getTimetableColumnAreaWidth(timetableWidth);
+    const columnCount = getColumnCount(
+      Math.min(currentClientX, maxClientX),
+      selectedAreaX,
+      timetableEachColumnArea
+    );
+    const selectedAreaWidth = getSelectedAreaWidth(
+      columnCount,
+      timetableEachColumnArea,
+      1
+    );
+    return {
+      x: selectedAreaX,
+      w: selectedAreaWidth,
+    };
+  }
+
+  const selectedAreaX = Math.max(
+    getSelectedAreaX(timetableWidth, currentClientX),
+    minClientX
+  );
+  const timetableEachColumnArea = getTimetableColumnAreaWidth(timetableWidth);
+  const columnCount = getColumnCount(
+    startClientX,
+    selectedAreaX,
+    timetableEachColumnArea
+  );
+  const selectedAreaWidth = getSelectedAreaWidth(
+    columnCount,
+    timetableEachColumnArea,
+    1
+  );
+  return {
+    x: selectedAreaX,
+    w: selectedAreaWidth,
+  };
+};
+
+const getYAndHeightOfSelectedArea = (timetableArea: Area, clientY: ClientY) => {
+  const { startClientY, currentClientY } = clientY;
+
+  if (currentClientY <= startClientY && currentClientY !== 0) {
+    const selectedAreaY =
+      currentClientY >= timetableArea.y ? currentClientY : timetableArea.y;
+    const selectedAreaHeight = startClientY - selectedAreaY;
+    return {
+      y: selectedAreaY,
+      h: selectedAreaHeight,
+    };
+  }
+
   const minHeight =
     (timetableArea.h - (END_TIME - START_TIME - 1)) /
     (END_TIME - START_TIME) /
     3;
-
   const selectedAreaY = startClientY;
   const selectedAreaHeight =
     currentClientY >= timetableArea.y + timetableArea.h
       ? timetableArea.y + timetableArea.h - selectedAreaY
       : currentClientY - startClientY;
-  const { selectedAreaX, selectedAreaWidth } = getSelectedAreaWidthAndX({
-    startClientX,
-    currentClientX,
-    timetableWidth: timetableArea.w,
-  });
   return {
-    x: selectedAreaX,
     y: selectedAreaY,
-    w: selectedAreaWidth,
     h: Math.max(selectedAreaHeight, minHeight),
   };
 };
@@ -123,59 +187,4 @@ const getSelectedAreaWidth = (
   gapSize: number
 ) => {
   return columnCount * columnWidth + (columnCount - 1) * gapSize;
-};
-
-const getSelectedAreaWidthAndX = ({
-  startClientX,
-  currentClientX,
-  timetableWidth,
-}: {
-  startClientX: number;
-  currentClientX: number;
-  timetableWidth: number;
-}) => {
-  if (currentClientX === 0) {
-    const selectedAreaX = getSelectedAreaX(timetableWidth, startClientX);
-    const timetableEachColumnArea = getTimetableColumnAreaWidth(timetableWidth);
-    return {
-      selectedAreaX,
-      selectedAreaWidth: timetableEachColumnArea,
-    };
-  }
-  if (currentClientX >= startClientX) {
-    const selectedAreaX = getSelectedAreaX(timetableWidth, startClientX);
-    const timetableEachColumnArea = getTimetableColumnAreaWidth(timetableWidth);
-    const columnCount = getColumnCount(
-      currentClientX,
-      selectedAreaX,
-      timetableEachColumnArea
-    );
-    const selectedAreaWidth = getSelectedAreaWidth(
-      columnCount,
-      timetableEachColumnArea,
-      1
-    );
-
-    return {
-      selectedAreaX,
-      selectedAreaWidth,
-    };
-  }
-
-  const selectedAreaX = getSelectedAreaX(timetableWidth, currentClientX);
-  const timetableEachColumnArea = getTimetableColumnAreaWidth(timetableWidth);
-  const columnCount = getColumnCount(
-    startClientX,
-    selectedAreaX,
-    timetableEachColumnArea
-  );
-  const selectedAreaWidth = getSelectedAreaWidth(
-    columnCount,
-    timetableEachColumnArea,
-    1
-  );
-  return {
-    selectedAreaX,
-    selectedAreaWidth,
-  };
 };

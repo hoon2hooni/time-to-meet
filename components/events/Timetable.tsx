@@ -17,6 +17,7 @@ import useUrlEventId from "@lib/hooks/useUrlEventId";
 import {
   generateSelectedArea,
   getColumnIndexAtTimetable,
+  getXOfTable,
 } from "@lib/tableHelper";
 import updateCurrentAttendee from "@lib/updateCurrentAttendee";
 import { FC, useCallback, useRef, useState } from "react";
@@ -92,14 +93,28 @@ const Timetable: FC<ComponentProps> = ({
     startClientX
   );
 
-  currentSelectedAreaRef.current = generateSelectedArea(
-    hasNotStartMove,
-    moveClientY,
-    startClientY,
-    timetableArea,
+  const availableIndexAtTable = new Array(7)
+    .fill(0)
+    .map((_, i) =>
+      isInRange(endDate, startWeekOfMonday, currentPageIndex, i, startDate)
+    );
+  const startDayIndex = availableIndexAtTable.findIndex((v) => v);
+  const endDayIndex = 6 - availableIndexAtTable.reverse().findIndex((v) => v);
+  const minClientX = getXOfTable(1, timetableArea.w / 7, startDayIndex) - 1;
+  const maxClientX = getXOfTable(1, timetableArea.w / 7, endDayIndex);
+  const client = {
     startClientX,
-    moveClientX
-  );
+    startClientY,
+    currentClientX: moveClientX,
+    currentClientY: moveClientY,
+  };
+  const limitClient = { minClientX, maxClientX };
+  currentSelectedAreaRef.current = generateSelectedArea({
+    hasNotStartMove,
+    client,
+    limitClient,
+    timetableArea,
+  });
 
   const resizeTimeTableHandler = () => {
     if (containerRef.current) {
@@ -162,6 +177,7 @@ const Timetable: FC<ComponentProps> = ({
 
   useMouseAndTouchEnd(updateAttendeesAndResetSelectedArea);
   const dateToAttendees = generateDateToAttendees(attendees);
+
   return (
     <Container ref={containerRef}>
       {DAY_TIME_ARRAY.map((hours, dayIndex) => {
