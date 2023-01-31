@@ -1,17 +1,14 @@
 import styled from "@emotion/styled";
-import { getIsMobile } from "@lib/handleCrossPlatform";
 import type { ComponentProps, FC } from "react";
 type ButtonProps = {
   color?: "primary" | "secondary";
   size?: "sm" | "md" | "lg";
-  width?: string;
 } & ComponentProps<"button">;
 
 type StyledProps = Partial<ButtonProps>;
 
 const Button: FC<ButtonProps> = ({
   children,
-  width = "10rem",
   color = "primary",
   size = "md",
   ...props

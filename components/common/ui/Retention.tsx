@@ -12,9 +12,7 @@ const Retention = () => {
         <br />
         모임이 더 있으신가요?
       </MarginText>
-      <Button width={"16rem"} onClick={() => router.push("/")}>
-        새로운 모임 만들기
-      </Button>
+      <Button onClick={() => router.push("/")}>새로운 모임 만들기</Button>
       <Wrapper>
         <Thumbnail width={16} height={16} />
         <Text>타임투밋</Text>
