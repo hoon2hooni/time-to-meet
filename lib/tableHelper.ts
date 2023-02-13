@@ -170,7 +170,7 @@ export const getXOfTable = (gap: number, width: number, index: number) => {
   return PADDING_X + index * (gap + width);
 };
 
-const getTimetableColumnAreaWidth = (totalWidth: number) =>
+export const getTimetableColumnAreaWidth = (totalWidth: number) =>
   (totalWidth - 1 * 6) / 7;
 
 const getColumnCount = (
