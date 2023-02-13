@@ -1,3 +1,4 @@
+import { getTimetableColumnAreaWidth } from "./tableHelper";
 interface TimeProps {
   x: number;
   y: number;
@@ -88,53 +89,88 @@ export function getSelectedDatesWithSelectedArea(
   selectedArea: TimeProps,
   table: TimeProps,
   startDate: Date,
-  currentTableIndex: number,
   pageIndex: number
 ) {
-  const { startIdx, endIdx } = getIndexesFromTable(selectedArea, table);
+  const { startXIndex, endXIndex } = getXIndexesFromTable(selectedArea, table);
+  const { startYIndex, endYIndex } = getYIndexesFromTable(selectedArea, table);
+  
   return getSelectedDates({
-    startIdx,
-    endIdx,
-    startDate,
-    currentTableIndex,
     pageIndex,
+    startDate,
+    startXIndex,
+    endXIndex,
+    startYIndex,
+    endYIndex,
   });
 }
 
-function getIndexesFromTable(selectedArea: TimeProps, table: TimeProps) {
+function getXIndexesFromTable(selectedArea: TimeProps, timetable: TimeProps) {
+  const GAP_SIZE = 1;
+
+  const { x: selectedAreaX, w: selectedAreaWidth } = selectedArea;
+  const { x: timetableX, w: timetableWidth } = timetable;
+
+  const columnWidth = getTimetableColumnAreaWidth(timetableWidth);
+
+  let startXIndex = 0;
+  for (let index = 0; index < 7; index++) {
+    const eachColumnXByIndex =
+      timetableX + columnWidth * index + GAP_SIZE * index;
+    //해당 인덱스의 컬럼의 x좌표와 선택영역의 x좌표가 소수점으로인해 다를수 있기에 반올림했음
+    if (Math.round(selectedAreaX - eachColumnXByIndex) === 0) {
+      startXIndex = index;
+      break;
+    }
+  }
+
+  const endXIndex =
+    Math.round(selectedAreaWidth / columnWidth) + startXIndex - 1;
+
+  return { startXIndex, endXIndex };
+}
+
+function getYIndexesFromTable(selectedArea: TimeProps, table: TimeProps) {
   const fromTableToSelectedArea = selectedArea.y - table.y;
   const GAP = 1;
   const HEIGHT =
     (table.h - GAP * (END_TIME - START_TIME - 1)) / (END_TIME - START_TIME);
 
-  const startIdx = Math.round(fromTableToSelectedArea / (HEIGHT + GAP));
-  const endIdx =
+  const startYIndex = Math.round(fromTableToSelectedArea / (HEIGHT + GAP));
+  const endYIndex =
     Math.round((fromTableToSelectedArea + selectedArea.h) / (HEIGHT + GAP)) - 1;
-  return { startIdx, endIdx };
+  return { startYIndex, endYIndex };
 }
 
 export function getSelectedDates({
-  endIdx = 15,
-  startIdx = 0,
-  startDate,
-  currentTableIndex,
   pageIndex,
+  startDate,
+  startXIndex,
+  endXIndex = startXIndex,
+  startYIndex = 0,
+  endYIndex = 15,
   startTime = 8,
 }: {
-  endIdx?: number;
-  startIdx?: number;
-  startDate: Date;
-  currentTableIndex: number;
   pageIndex: number;
+  startDate: Date;
+  startXIndex: number;
+  endXIndex?: number;
+  startYIndex?: number;
+  endYIndex?: number;
   startTime?: number;
 }) {
-  if (endIdx - startIdx + 1 < 0) return [];
-  const selectedDates = new Array(endIdx - startIdx + 1).fill(0).map((_, idx) =>
-    addDateAndTime(startDate, {
-      days: currentTableIndex + pageIndex * 7,
-      hours: startIdx + idx + startTime,
-    })
-  );
+  if (endYIndex - startYIndex + 1 < 0) return [];
+  let selectedDates: Date[] = [];
+  for (let startIndex = startXIndex; startIndex <= endXIndex; startIndex++) {
+    selectedDates = selectedDates.concat(
+      new Array(endYIndex - startYIndex + 1).fill(0).map((_, idx) =>
+        addDateAndTime(startDate, {
+          days: startIndex + pageIndex * 7,
+          hours: startYIndex + idx + startTime,
+        })
+      )
+    );
+  }
+  console.log(selectedDates);
   return selectedDates;
 }
 
