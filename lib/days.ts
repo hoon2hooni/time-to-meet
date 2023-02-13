@@ -93,7 +93,7 @@ export function getSelectedDatesWithSelectedArea(
 ) {
   const { startXIndex, endXIndex } = getXIndexesFromTable(selectedArea, table);
   const { startYIndex, endYIndex } = getYIndexesFromTable(selectedArea, table);
-
+  
   return getSelectedDates({
     pageIndex,
     startDate,
@@ -145,17 +145,17 @@ export function getSelectedDates({
   pageIndex,
   startDate,
   startXIndex,
-  endXIndex,
-  startYIndex,
-  endYIndex,
+  endXIndex = startXIndex,
+  startYIndex = 0,
+  endYIndex = 15,
   startTime = 8,
 }: {
   pageIndex: number;
   startDate: Date;
   startXIndex: number;
-  endXIndex: number;
-  startYIndex: number;
-  endYIndex: number;
+  endXIndex?: number;
+  startYIndex?: number;
+  endYIndex?: number;
   startTime?: number;
 }) {
   if (endYIndex - startYIndex + 1 < 0) return [];
@@ -170,6 +170,7 @@ export function getSelectedDates({
       )
     );
   }
+  console.log(selectedDates);
   return selectedDates;
 }
 

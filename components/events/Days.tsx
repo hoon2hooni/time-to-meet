@@ -110,7 +110,7 @@ const Days: FC<ComponentProps> = ({
       });
       const selectedDates = getSelectedDates({
         startDate,
-        currentTableIndex: dayIndex,
+        startXIndex: dayIndex,
         pageIndex: currentPageIndex,
       });
       const method = {

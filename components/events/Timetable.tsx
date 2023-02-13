@@ -144,7 +144,7 @@ const Timetable: FC<ComponentProps> = ({
       currentSelectedArea,
       timetableAreaRef.current,
       startDate,
-      columnIndexOfSelectedAreaRef.current
+      currentPageIndex
     );
 
     if (!selectedDates.length) {
@@ -171,6 +171,7 @@ const Timetable: FC<ComponentProps> = ({
     initializeMouseAndTouchMove,
     initializeMouseAndTouchStart,
     id,
+    currentPageIndex,
   ]);
 
   useMouseAndTouchEnd(updateAttendeesAndResetSelectedArea);
