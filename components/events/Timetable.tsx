@@ -285,6 +285,7 @@ const TimesWrapper = styled.div<{ height: number }>`
   top: 0px;
   left: 0px;
   height: ${(props) => props.height}px;
+  width: 0px;
 `;
 
 const TimeUnit = styled.div`
