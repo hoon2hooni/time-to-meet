@@ -1,3 +1,5 @@
+import "../styles/globals.css";
+
 import { Global, ThemeProvider } from "@emotion/react";
 import global from "@styles/global";
 import theme from "@styles/theme";

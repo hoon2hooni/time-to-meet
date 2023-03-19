@@ -1,5 +1,6 @@
 import {
   EntranceInput,
+  Poll,
   TimetableInfo,
   TimetableTemplate,
 } from "@components/events";
@@ -13,11 +14,13 @@ import type { NextPageWithLayout } from "@pages/_app";
 import { Button, ErrorBox, MetaOgTwitterUrl, Modal, Toast } from "@ui";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
 const getLocalStorageKey = (id: string) => {
   return `${id}-currentAttendee`;
 };
 
 const Events: NextPageWithLayout = () => {
+  const [isPoll, setIsPoll] = useState(true);
   const [windowHeight, setWindowHeight] = useState<number>(0);
   const { isToastOpen, toggleToast } = useToast();
   useEffect(() => {
@@ -125,13 +128,17 @@ const Events: NextPageWithLayout = () => {
             setAttendees={setAttendees}
           />
         </Container>
-        <TimetableTemplate
-          startDate={startDate?.toDate() || new Date()}
-          endDate={endDate?.toDate() || new Date()}
-          attendees={attendees}
-          currentAttendee={currentAttendee}
-          maxCapacity={maxCapacity}
-        />
+        {isPoll ? (
+          <Poll />
+        ) : (
+          <TimetableTemplate
+            startDate={startDate?.toDate() || new Date()}
+            endDate={endDate?.toDate() || new Date()}
+            attendees={attendees}
+            currentAttendee={currentAttendee}
+            maxCapacity={maxCapacity}
+          />
+        )}
       </ContainerWrapper>
     </>
   );
